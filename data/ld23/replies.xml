@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<replies>
+	
+	<reply>
+		<id>800</id>
+		<text>Goodbye !</text>
+		<requirements>
+			<isTrue>w1_intro_done;</isTrue>
+		</requirements>
+		<stopConversation>true</stopConversation>
+	</reply>
+	
+	<reply>
+		<id>801</id>
+		<text>Goodbye for NPCs</text>
+		<requirements>
+			<isPlayer>false</isPlayer>
+		</requirements>
+		<stopConversation>true</stopConversation>
+	</reply>
+	
+	<reply>
+		<id>810</id>
+		<text>Goodbye !</text>
+		<requirements>
+			<name>player</name>
+			<lastReceived>0</lastReceived>
+			<isFalse>w1_intro_done;</isFalse>
+		</requirements>
+		<startScript>w1_lose = true;</startScript>
+	</reply>
+	<reply>
+		<id>812</id>
+		<text>...</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w1_lose;</isTrue>
+		</requirements>
+		<stopConversation>true</stopConversation>
+	</reply>
+	
+	<reply>
+		<id>200</id>
+		<text>Well, Goodbye then !</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>810</lastReceived>
+		</requirements>
+		<startScript>w1_lose_1();</startScript>
+	</reply>
+	
+	<reply>
+		<id>1</id>
+		<text>Hello !</text>
+		<requirements>
+			<isPlayer>true</isPlayer>
+			<lastReceived>0</lastReceived>
+			<isFalse>w1_intro_done;</isFalse>
+		</requirements>
+	</reply>
+
+	
+	<reply>
+		<id>101</id>
+		<text>Hello! Who are you?</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>1</lastReceived>
+		</requirements>
+	</reply>
+	<reply>
+		<id>102</id>
+		<text>I'm Max the sheep. I live here, under the rainbow! Who are you?</text>
+		<requirements>
+			<name>player</name>
+			<lastReceived>101</lastReceived>
+			<isTrue>world == 1;</isTrue>
+		</requirements>
+	</reply>
+	<reply>
+		<id>103</id>
+		<text>I'm Akka the goose and I come from far away. What did you want?</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>102</lastReceived>
+		</requirements>
+		<startScript>w1_intro_done = true;</startScript>
+	</reply>
+	
+	<reply>
+		<id>104</id>
+		<text>Where are you going?</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w1_intro_done;</isTrue>
+			<talkingTo>npc_akka</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>105</id>
+		<text>We're migrating to Adélaide</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>104</lastReceived>
+		</requirements>
+	</reply>
+	
+	
+	<reply>
+		<id>106</id>
+		<text>How is your planet?</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w1_intro_done;</isTrue>
+			<talkingTo>npc_akka</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>107</id>
+		<text>My planet is much bigger than yours, so we don't see sunsets very often</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>106</lastReceived>
+		</requirements>
+		<startScript>w1_know_planet = true;</startScript>
+	</reply>
+	
+	<reply>
+		<id>108</id>
+		<text>Why did you leave?</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w1_know_planet;</isTrue>
+			<talkingTo>npc_akka</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>109</id>
+		<text>It was the migration season, so we migrated.</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>108</lastReceived>
+		</requirements>
+	</reply>
+	
+	<reply>
+		<id>110</id>
+		<text>Can you take me with you?</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w1_intro_done;</isTrue>
+			<isFalse>world > 1;</isFalse>
+		</requirements>
+	</reply>
+	<reply>
+		<id>111</id>
+		<text>I suppose we could take you, but I'd like to see this planet's sunsets first</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>110</lastReceived>
+			<isFalse>w1_quest;</isFalse>
+		</requirements>
+		<startScript>w1_quest = true;</startScript>
+	</reply>
+	<reply>
+		<id>112</id>
+		<text>I'd like to see more sunsets before leaving</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>110</lastReceived>
+			<isTrue>w1_quest;</isTrue>
+			<isFalse>w1_sunsets > 1;</isFalse>
+		</requirements>
+	</reply>
+	<reply>
+		<id>113</id>
+		<text>Ok, we can leave when you are ready!</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>110</lastReceived>
+			<isTrue>w1_quest;</isTrue>
+			<isTrue>w1_sunsets > 1;</isTrue>
+		</requirements>
+		<startScript>w1_quest_complete = true;</startScript>
+	</reply>
+	
+	
+	<reply>
+		<id>120</id>
+		<text>Can you wait here?</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>isFollowing("npc_akka");</isTrue>
+		</requirements>
+		<startScript>setFollow("npc_akka", false); w1_script(false);</startScript>
+	</reply>
+	<reply>
+		<id>121</id>
+		<text>Come with me, I'll show you my planet's sunsets</text>
+		<requirements>
+			<name>player</name>
+			<isFalse>isFollowing("npc_akka");</isFalse>
+			<isTrue>w1_quest;</isTrue>
+		</requirements>
+		<startScript>setFollow("npc_akka", true); w1_script(true);</startScript>
+	</reply>
+	
+	
+	<reply>
+		<id>122</id>
+		<text>I'm ready, let's go!</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w1_quest_complete;</isTrue>
+			<isFalse>world > 1;</isFalse>
+		</requirements>
+		<startScript>w1_goto_w2();</startScript>
+		<stopConversation>true</stopConversation>
+	</reply>
+	
+	<reply>
+		<id>201</id>
+		<text>I feel too heavy here, can we leave?</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>world == 2;</isTrue>
+			<talkingTo>npc_akka</talkingTo>
+		</requirements>
+		<startScript>w2_goto_w3();</startScript>
+		<stopConversation>true</stopConversation>
+	</reply>
+	
+	
+	
+	
+	<reply>
+		<id>210</id>
+		<text>Hello !</text>
+		<requirements>
+			<name>player</name>
+			<isFalse>w3_ted_hey;</isFalse>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>211</id>
+		<text>Hey ! I'm Ted the rabbit! Who are you?</text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>210</lastReceived>
+		</requirements>
+		<startScript>w3_ted_hey = true;</startScript>
+	</reply>
+	
+	<reply>
+		<id>212</id>
+		<text>I'm Max the sheep. </text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w3_ted_hey;</isTrue>
+			<isFalse>w3_ted_intro;</isFalse>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>213</id>
+		<text>Nice to meet you! What are you doing down here? </text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>212</lastReceived>
+		</requirements>
+		<startScript>w3_ted_intro = true; w3_ted_down = true;</startScript>
+	</reply>
+	
+	<reply>
+		<id>214</id>
+		<text>I'm migrating to Adélaide with geese. Do you want to come with us? </text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w3_ted_intro;</isTrue>
+			<isFalse>w3_ted_quest;</isFalse>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>215</id>
+		<text>Maybe... How is Adélaide? </text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>214</lastReceived>
+		</requirements>
+		<startScript>w3_ted_quest = true; w3_ted_quest2 = true;</startScript>
+	</reply>
+	
+	<reply>
+		<id>216</id>
+		<text>I don't know, I've never been there. </text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w3_ted_quest;</isTrue>
+			<isFalse>w3_ted_answer;</isFalse>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>217</id>
+		<text>I don't want to end up in a bad place so I'd rather stay here... </text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>216</lastReceived>
+		</requirements>
+		<startScript>w3_ted_answer = true; w3_ted_quest2 = false;</startScript>
+	</reply>
+	
+	<reply>
+		<id>218</id>
+		<text>I'm sure it's a very nice place. </text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w3_ted_quest;</isTrue>
+			<isFalse>w3_ted_answer;</isFalse>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>219</id>
+		<text>I'll meet you there with the duck migration then</text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>218</lastReceived>
+		</requirements>
+		<startScript>w3_ted_answer = true; w3_ted_quest2 = false;</startScript>
+	</reply>
+	
+	<reply>
+		<id>220</id>
+		<text>What are you doing here? </text>
+		<requirements>
+			<name>player</name>
+			<isTrue>w3_ted_down;</isTrue>
+			<isFalse>w3_ted_quest2;</isFalse>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>221</id>
+		<text>I come here when it's dark outside</text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>220</lastReceived>
+		</requirements>
+		<startScript>w3_ted_down = false; w3_ted_down2 = true;</startScript>
+	</reply>
+	
+	<reply>
+		<id>222</id>
+		<text>But this side of the planet is always dark!</text>
+		<requirements>
+			<name>player</name>
+			<isFalse>w3_ted_quest2;</isFalse>
+			<isTrue>w3_ted_down2;</isTrue>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>223</id>
+		<text>That's why I'm always here</text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>222</lastReceived>
+		</requirements>
+		<startScript>w3_ted_down2 = false; w3_ted_down3 = true;</startScript>
+	</reply>
+	
+	<reply>
+		<id>224</id>
+		<text>Isn't it sad?</text>
+		<requirements>
+			<name>player</name>
+			<isFalse>w3_ted_quest2;</isFalse>
+			<isTrue>w3_ted_down3;</isTrue>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>225</id>
+		<text>Not really, I'm used to it</text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>224</lastReceived>
+		</requirements>
+		<startScript>w3_ted_down3 = false; w3_ted_down = true;</startScript>
+	</reply>
+	
+	
+	
+	<reply>
+		<id>230</id>
+		<text>I'm ready to continue the migration</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>world == 3;</isTrue>
+			<talkingTo>npc_akka</talkingTo>
+		</requirements>
+		<startScript>w3_goto_w4();</startScript>
+		<stopConversation>true</stopConversation>
+	</reply>
+	
+	
+	<reply>
+		<id>300</id>
+		<text>I'm glad you could come!</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>world == 4;</isTrue>
+			<talkingTo>npc_ted</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>301</id>
+		<text>Me too, it's pretty nice here!</text>
+		<requirements>
+			<name>npc_ted</name>
+			<lastReceived>300</lastReceived>
+		</requirements>
+	</reply>
+	
+	<reply>
+		<id>302</id>
+		<text>Where are we?</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>world == 4;</isTrue>
+			<talkingTo>npc_akka</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>303</id>
+		<text>We've reached Adélaide! Enjoy your stay!</text>
+		<requirements>
+			<name>npc_akka</name>
+			<lastReceived>302</lastReceived>
+		</requirements>
+	</reply>
+	
+	
+	<reply>
+		<id>304</id>
+		<text>Hello!</text>
+		<requirements>
+			<name>player</name>
+			<isTrue>world == 4;</isTrue>
+			<talkingTo>npc_pink</talkingTo>
+		</requirements>
+	</reply>
+	<reply>
+		<id>305</id>
+		<text>Hello! This is the end of your trip! Thanks for playing!</text>
+		<requirements>
+			<name>npc_pink</name>
+			<lastReceived>304</lastReceived>
+		</requirements>
+	</reply>
+	
+	
+</replies>
+

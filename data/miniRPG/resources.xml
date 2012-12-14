@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources> <!-- Resources file for the plateformer project -->
+	<!-- basedir -->
+	<basedir path="data/miniRPG" />
+	<!-- sounds -->
+	<!-- songs -->
+	<!-- images -->
+	<!-- sheets -->
+	<sheet key="lordLard" file="anims/lord_lard_sheet.png" width="32" height="32" />
+	<!-- fonts -->
+	<!-- maps -->	
+	<map key="map1" file="maps/map1.tmx" width="32" height="32" />
+	<!-- Data files -->
+	<file key="script" file="script.js" />
+</resources>

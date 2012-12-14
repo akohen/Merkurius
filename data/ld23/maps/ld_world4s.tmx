@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="120" height="20" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="gravity" value="0.8"/>
+  <property name="rotate" value="true"/>
+  <property name="timestep" value="0.0002"/>
+ </properties>
+ <tileset firstgid="1" name="tilesx2" tilewidth="32" tileheight="32">
+  <image source="tilesx2.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <layer name="Calque de Tile 1" width="120" height="20">
+  <properties>
+   <property name="foreground" value="true"/>
+  </properties>
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3QSQqAMAyFYTu4cNioJ/D+lzSLFkqIcdgp/wcPOyQttusAAAAAAAAAAAAAAH8QmiQ17tV+LMllv87bmmys1d7k3Bea+5La071RrddvVvPYnKXXBskomSSzcV427r7Te2d81d87/2+9hXfX8tGsks0Y65qzeu+Mt/tPe7yaN7XW++yEkM/mAJDezwuAJQAA
+  </data>
+ </layer>
+ <layer name="Calque 3" width="120" height="20">
+  <properties>
+   <property name="foreground" value="true"/>
+  </properties>
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2UUQ6EIAxEOQRC73/SjQkm3dkp6ucm7/0Qy9BOHLE1AAAAAAAAAAAAAAAAAAAA+Af6WiPV5lqHaPKe1s/zh9FcPY5Uz+euMyH6MJonVNppat3UhjyH0bhel87Nn6KpZru+Wt/52XnQusvA+dJeOr8vjctN/bWlmxuPGff96V7mzXeivqo51ax8vtrXGbv8XQZVX61X93O07zsXspcJ0eT76jIfxrPL3mVY5fTkToxNL/dvUp8nIRrtc5fTKLSt/b5X1d/9h7KPD9XNcL6AJQAA
+  </data>
+ </layer>
+ <layer name="collision" width="120" height="20" visible="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3DAQ0AAAgDoIeyfzZrXAcbCQAAAAAAAADQbnwduGsBF6XzGoAlAAA=
+  </data>
+ </layer>
+</map>

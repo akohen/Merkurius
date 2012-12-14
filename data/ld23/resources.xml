@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources> <!-- Resources file LD23 project -->
+	<!-- basedir -->
+	<basedir path="data/ld23" />
+	<!-- sounds -->
+	<sound key="jump" file="sounds/jump.wav" />	
+	<!-- songs -->
+	<music key="music" file="sounds/music.ogg" />
+	<!-- images -->
+	<image key="buttons" file="buttons.png" />	
+	<image key="moon" file="images/moon.png" />
+	<image key="sun" file="images/sun.png" />
+	<image key="rainbow" file="images/rainbow.png" />
+	<image key="talk" file="images/talk.png" />
+	<image key="title" file="images/title.png" />
+	<image key="credits" file="images/credits.png" />
+	<!-- sheets -->
+	<sheet key="sheep" file="anims/sheep.png" width="48" height="32" />
+	<sheet key="goose" file="anims/goose.png" width="32" height="32" />
+	<sheet key="rabbit" file="anims/rabbit.png" width="16" height="32" />
+	<sheet key="flying_goose" file="anims/goose_fly.png" width="32" height="16" />
+
+	<!-- fonts -->
+	<!-- maps -->
+	<map key="world1" file="maps/ld_world1.tmx" width="32" height="32" />
+	<map key="world2" file="maps/ld_world2.tmx" width="32" height="32" />
+	<map key="world3" file="maps/ld_world3.tmx" width="32" height="32" />
+	<map key="world4" file="maps/ld_world4.tmx" width="32" height="32" />
+	
+	<!-- Data files -->
+	<file key="replies" file="replies.xml" />
+	<file key="script" file="test.js" />
+</resources>

@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Class-Path: lib/lwjgl.jar lib/slick.jar lib/artemis.jar lib/js.jar lib/jogg-0.0.7.jar lib/jorbis-0.0.15.jar
+Main-Class: fr.kohen.alexandre.examples.miniRPG.Main

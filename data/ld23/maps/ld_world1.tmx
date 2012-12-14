@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="40" height="20" tilewidth="32" tileheight="32">
+ <properties>
+  <property name="gravity" value="0.8"/>
+  <property name="rotate" value="true"/>
+  <property name="timestep" value="0.0002"/>
+ </properties>
+ <tileset firstgid="1" name="tilesx2" tilewidth="32" tileheight="32">
+  <image source="tilesx2.png" trans="ffffff" width="512" height="512"/>
+ </tileset>
+ <layer name="Calque de Tile 1" width="40" height="20">
+  <properties>
+   <property name="foreground" value="true"/>
+  </properties>
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC2NgGAWjYBSMglEwCkbBKBgFIwkwImFmNDYrmjwTFLNA5WF8ZDUsWMRgepnx2MeIZB8zkpzgIMeKo5giDACOj051gAwAAA==
+  </data>
+ </layer>
+ <layer name="Calque 3" width="40" height="20">
+  <properties>
+   <property name="foreground" value="true"/>
+  </properties>
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2QSQoAMQgE84gs/v+lw4BC0zg5z6HqImi5JGMAAAAAAPyLmTEkdzJuc7Tm+bd/NU7NWJLXvuoJ8/Ued79meN5r3dyZzm2vv+dcdnZuOWE1v0sd/a/u5t3c4N4DuMrhj4AMAAA=
+  </data>
+ </layer>
+ <layer name="collision" width="40" height="20">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3DMQ0AAAwDoIqaf20T0acHJCQAALDjxtN5gFEhLYAMAAA=
+  </data>
+ </layer>
+ <objectgroup name="object" width="40" height="20">
+  <object name="start1" type="script" x="475" y="320" width="53" height="203">
+   <properties>
+    <property name="script" value="w1_start();"/>
+   </properties>
+  </object>
+  <object name="start1" type="script" x="702" y="320" width="51" height="208">
+   <properties>
+    <property name="script" value="w1_start();"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
