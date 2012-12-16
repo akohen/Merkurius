@@ -50,4 +50,8 @@ public class HitboxForm extends Component {
 		return this.spatial.getShape();
 	}
 	
+	public Spatial getSpatial() {
+		return this.spatial;
+	}
+	
 }

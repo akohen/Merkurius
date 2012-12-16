@@ -16,22 +16,24 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.World;
 
-public abstract class Spatial implements Comparable<Spatial> {
-	protected World 		world;
-	protected Entity 		owner;
+public abstract class Spatial {
 	
+	protected World 		world;
+	protected Shape			shape;
 	protected SpriteSheet 	sheet;
 	protected Hashtable<String, Animation> animations = new Hashtable<String, Animation>();
 	protected String 		currentAnim;
 	protected Image 		currentImage;
-	protected int 			duration = 200;
-	protected int 			depth = -1;
-	protected Transform 	transform;
-	protected Color			color;
-	protected Vector2f 		position;
-	protected Shape			shape;
+	protected int 			duration 	= 200;
+	protected Color			color		= Color.white;
+	protected Vector2f		size		= new Vector2f(0,0);
+	protected Vector2f		offset 		= new Vector2f(0,0);
 	
-	public Spatial() { color = new Color(Color.white); }
+	//TODO remove
+	protected Entity 		owner;
+	protected Transform 	transform;
+	
+	public Spatial() {  }
 	public Spatial(Entity owner) { 
 		this.owner 		= owner;
 		this.transform 	= new ComponentMapper<Transform>(Transform.class, world).get(owner);
@@ -72,6 +74,49 @@ public abstract class Spatial implements Comparable<Spatial> {
 
 		g.resetTransform();
 	}
+	
+	
+	public void render(Graphics g, Transform transform) { render(g,transform,color); }
+	
+	
+	/**
+	 * 
+	 * @param g graphics context
+	 * @param transform Transform component of the entity to draw
+	 */
+	public void render(Graphics g, Transform transform, Color color) {
+		g.setColor(color);
+		g.setAntiAlias(false);
+
+		Vector2f center =  transform.getLocation().sub(offset);
+		
+		// Rotating the graphics context to apply object rotation
+		g.rotate( center.x, center.y, transform.getRotation() );
+		
+		// Drawing only one type
+		if( currentAnim != null ) {
+			animations.get(currentAnim).draw( center.x, center.y, size.x, size.y, color );
+		}
+		else if( currentImage != null) {
+			currentImage.draw( center.x, center.y , 1.0f, color);
+		}
+		else {
+			shape.setLocation( center );
+			g.draw(shape);
+		}
+		
+		// Cancelling the object rotation
+		g.rotate( center.x, center.y, -transform.getRotation() );
+	}
+
+	
+	/**
+	 * Return the offset of this spatial
+	 * @return
+	 */
+	public Vector2f getOffset() { return offset; }
+	
+	public Vector2f getSize() { return size; }
 	
 	public void update(int delta) {	 }
 	
@@ -153,20 +198,5 @@ public abstract class Spatial implements Comparable<Spatial> {
 	public void setCurrentAnim(String currentAnim) {
 		this.currentAnim = currentAnim;
 	}
-	
-	public void setPosition(Vector2f loc) {
-		this.position = loc;
-	}
-	
-	public Vector2f getPosition() {
-		return this.position;
-	}
-	
-	public int compareTo(Spatial spatial) {
-		if( spatial.getPosition().y < this.position.y )
-			return 1;
-		else return -1;
-	}
-	
 
 }

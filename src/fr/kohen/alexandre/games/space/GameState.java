@@ -16,16 +16,16 @@ import com.artemis.World;
 
 import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.systems.base.ActionsSystemBase;
+import fr.kohen.alexandre.framework.systems.base.CameraSystemBase;
 import fr.kohen.alexandre.framework.systems.base.CollisionSystemFast;
 import fr.kohen.alexandre.framework.systems.base.DebugSystemBase;
 import fr.kohen.alexandre.framework.systems.base.FrictionSystem;
 import fr.kohen.alexandre.framework.systems.base.MapSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MouseSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MovementSystemFloat;
-import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
 import fr.kohen.alexandre.framework.systems.interfaces.CommunicationSystem;
+import fr.kohen.alexandre.framework.systems.unused.RenderSystemBase;
 import fr.kohen.alexandre.games.space.systems.ApplyDestination;
-import fr.kohen.alexandre.games.space.systems.CameraSystemNav;
 import fr.kohen.alexandre.games.space.systems.ClientHud;
 import fr.kohen.alexandre.games.space.systems.ClientSyncSystem;
 import fr.kohen.alexandre.games.space.systems.ServerSyncSystem;
@@ -65,7 +65,7 @@ public class GameState extends BasicGameState {
 		else {
 			syncSystem 		= 	systemManager.setSystem(new ClientSyncSystem());
 			guiSystem 		= 	systemManager.setSystem(new ClientHud());
-			cameraSystem	= 	systemManager.setSystem(new CameraSystemNav(gc));
+			cameraSystem	= 	systemManager.setSystem(new CameraSystemBase(gc));
 		}
 		
 		mouseSystem			=	systemManager.setSystem(new MouseSystemBase(gc));

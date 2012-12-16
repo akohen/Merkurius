@@ -15,11 +15,11 @@ import fr.kohen.alexandre.examples.miniRPG.systems.MapSystemMiniRPG;
 import fr.kohen.alexandre.examples.miniRPG.systems.ScriptSystemMiniRPG;
 import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.systems.base.AnimationSystem;
-import fr.kohen.alexandre.framework.systems.base.CameraSystemBase;
 import fr.kohen.alexandre.framework.systems.base.CollisionSystemBase;
 import fr.kohen.alexandre.framework.systems.base.FrictionSystem;
 import fr.kohen.alexandre.framework.systems.base.MovementSystem;
-import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
+import fr.kohen.alexandre.framework.systems.unused.CameraSystemBase;
+import fr.kohen.alexandre.framework.systems.unused.RenderSystemBase;
 
 
 public class GameState extends BasicGameState {

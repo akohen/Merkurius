@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.canabalt;
+ package fr.kohen.alexandre.examples.canabalt;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;

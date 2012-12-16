@@ -50,12 +50,8 @@ public class GameState extends BasicGameState {
 		EntityFactoryCana.createMap(world, 1, 16000,600);
 		EntityFactoryCana.createPlayer(world, 1, 50, 50);
 		
-		EntityFactoryCana.createBox(world, 1, 0, 0, 15);
-		EntityFactoryCana.createBox(world, 1, 600, 0, 15);
-		EntityFactoryCana.createBox(world, 1, 1200, 0, 15);
-
-		EntityFactoryCana.createBox(world, 1, 200, 200, 15);
-		EntityFactoryCana.createBox(world, 1, 800, 200, 15);
+		EntityFactoryCana.createBox(world, 1, 50, 50, 15);
+		EntityFactoryCana.testCamera(world, 1, 0, 0, 0, 0, 400, 300, 0, "camera1");
 		
 	}
 

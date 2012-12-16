@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.canabalt;
+package fr.kohen.alexandre.games.jeu1412;
 
 import org.newdawn.slick.Color;
 
@@ -14,8 +14,7 @@ import fr.kohen.alexandre.framework.spatials.BoxSpatial;
  * @author Alexandre
  *
  */
-public class EntityFactoryCana extends EntityFactory {
-	
+public class EntityFactory1412 extends EntityFactory {
 	
 	public static Entity testCamera(World world, int mapId, float x, float y, int screenX, int screenY, int width, int height, float screenRotation, String name) {
 		Entity e = world.createEntity();
@@ -30,7 +29,6 @@ public class EntityFactoryCana extends EntityFactory {
 		e.refresh();
 		return e;
 	}
-	
 	
 	/**
 	 * Creates a player entity
@@ -53,7 +51,7 @@ public class EntityFactoryCana extends EntityFactory {
 		SpatialForm spatial = new SpatialForm(new BoxSpatial(50, 30));
 		spatial.getSpatial().setColor(Color.white);
 		e.addComponent(spatial);
-		e.addComponent(new HitboxForm(new BoxSpatial(50, 30), "actor"));
+		//e.addComponent(new HitboxForm(new BoxSpatial(50, 30), "actor"));
 		
 		// Technical
 		e.addComponent(new Player());

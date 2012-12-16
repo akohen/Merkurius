@@ -50,7 +50,6 @@ public class Dialog extends Component {
 	 */
 	public int sendMessage(HashMap<Integer, Reply> replies) {
 		ArrayList<Reply> possibleReplies = getReplies(replies);
-		//TODO better reply selection
 		lastSent = possibleReplies.get(0).getId();
 		return lastSent;
 	}

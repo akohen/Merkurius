@@ -30,6 +30,11 @@ public class Transform extends Component {
 		this.mapId = mapId;
 	}
 
+	public Transform(int mapId, float x, float y, float rotation) {
+		this(mapId, x, y);
+		this.setRotation(rotation);
+	}
+	
 	public void addX(float x) {
 		this.x += x;
 	}
@@ -74,7 +79,7 @@ public class Transform extends Component {
 	}
 
 	public void setRotation(float rotation) {
-		this.rotation = rotation;
+		this.rotation = (rotation + 360) % 360;
 	}
 
 	public void addRotation(float angle) {
@@ -99,6 +104,24 @@ public class Transform extends Component {
 
 	public void setMapId(int mapId) {
 		this.mapId = mapId;
+	}
+	
+	/**
+	 * Returns the difference between two Transform object
+	 * @param t
+	 * @return
+	 */
+	public Transform getDifference(Transform t) {
+		//TODO: Complete fonction
+		if( this.getMapId() == t.getMapId() ) {
+			return new Transform(
+					this.mapId, 
+					this.x - t.getX(), 
+					this.y - t.getY(), 
+					this.rotation - t.getRotation()
+				);
+		}
+		return null;
 	}
 
 }

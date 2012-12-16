@@ -1,19 +1,20 @@
 package fr.kohen.alexandre.framework.systems.base;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
+import fr.kohen.alexandre.framework.components.Camera;
 import fr.kohen.alexandre.framework.components.SpatialForm;
 import fr.kohen.alexandre.framework.components.Transform;
-import fr.kohen.alexandre.framework.engine.Camera;
-import fr.kohen.alexandre.framework.engine.Spatial;
 import fr.kohen.alexandre.framework.engine.Systems;
-import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
+import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -25,16 +26,10 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 	protected GameContainer 				container;
 	protected ComponentMapper<SpatialForm> 	spatialFormMapper;
 	protected ComponentMapper<Transform> 	transformMapper;
-	protected Camera						camera;
+	protected ComponentMapper<Camera> 		cameraMapper;
+	protected List<Entity>					cameras;
 	protected Vector2f 						screen;
 	protected float							rotation = 0;
-	protected ArrayList<Spatial> 			spatialArray;
-	protected ArrayList<Spatial> 			OffScreen;
-	protected ArrayList<Spatial> 			differential;
-	protected ArrayList<Spatial> 			background;
-	protected ArrayList<Spatial> 			foreground;
-	protected ArrayList<Spatial> 			effects;
-	protected ArrayList<Spatial> 			guiArray;
 	protected MapSystem 					mapSystem;
 	protected CameraSystem 					cameraSystem;
 
@@ -49,10 +44,10 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 	public void initialize() {
 		spatialFormMapper	= new ComponentMapper<SpatialForm>	(SpatialForm.class, world);
 		transformMapper		= new ComponentMapper<Transform>	(Transform.class, world);
+		cameraMapper		= new ComponentMapper<Camera>		(Camera.class, world);
 		screen 				= new Vector2f(container.getWidth(), container.getHeight());
 		mapSystem			= Systems.get(MapSystem.class, world);
 		cameraSystem		= Systems.get(CameraSystem.class, world);
-		camera				= new Camera();
 	}
 
 	@Override
@@ -60,108 +55,56 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 	}
 	
 	
-	
 	@Override
 	protected void begin() {
-		// Getting map shift from the camera system
-		if( cameraSystem != null )
-			camera = cameraSystem.getCamera();
-		
-		// Initializating layers
-		//TODO Change layer behavior
-		spatialArray 	= new ArrayList<Spatial>();
-		OffScreen 		= new ArrayList<Spatial>();
-		differential	= new ArrayList<Spatial>();
-		background 		= new ArrayList<Spatial>();
-		foreground 		= new ArrayList<Spatial>();
-		effects 		= new ArrayList<Spatial>();
-		guiArray 		= new ArrayList<Spatial>();
+		if( cameraSystem != null ) { // Getting camera list from the camera system
+			cameras = cameraSystem.getCameras();
+		}
 	}
 	
 	
 	
 	@Override
 	protected void process(Entity e) {
-		Spatial 	spatial 	= spatialFormMapper	.get(e).getSpatial();
-		Transform 	transform 	= transformMapper	.get(e);
 		
-		if( transform.getMapId() == -1 || (mapSystem != null && transform.getMapId() == mapSystem.getCurrentMap()) ) {
-			spatial.setTransform(transform);
-			if( "GUI" == world.getGroupManager().getGroupOf(e) )
-				guiArray.add(spatial);
-			else if( "background" == world.getGroupManager().getGroupOf(e) )
-				background.add(spatial);
-			else if( "foreground" == world.getGroupManager().getGroupOf(e) )
-				foreground.add(spatial);
-			else if( "differential" == world.getGroupManager().getGroupOf(e) )
-				differential.add(spatial);
-			else if( "effects" == world.getGroupManager().getGroupOf(e) )
-				effects.add(spatial);
-			else if (transform.getX() >= -200-camera.getPosition().x 
-					&& transform.getY() >= -200-camera.getPosition().y 
-					&& transform.getX() < container.getWidth()-camera.getPosition().x 
-					&& transform.getY() < container.getHeight()-camera.getPosition().y && spatial != null) {
-				spatialArray.add(spatial);	
-			}
-			else {
-				OffScreen.add(spatial);
-			}
-		}		
+		for(Entity camera : cameras) {			
+			if( isVisible(e, camera) ) // Adding visible entity to the camera rendering list
+				cameraMapper.get(camera).addEntity(e);
+		} // Foreach camera
+		
+		if( cameras == null || cameras.isEmpty() )
+			defaultRender(e); // Default camera system if no camera is defined
 	}
 	
 	
 	@Override
 	protected void end() {
-
-		// TODO reactivate sorting
-		// Collections.sort(spatialArray);
 		
-		// various shifts
-		Camera diffCamera = new Camera(camera.getScreenSize().x, camera.getScreenSize().y);
-		diffCamera.setRotation( camera.getRotation() );
-		diffCamera.setPosition( new Vector2f(camera.getPosition().x/2.0f, camera.getPosition().y) );
-		
-		// Render map background
-		for (Spatial spatial : background)
-			spatial.render(graphics);
-				
-
-		if( mapSystem != null && mapSystem.getCurrentMap() > -1 )
-			mapSystem.renderLayers("back", camera);
+		for(Entity camera : cameras) {
+			setCamera(camera);	// Setting graphics context according to camera
 			
-				
-		for (Spatial spatial : differential) {
-			spatial.render(graphics, diffCamera);
-			spatial.update(world.getDelta());
-		}
+			// Drawing objects
+			for(Entity e : cameraMapper.get(camera).getEntities() ) {
+				spatialFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e));	
+			}
 			
-		
-		// Render entities in order (from back to front)		
-		for (Spatial spatial : spatialArray) {
-			spatial.render(graphics, camera);
-			spatial.update(world.getDelta());
-		}
-		
-		// Render map foreground
-		if( mapSystem != null && mapSystem.getCurrentMap() > -1 )
-			mapSystem.renderLayers("front", camera);
-		
-		// Render foreground
-		for (Spatial spatial : foreground) {
-			spatial.render(graphics, camera);
-			spatial.update(world.getDelta());
-		}
 			
-		// Render effects
-		for (Spatial spatial : effects) {
-			spatial.render(graphics);
-			spatial.update(world.getDelta());
-		}
-		
-		// Render UI
-		for (Spatial spatial : guiArray) {
-			spatial.render(graphics);
-			spatial.update(world.getDelta());
+			//DEBUG ONLY
+			Vector2f 	cameraLocation 	= transformMapper.get(camera).getLocation();
+			if( cameraMapper.get(camera).getName().equalsIgnoreCase("camera1") )
+				graphics.setColor(Color.red);
+			else
+				graphics.setColor(Color.blue);
+			Rectangle cameraShape = new Rectangle(0,0,cameraMapper.get(camera).getScreenWidth()-1,cameraMapper.get(camera).getScreenHeight()-1 );
+			cameraShape.setLocation( 
+					cameraLocation.x-cameraMapper.get(camera).getScreenWidth()/2,
+					cameraLocation.y-cameraMapper.get(camera).getScreenHeight()/2
+				);
+			
+			graphics.draw(cameraShape);
+			
+			// Resetting graphics context for the next camera
+			resetCamera();
 		}
 	}
 
@@ -169,6 +112,64 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 	@Override
 	protected boolean checkProcessing() {
 		return true;
+	}
+	
+	
+	@Override
+	public boolean isVisible(Entity e, Entity camera) {
+		Transform 	transform 	= transformMapper	.get(e);
+		
+		if( transformMapper.get(camera).getMapId() == transform.getMapId() ) {
+			float maxDistance = Math.max( cameraMapper.get(camera).getScreenWidth(), cameraMapper.get(camera).getScreenHeight() ) 
+					+ Math.max( spatialFormMapper.get(e).getSpatial().getSize().x, spatialFormMapper.get(e).getSpatial().getSize().y ) ;
+			if( transformMapper.get(camera).getDistanceTo(transform) < maxDistance )
+				return true;
+			else return false;
+			//TODO Better visibility detection
+		}
+		else return false;
+	}
+
+	
+	@Override
+	public void setCamera(Entity camera) {
+		Vector2f 	cameraLocation 	= transformMapper.get(camera).getLocation();
+		Camera		cameraComponent	= cameraMapper.get(camera);
+		
+		// Setting clip according to the camera definition so anything outside the camera viewport isn't drawn
+		graphics.rotate(
+				cameraLocation.x + cameraComponent.getScreenX(), 
+				cameraLocation.y + cameraComponent.getScreenY(), 
+				cameraComponent.getScreenRotation()
+			);
+		
+		graphics.setWorldClip(
+				cameraComponent.getScreenX() - cameraComponent.getScreenWidth()/2, 
+				cameraComponent.getScreenY() - cameraComponent.getScreenHeight()/2, 
+				cameraComponent.getScreenWidth(), 
+				cameraComponent.getScreenHeight() 
+			);
+		
+		graphics.translate(
+				- cameraLocation.x + cameraComponent.getScreenX(), 
+				- cameraLocation.y + cameraComponent.getScreenY()
+			);
+	}
+
+	
+	@Override
+	public void defaultRender(Entity e) {
+		graphics.setClip(0, 0, container.getWidth(), container.getHeight());
+		spatialFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e));	
+		graphics.clearClip();
+		graphics.resetTransform();
+	}
+
+	
+	@Override
+	public void resetCamera() {
+		graphics.clearWorldClip();
+		graphics.resetTransform();	
 	}
 	
 }
