@@ -88,20 +88,21 @@ public abstract class Spatial {
 		g.setColor(color);
 		g.setAntiAlias(false);
 
-		Vector2f center =  transform.getLocation().sub(offset);
+		Vector2f center =  transform.getLocation();
+		Vector2f corner =  transform.getLocation().sub(offset);
 		
 		// Rotating the graphics context to apply object rotation
 		g.rotate( center.x, center.y, transform.getRotation() );
 		
 		// Drawing only one type
 		if( currentAnim != null ) {
-			animations.get(currentAnim).draw( center.x, center.y, size.x, size.y, color );
+			animations.get(currentAnim).draw( corner.x, corner.y, size.x, size.y, color );
 		}
 		else if( currentImage != null) {
-			currentImage.draw( center.x, center.y , 1.0f, color);
+			currentImage.draw( corner.x, corner.y , 1.0f, color);
 		}
 		else {
-			shape.setLocation( center );
+			shape.setLocation( corner );
 			g.draw(shape);
 		}
 		
