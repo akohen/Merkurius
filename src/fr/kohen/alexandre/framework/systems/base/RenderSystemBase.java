@@ -2,10 +2,8 @@ package fr.kohen.alexandre.framework.systems.base;
 
 import java.util.List;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import fr.kohen.alexandre.framework.components.Camera;
@@ -87,21 +85,6 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 			for(Entity e : cameraMapper.get(camera).getEntities() ) {
 				spatialFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e));	
 			}
-			
-			
-			//DEBUG ONLY
-			Vector2f 	cameraLocation 	= transformMapper.get(camera).getLocation();
-			if( cameraMapper.get(camera).getName().equalsIgnoreCase("camera1") )
-				graphics.setColor(Color.red);
-			else
-				graphics.setColor(Color.blue);
-			Rectangle cameraShape = new Rectangle(0,0,cameraMapper.get(camera).getScreenWidth()-1,cameraMapper.get(camera).getScreenHeight()-1 );
-			cameraShape.setLocation( 
-					cameraLocation.x-cameraMapper.get(camera).getScreenWidth()/2,
-					cameraLocation.y-cameraMapper.get(camera).getScreenHeight()/2
-				);
-			
-			graphics.draw(cameraShape);
 			
 			// Resetting graphics context for the next camera
 			resetCamera();

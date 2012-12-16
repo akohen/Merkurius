@@ -7,6 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 
 import fr.kohen.alexandre.framework.components.Camera;
@@ -32,6 +33,7 @@ public class DebugSystemBase extends EntitySystem implements KeyListener {
 	protected RenderSystem 					renderSystem;
 	protected CameraSystem 					cameraSystem;
 	protected boolean						showDebug = false;
+	protected Color[]						cameraColors = {Color.blue, Color.yellow, Color.magenta, Color.white, Color.pink, Color.cyan, Color.gray, Color.orange};
 
 
 	public DebugSystemBase(GameContainer container) {
@@ -52,12 +54,13 @@ public class DebugSystemBase extends EntitySystem implements KeyListener {
 	
 	@Override
 	protected void begin() {
+		int colorCount = 0;
 		if( cameraSystem != null )
-			for(Entity c : cameraSystem.getCameras() ) {
-				renderSystem.setCamera(c);	// Setting graphics context according to camera
+			for(Entity camera : cameraSystem.getCameras() ) {
+				renderSystem.setCamera(camera);	// Setting graphics context according to camera
 				
 				// Drawing objects
-				for(Entity e : cameraMapper.get(c).getEntities() ) {
+				for(Entity e : cameraMapper.get(camera).getEntities() ) {
 					Vector2f location = transformMapper.get(e).getLocation();
 					
 					graphics.setColor(Color.green); 
@@ -68,7 +71,19 @@ public class DebugSystemBase extends EntitySystem implements KeyListener {
 						hitboxFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e), Color.red);	
 				}
 				
-				renderSystem.resetCamera();			
+				// Camera box
+				Vector2f 	cameraLocation 	= transformMapper.get(camera).getLocation();
+				graphics.setColor(cameraColors[colorCount%8]); 
+				Rectangle cameraShape = new Rectangle(0,0,cameraMapper.get(camera).getScreenWidth()-1,cameraMapper.get(camera).getScreenHeight()-1 );
+				cameraShape.setLocation( 
+						cameraLocation.x-cameraMapper.get(camera).getScreenWidth()/2,
+						cameraLocation.y-cameraMapper.get(camera).getScreenHeight()/2
+					);
+				
+				graphics.draw(cameraShape);
+				
+				renderSystem.resetCamera();	
+				colorCount++;
 			} // foreach camera
 	}
 	
