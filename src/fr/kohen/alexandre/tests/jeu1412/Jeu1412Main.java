@@ -1,14 +1,14 @@
-package fr.kohen.alexandre.games.jeu1412;
+package fr.kohen.alexandre.tests.jeu1412;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
 
+import fr.kohen.alexandre.framework.base.GameMain;
 import fr.kohen.alexandre.framework.engine.C;
 
 
-public class Jeu1412Main extends StateBasedGame {
+public class Jeu1412Main extends GameMain {
 
 	public Jeu1412Main() { super("Jeu 1412"); }
 

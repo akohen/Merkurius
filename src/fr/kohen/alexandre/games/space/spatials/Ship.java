@@ -24,7 +24,6 @@ public class Ship extends Spatial {
 		shape = ship;
 	}
 
-	@Override
 	public void render(Graphics g, Transform transform, Camera camera, Color color) {
 		g.setColor(color);
 		g.setAntiAlias(false);

@@ -56,7 +56,6 @@ public class TextSpatial extends Spatial {
 	@Override
 	public void initalize() { }
 
-	@Override
 	public void render(Graphics g, Transform transform, Camera camera, Color color) {
 		Vector2f shift = camera.getPosition();
 		if( lineWidth > 0 ) {

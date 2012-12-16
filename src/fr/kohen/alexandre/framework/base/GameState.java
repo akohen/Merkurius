@@ -12,8 +12,7 @@ import com.artemis.SystemManager;
 import com.artemis.World;
 
 import fr.kohen.alexandre.framework.engine.C;
-import fr.kohen.alexandre.framework.systems.*;
-import fr.kohen.alexandre.framework.systems.unused.RenderSystemBase;
+import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
 
 
 @SuppressWarnings("unused")

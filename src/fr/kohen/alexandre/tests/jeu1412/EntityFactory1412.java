@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.games.jeu1412;
+package fr.kohen.alexandre.tests.jeu1412;
 
 import org.newdawn.slick.Color;
 
@@ -16,20 +16,6 @@ import fr.kohen.alexandre.framework.spatials.BoxSpatial;
  */
 public class EntityFactory1412 extends EntityFactory {
 	
-	public static Entity testCamera(World world, int mapId, float x, float y, int screenX, int screenY, int width, int height, float screenRotation, String name) {
-		Entity e = world.createEntity();
-		e.setTag("camera");
-		e.setGroup("CAMERA");
-		
-		// Position and movement
-		e.addComponent(new Transform(mapId, x, y));
-		// Technical
-		e.addComponent(new Camera(screenX, screenY, width, height, screenRotation, name));
-		
-		e.refresh();
-		return e;
-	}
-	
 	/**
 	 * Creates a player entity
 	 * @param world
@@ -38,13 +24,13 @@ public class EntityFactory1412 extends EntityFactory {
 	 * @param y
 	 * @return
 	 */
-	public static Entity createPlayer(World world, int mapId, float x, float y) {
+	public static Entity createPlayer(World world, int mapId, float x, float y, int rotation) {
 		Entity e = world.createEntity();
 		e.setTag("player");
 		e.setGroup("ACTOR");
 		
 		// Position and movement
-		e.addComponent(new Transform(mapId, x, y));
+		e.addComponent(new Transform(mapId, x, y, rotation));
 		e.addComponent(new Velocity(10f,10f));
 		
 		// Physical

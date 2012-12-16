@@ -79,7 +79,7 @@ public class DebugSystemBase extends EntitySystem implements KeyListener {
 						cameraLocation.x-cameraMapper.get(camera).getScreenWidth()/2,
 						cameraLocation.y-cameraMapper.get(camera).getScreenHeight()/2
 					);
-				
+				graphics.rotate( 0, 0, -transformMapper.get(camera).getRotation() );
 				graphics.draw(cameraShape);
 				
 				renderSystem.resetCamera();	

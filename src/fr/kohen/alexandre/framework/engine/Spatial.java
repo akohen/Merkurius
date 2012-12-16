@@ -43,37 +43,7 @@ public abstract class Spatial {
 	
 	public void render() { }
 
-	//public void render(Graphics g, Vector2f loc, Color color) { }
-
-	public void render(Graphics g) 								{ render(g, transform, new Camera(), color); }
 	
-	public void render(Graphics g, Color color) 				{ render(g, transform, new Camera(), color); }
-	
-	public void render(Graphics g, Camera camera) 				{ render(g, transform, camera, color); }
-	
-	public void render(Graphics g, Camera camera, Color color) 	{ render(g, transform, camera, color); }
-	
-	public void render(Graphics g, Transform transform, Camera camera, Color color) {
-		g.setColor(color);
-		g.setAntiAlias(false);
-
-		g.rotate( camera.getScreenSize().x/2, camera.getScreenSize().y/2, camera.getRotation() );
-		//g.rotate( transform.getX()+camera.getPosition().x, transform.getY()+camera.getPosition().y, transform.getRotation() );
-		
-		if( currentAnim != null )
-			animations.get(currentAnim).draw(
-					transform.getX() + camera.getPosition().x, 
-					transform.getY() + camera.getPosition().y, 32, 32, color);
-		else if( currentImage != null) {
-			currentImage.draw( transform.getX()+camera.getPosition().x, transform.getY()+camera.getPosition().y , 1.0f, color);
-		}
-		else {
-			shape.setLocation( transform.getX()+camera.getPosition().x, transform.getY()+camera.getPosition().y );
-			g.draw(shape);
-		}
-
-		g.resetTransform();
-	}
 	
 	
 	public void render(Graphics g, Transform transform) { render(g,transform,color); }
