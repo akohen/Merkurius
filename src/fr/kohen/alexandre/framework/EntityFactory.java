@@ -16,7 +16,29 @@ import fr.kohen.alexandre.framework.spatials.TextSpatial;
  */
 public class EntityFactory {
 
-	
+	/**
+	 * Create a new camera
+	 * @param world
+	 * @param mapId
+	 * @param x
+	 * @param y
+	 * @param screenX
+	 * @param screenY
+	 * @param width
+	 * @param height
+	 * @param screenRotation
+	 * @param name
+	 * @return
+	 */
+	public static Entity createCamera(World world, int mapId, float x, float y, int screenX, int screenY, int width, int height, float screenRotation, String name) {
+		Entity e = world.createEntity();
+		e.setTag(name);
+		e.setGroup("CAMERA");
+		e.addComponent(new Transform(mapId, x, y));
+		e.addComponent(new Camera(screenX, screenY, width, height, screenRotation, name));
+		e.refresh();
+		return e;
+	}
 	
 	public static Entity createTimer(World world, String tag, int duration) {
 		Entity e = world.createEntity();

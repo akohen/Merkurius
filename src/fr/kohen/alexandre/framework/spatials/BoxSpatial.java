@@ -10,8 +10,6 @@ import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.engine.Spatial;
 
 public class BoxSpatial extends Spatial {
-	private float width;
-	private float height;
 
 	/**
 	 * Creates a solid green box
@@ -20,13 +18,13 @@ public class BoxSpatial extends Spatial {
 	 */
 	public BoxSpatial(int width, int height) {
 		super();
-		this.width = width;
-		this.height = height;
+		size.set(width, height);
+		offset.set(width/2, height/2);
 	}
 
 	@Override
 	public void initalize() {
-		shape = new Rectangle(0,0,width,height);
+		shape = new Rectangle(0,0,size.x,size.y);
 	}
 	
 	public void render(Graphics g, Transform transform, Vector2f shift, float rotation, Color color) {		

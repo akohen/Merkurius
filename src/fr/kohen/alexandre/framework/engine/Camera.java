@@ -11,6 +11,8 @@ public class Camera {
 	protected Vector2f 	screenPosition;	// Position of the viewport on the screen
 	protected float		screenRotation;	// Rotation of the viewport on the screen (in degrees)
 	
+	protected String	name;
+	
 	
 	/**
 	 * Create a default camera
@@ -47,6 +49,24 @@ public class Camera {
 		this.screenSize 	= new Vector2f(screenX,screenY);
 		this.screenPosition = new Vector2f(width,height);
 		this.screenRotation = screenRotation;
+	}
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param rotation
+	 * @param mapId
+	 * @param screenX
+	 * @param screenY
+	 * @param width
+	 * @param height
+	 * @param screenRotation
+	 * @param name
+	 */
+	public Camera(float x, float y, float rotation, int mapId, float screenX, float screenY, float width, float height, float screenRotation, String name) {
+		this(x, y, rotation, mapId, screenX, screenY, width, height, screenRotation);
+		this.name = name;
 	}
 	
 	/**
@@ -133,4 +153,17 @@ public class Camera {
 		this.screenRotation = (screenRotation + 360) % 360;
 	}
 	
+	/**
+	 * @return name of the camera
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name Name of the camera
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 }

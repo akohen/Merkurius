@@ -74,7 +74,6 @@ public class CollisionSystemSideView extends EntitySystem implements CollisionSy
 						Entity 		e2 = entities.get(j);
 						if( !e2.equals(e1) ) { // Avoid collisions with self
 							
-							//TODO generic collision handling
 							if( causeCollision(e1,e2) ) { // Movement
 								
 								// Jumping
@@ -129,7 +128,6 @@ public class CollisionSystemSideView extends EntitySystem implements CollisionSy
 					transform	.addVector(new Vector2f(x,y));
 					
 					// Updating animations
-					//TODO remove this from the collision system
 					
 					/*
 					boolean jumping = false;

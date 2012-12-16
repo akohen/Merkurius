@@ -62,7 +62,7 @@ public class PathfindingSystem extends IntervalEntityProcessingSystem {
 				}
 			}
 			else { // The NPC has to change map to reach its destination
-				//TODO: world movement
+				//world movement
 			}
 		}			
 	}

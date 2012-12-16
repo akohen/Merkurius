@@ -17,7 +17,7 @@ import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.systems.base.ControlSystemMouse;
 import fr.kohen.alexandre.framework.systems.base.MapSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MovementSystem;
-import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
+import fr.kohen.alexandre.framework.systems.unused.RenderSystemBase;
 
 
 public class GameState extends BasicGameState {

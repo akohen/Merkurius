@@ -14,8 +14,8 @@ import fr.kohen.alexandre.framework.EntityFactory;
 import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.systems.base.GameStateManager;
 import fr.kohen.alexandre.framework.systems.base.MenuSystemBase;
-import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
 import fr.kohen.alexandre.framework.systems.interfaces.MenuSystem;
+import fr.kohen.alexandre.framework.systems.unused.RenderSystemBase;
 
 
 public class MenuState extends BasicGameState {

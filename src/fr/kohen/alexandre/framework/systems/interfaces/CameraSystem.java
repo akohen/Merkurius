@@ -1,8 +1,10 @@
 package fr.kohen.alexandre.framework.systems.interfaces;
 
-import fr.kohen.alexandre.framework.engine.Camera;
+import java.util.List;
+
+import com.artemis.Entity;
 
 public interface CameraSystem {
 
-	public Camera getCamera();
+	public List<Entity> getCameras();
 }
