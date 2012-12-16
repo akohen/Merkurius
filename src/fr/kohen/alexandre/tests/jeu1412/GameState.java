@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.games.jeu1412;
+package fr.kohen.alexandre.tests.jeu1412;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -38,17 +38,19 @@ public class GameState extends BasicGameState {
 		EntityFactory1412.createMap(world, 1, 16000,600);
 		
 		EntityFactory1412.createBox(world, 1, 0, 0, 50);
-		EntityFactory1412.createBox(world, 1, 0, 50, 50);
+		EntityFactory1412.createBox(world, 1, 0, 75, 50);
 		EntityFactory1412.createBox(world, 1, 200, 150, 100);
+		EntityFactory1412.createBox(world, 1, 0, 180, 50);
 		
 
 		EntityFactory1412.createBox(world, 2, 100, 150, 100);
 		
-		EntityFactory1412.createPlayer(world, 1, 75, 0);
-		
-		EntityFactory1412.testCamera(world, 1, 0, 0, 200, 150, 400, 300, 0, "camera1");
-		EntityFactory1412.testCamera(world, 1, 0, 0, 400, 300, 400, 300, 45, "camera2");
-		EntityFactory1412.testCamera(world, 2, 100, 150, 600, 150, 400, 300, 0, "camera3");
+		EntityFactory1412.createPlayer(world, 1, 75, 150, 0);
+
+		EntityFactory1412.createCamera(world, 1, 0, 0, 25, 200, 150, 400, 300, 0, "camera1");
+		EntityFactory1412.createCamera(world, 1, 0, 0, 0, 400, 300, 400, 300, 45, "camera2");
+		EntityFactory1412.createCamera(world, 2, 100, 150, 0, 600, 150, 400, 300, 0, "camera3");
+		EntityFactory1412.createCamera(world, 1, 0, 0, 10, 200, 450, 400, 300, 0, "camera4");
 	}
 
 	

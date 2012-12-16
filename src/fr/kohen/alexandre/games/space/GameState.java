@@ -24,7 +24,7 @@ import fr.kohen.alexandre.framework.systems.base.MapSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MouseSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MovementSystemFloat;
 import fr.kohen.alexandre.framework.systems.interfaces.CommunicationSystem;
-import fr.kohen.alexandre.framework.systems.unused.RenderSystemBase;
+import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
 import fr.kohen.alexandre.games.space.systems.ApplyDestination;
 import fr.kohen.alexandre.games.space.systems.ClientHud;
 import fr.kohen.alexandre.games.space.systems.ClientSyncSystem;

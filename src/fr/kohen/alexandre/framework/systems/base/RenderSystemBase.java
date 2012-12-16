@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import fr.kohen.alexandre.framework.components.Camera;
 import fr.kohen.alexandre.framework.components.SpatialForm;
 import fr.kohen.alexandre.framework.components.Transform;
+import fr.kohen.alexandre.framework.engine.Spatial;
 import fr.kohen.alexandre.framework.engine.Systems;
 import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
@@ -100,15 +103,28 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 	
 	@Override
 	public boolean isVisible(Entity e, Entity camera) {
-		Transform 	transform 	= transformMapper	.get(e);
-		
-		if( transformMapper.get(camera).getMapId() == transform.getMapId() ) {
-			float maxDistance = Math.max( cameraMapper.get(camera).getScreenWidth(), cameraMapper.get(camera).getScreenHeight() ) 
-					+ Math.max( spatialFormMapper.get(e).getSpatial().getSize().x, spatialFormMapper.get(e).getSpatial().getSize().y ) ;
-			if( transformMapper.get(camera).getDistanceTo(transform) < maxDistance )
+		if( transformMapper.get(camera).getMapId() == transformMapper.get(e).getMapId() ) {
+			
+			Shape cameraShape = new Rectangle(0,0,cameraMapper.get(camera).getScreenWidth(),cameraMapper.get(camera).getScreenHeight());
+			cameraShape.setLocation( transformMapper.get(camera).getLocation().sub(cameraMapper.get(camera).getOffset() ) );
+			cameraShape = cameraShape.transform( org.newdawn.slick.geom.Transform.createRotateTransform(
+					(float) -Math.toRadians(transformMapper.get(camera).getRotation()),
+					transformMapper.get(camera).getLocation().x,
+					transformMapper.get(camera).getLocation().y)
+				);
+			
+			Spatial spatial = spatialFormMapper.get(e).getSpatial();
+			Shape entityShape = spatial.getShape();
+			entityShape.setLocation( transformMapper.get(e).getLocation().sub(spatial.getOffset()) );
+			entityShape = entityShape.transform( org.newdawn.slick.geom.Transform.createRotateTransform(
+					(float) Math.toRadians(transformMapper.get(e).getRotation()),
+					transformMapper.get(e).getLocation().x,
+					transformMapper.get(e).getLocation().y)
+				);
+			
+			if( cameraShape.intersects(entityShape) || cameraShape.contains(entityShape) )
 				return true;
 			else return false;
-			//TODO Better visibility detection
 		}
 		else return false;
 	}
@@ -132,11 +148,19 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 				cameraComponent.getScreenWidth(), 
 				cameraComponent.getScreenHeight() 
 			);
+
+		graphics.rotate(
+				cameraLocation.x + cameraComponent.getScreenX(), 
+				cameraLocation.y + cameraComponent.getScreenY(), 
+				transformMapper.get(camera).getRotation()
+			);
 		
 		graphics.translate(
 				- cameraLocation.x + cameraComponent.getScreenX(), 
 				- cameraLocation.y + cameraComponent.getScreenY()
 			);
+		
+		
 	}
 
 	

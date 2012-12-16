@@ -3,6 +3,8 @@ package fr.kohen.alexandre.framework.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.newdawn.slick.geom.Vector2f;
+
 import com.artemis.Component;
 import com.artemis.Entity;
 
@@ -61,8 +63,7 @@ public class Camera extends Component {
 		this.name = name;
 	}
 	
-	
-	
+	public Vector2f getOffset() { return new Vector2f(screenWidth/2, screenHeight/2); }
 	
 	public int getScreenWidth() {
 		return screenWidth;

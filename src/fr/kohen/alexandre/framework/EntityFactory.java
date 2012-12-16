@@ -19,22 +19,23 @@ public class EntityFactory {
 	/**
 	 * Create a new camera
 	 * @param world
-	 * @param mapId
-	 * @param x
-	 * @param y
-	 * @param screenX
-	 * @param screenY
-	 * @param width
-	 * @param height
-	 * @param screenRotation
-	 * @param name
+	 * @param mapId Id of the map on which the camera should be placed
+	 * @param x camera X position in the game world
+	 * @param y camera Y position in the game world
+	 * @param rotation camera rotation in the game world
+	 * @param screenX viewport top-left corner X position on the screen
+	 * @param screenY viewport top-left corner Y position on the screen
+	 * @param width viewport width
+	 * @param height viewport height
+	 * @param screenRotation viewport rotation
+	 * @param name Camera name
 	 * @return
 	 */
-	public static Entity createCamera(World world, int mapId, float x, float y, int screenX, int screenY, int width, int height, float screenRotation, String name) {
+	public static Entity createCamera(World world, int mapId, float x, float y, float rotation, int screenX, int screenY, int width, int height, float screenRotation, String name) {
 		Entity e = world.createEntity();
 		e.setTag(name);
 		e.setGroup("CAMERA");
-		e.addComponent(new Transform(mapId, x, y));
+		e.addComponent(new Transform(mapId, x, y, rotation));
 		e.addComponent(new Camera(screenX, screenY, width, height, screenRotation, name));
 		e.refresh();
 		return e;
