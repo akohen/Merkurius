@@ -15,6 +15,7 @@ public class Camera extends Component {
 	protected int		screenY;
 	protected float		screenRotation;	// Rotation of the viewport on the screen (in degrees)
 	protected String	name;			// Name of the camera
+	protected Entity	mouse;
 	protected List<Entity> entities;
 	
 	
@@ -103,6 +104,13 @@ public class Camera extends Component {
 	public float getScreenRotation() {
 		return screenRotation;
 	}
+	
+	/**
+	 * @return Rotation of the viewport on the screen (in radians)
+	 */
+	public float getScreenRotationAsRadians() {
+		return (float) Math.toRadians(screenRotation);
+	}
 
 	/**
 	 * @param rotation Rotation of the viewport on the screen (in degrees)
@@ -119,6 +127,14 @@ public class Camera extends Component {
 		this.name = name;
 	}
 
+	public Entity getMouse() {
+		return mouse;
+	}
+
+	public void setMouse(Entity mouse) {
+		this.mouse = mouse;
+	}
+
 	public List<Entity> getEntities() {
 		return entities;
 	}
@@ -129,6 +145,10 @@ public class Camera extends Component {
 	
 	public void addEntity(Entity e) {
 		this.entities.add(e);
+	}
+	
+	public void clearEntities() {
+		this.entities.clear();
 	}
 	
 }

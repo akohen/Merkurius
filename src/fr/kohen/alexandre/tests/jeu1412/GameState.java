@@ -14,6 +14,7 @@ import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.systems.base.CameraSystemBase;
 import fr.kohen.alexandre.framework.systems.base.DebugSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MapSystemBase;
+import fr.kohen.alexandre.framework.systems.base.MouseSystemBase;
 import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
 
 
@@ -22,6 +23,7 @@ public class GameState extends BasicGameState {
 	private EntitySystem renderSystem;
 	private EntitySystem debugSystem;
 	private EntitySystem cameraSystem;
+	private EntitySystem mouseSystem;
 
 	
 	@Override
@@ -31,6 +33,7 @@ public class GameState extends BasicGameState {
 		renderSystem 		= 	systemManager.setSystem(new RenderSystemBase(gc));
 		debugSystem 		= 	systemManager.setSystem(new DebugSystemBase(gc));
 		cameraSystem 		= 	systemManager.setSystem(new CameraSystemBase(gc));
+		mouseSystem 		= 	systemManager.setSystem(new MouseSystemBase(gc));
 		systemManager.setSystem(new MapSystemBase());
 		systemManager.initializeAll();
 
@@ -43,19 +46,21 @@ public class GameState extends BasicGameState {
 		EntityFactory1412.createBox(world, 1, 0, 180, 50);
 		
 
-		EntityFactory1412.createBox(world, 2, 100, 150, 100);
+		EntityFactory1412.createBox(world, 2, 0, 0, 100);
 		
 		EntityFactory1412.createPlayer(world, 1, 75, 150, 0);
 
-		EntityFactory1412.createCamera(world, 1, 0, 0, 25, 200, 150, 400, 300, 0, "camera1");
+		EntityFactory1412.createCamera(world, 1, 0, 0, 0, 200, 150, 400, 300, 0, "camera1");
 		EntityFactory1412.createCamera(world, 1, 0, 0, 0, 400, 300, 400, 300, 45, "camera2");
-		EntityFactory1412.createCamera(world, 2, 100, 150, 0, 600, 150, 400, 300, 0, "camera3");
+		EntityFactory1412.createCamera(world, 2, 0, 0, 0, 600, 150, 400, 300, 0, "camera3");
 		EntityFactory1412.createCamera(world, 1, 0, 0, 10, 200, 450, 400, 300, 0, "camera4");
 	}
 
 	
 	@Override
 	public void render(GameContainer gc, StateBasedGame sb, Graphics g) throws SlickException {
+
+		mouseSystem			.process();
 		renderSystem		.process();
 		debugSystem			.process();
 		cameraSystem		.process();

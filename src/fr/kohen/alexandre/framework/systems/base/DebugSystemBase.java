@@ -13,17 +13,18 @@ import org.newdawn.slick.geom.Vector2f;
 import fr.kohen.alexandre.framework.components.Camera;
 import fr.kohen.alexandre.framework.components.HitboxForm;
 import fr.kohen.alexandre.framework.components.Transform;
+import fr.kohen.alexandre.framework.engine.Spatial;
 import fr.kohen.alexandre.framework.engine.Systems;
+import fr.kohen.alexandre.framework.spatials.CircleSpatial;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntitySystem;
-import com.artemis.utils.ImmutableBag;
+import com.artemis.EntityProcessingSystem;
 
 
-public class DebugSystemBase extends EntitySystem implements KeyListener {
+public class DebugSystemBase extends EntityProcessingSystem implements KeyListener {
 	protected Graphics 						graphics;
 	protected GameContainer 				container;
 	protected ComponentMapper<HitboxForm> 	hitboxFormMapper;
@@ -34,10 +35,13 @@ public class DebugSystemBase extends EntitySystem implements KeyListener {
 	protected CameraSystem 					cameraSystem;
 	protected boolean						showDebug = false;
 	protected Color[]						cameraColors = {Color.blue, Color.yellow, Color.magenta, Color.white, Color.pink, Color.cyan, Color.gray, Color.orange};
+	protected int 							colorCount;
+	protected Spatial 						mouseSpatial;
 
 
+	@SuppressWarnings("unchecked")
 	public DebugSystemBase(GameContainer container) {
-		//super(Unused.class);
+		super(Camera.class);
 		this.container = container;
 		this.graphics = container.getGraphics();
 	}
@@ -50,44 +54,55 @@ public class DebugSystemBase extends EntitySystem implements KeyListener {
 		container.getInput().addKeyListener(this);
 		renderSystem		= Systems.get(RenderSystem.class, world);
 		cameraSystem		= Systems.get(CameraSystem.class, world);
+		mouseSpatial		= new CircleSpatial(10);
+		mouseSpatial.initalize();		
 	}
+	
 	
 	@Override
 	protected void begin() {
-		int colorCount = 0;
-		if( cameraSystem != null )
-			for(Entity camera : cameraSystem.getCameras() ) {
-				renderSystem.setCamera(camera);	// Setting graphics context according to camera
-				
-				// Drawing objects
-				for(Entity e : cameraMapper.get(camera).getEntities() ) {
-					Vector2f location = transformMapper.get(e).getLocation();
-					
-					graphics.setColor(Color.green); 
-					graphics.drawLine(location.x-5, location.y, location.x+5, location.y);
-					graphics.drawLine(location.x, location.y-5, location.x, location.y+5);
-					
-					if( hitboxFormMapper.get(e) != null)
-						hitboxFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e), Color.red);	
-				}
-				
-				// Camera box
-				Vector2f 	cameraLocation 	= transformMapper.get(camera).getLocation();
-				graphics.setColor(cameraColors[colorCount%8]); 
-				Rectangle cameraShape = new Rectangle(0,0,cameraMapper.get(camera).getScreenWidth()-1,cameraMapper.get(camera).getScreenHeight()-1 );
-				cameraShape.setLocation( 
-						cameraLocation.x-cameraMapper.get(camera).getScreenWidth()/2,
-						cameraLocation.y-cameraMapper.get(camera).getScreenHeight()/2
-					);
-				graphics.rotate( 0, 0, -transformMapper.get(camera).getRotation() );
-				graphics.draw(cameraShape);
-				
-				renderSystem.resetCamera();	
-				colorCount++;
-			} // foreach camera
+		colorCount = 0;
 	}
 	
-
+	
+	@Override
+	protected void process(Entity camera) {
+		renderSystem.setCamera(camera);	// Setting graphics context according to camera
+		
+		// Drawing objects
+		for(Entity e : cameraMapper.get(camera).getEntities() ) {
+			if( e.isActive() ) {
+				Vector2f location = transformMapper.get(e).getLocation();
+				
+				graphics.setColor(Color.green); 
+				graphics.drawLine(location.x-5, location.y, location.x+5, location.y);
+				graphics.drawLine(location.x, location.y-5, location.x, location.y+5);
+				
+				if( hitboxFormMapper.get(e) != null)
+					hitboxFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e), Color.red);	
+			}			
+		}
+		
+		// Mouse pointer
+		if( cameraMapper.get(camera).getMouse() != null )
+			mouseSpatial.render(graphics, transformMapper.get(cameraMapper.get(camera).getMouse()), cameraColors[colorCount%8]);
+		
+		// Camera box
+		Vector2f 	cameraLocation 	= transformMapper.get(camera).getLocation();
+		Rectangle cameraShape = new Rectangle(0,0,cameraMapper.get(camera).getScreenWidth()-1,cameraMapper.get(camera).getScreenHeight()-1 );
+		cameraShape.setLocation( 
+				cameraLocation.x-cameraMapper.get(camera).getScreenWidth()/2,
+				cameraLocation.y-cameraMapper.get(camera).getScreenHeight()/2
+			);
+		graphics.rotate( 0, 0, -transformMapper.get(camera).getRotation() );
+		graphics.setColor(cameraColors[colorCount%8]); 
+		graphics.draw(cameraShape);
+		
+		renderSystem.resetCamera();	
+		colorCount++;
+	}
+	
+	
 	@Override
 	protected boolean checkProcessing() { return showDebug; }
 
@@ -113,8 +128,5 @@ public class DebugSystemBase extends EntitySystem implements KeyListener {
 
 	@Override
 	public void keyReleased(int key, char c) { }
-
-	@Override
-	protected void processEntities(ImmutableBag<Entity> entities) { }
 	
 }

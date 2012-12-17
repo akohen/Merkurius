@@ -14,11 +14,11 @@ import fr.kohen.alexandre.examples.canabalt.systems.SpawnSystem;
 import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.systems.base.CameraSystemBase;
 import fr.kohen.alexandre.framework.systems.base.CollisionSystemBase;
-import fr.kohen.alexandre.framework.systems.base.ControlSystemMouse;
 import fr.kohen.alexandre.framework.systems.base.GameStateManager;
 import fr.kohen.alexandre.framework.systems.base.MapSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MovementSystem;
 import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
+import fr.kohen.alexandre.framework.systems.unused.ControlSystemMouse;
 
 
 public class GameState extends BasicGameState {

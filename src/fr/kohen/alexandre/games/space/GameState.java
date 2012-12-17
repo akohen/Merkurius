@@ -74,7 +74,7 @@ public class GameState extends BasicGameState {
 		systemManager.initializeAll();
 		
 		EntityFactorySpaceGame.createMap(world, 1, 800, 600);
-		EntityFactorySpaceGame.createMouse(world);
+		//EntityFactorySpaceGame.createMouse(world);
 		
 		if(server) {
 			Entity player = EntityFactorySpaceGame.createPlayer(world, 1, 50, 50);
