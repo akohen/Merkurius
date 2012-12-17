@@ -1,5 +1,7 @@
 package fr.kohen.alexandre.framework.systems.base;
 
+import java.awt.geom.AffineTransform;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.MouseListener;
@@ -9,51 +11,82 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.EntityProcessingSystem;
 
-import fr.kohen.alexandre.framework.components.EntityState;
-import fr.kohen.alexandre.framework.components.Mouse;
+import fr.kohen.alexandre.framework.EntityFactory;
+import fr.kohen.alexandre.framework.components.SpatialForm;
 import fr.kohen.alexandre.framework.components.Transform;
+import fr.kohen.alexandre.framework.components.Camera;
+import fr.kohen.alexandre.framework.engine.Spatial;
 import fr.kohen.alexandre.framework.engine.Systems;
+import fr.kohen.alexandre.framework.spatials.BoxSpatial;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
-import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 
 public class MouseSystemBase extends EntityProcessingSystem implements MouseListener {
 
 	protected GameContainer 				container;
-	protected ComponentMapper<EntityState> 	stateMapper;
 	protected ComponentMapper<Transform> 	transformMapper;
-	protected CameraSystem 					cameraSystem;
-	protected MapSystem 					mapSystem;
+	protected ComponentMapper<Camera> 		cameraMapper;
+	protected ComponentMapper<SpatialForm> 	spatialMapper;
 	protected Vector2f	 					mousePosition = new Vector2f( 0,0 );
-	protected Transform						mouseTransform;
+	protected CameraSystem 					cameraSystem;
+	protected Spatial 						mouseHitbox;
 
 	@SuppressWarnings("unchecked")
 	public MouseSystemBase(GameContainer container) {
-		super(Mouse.class);
+		super(Camera.class);
 		this.container = container;
 	}
 
 	@Override
 	public void initialize() {
-		this.stateMapper 		= new ComponentMapper<EntityState>(EntityState.class, world);
-		this.transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
-		this.cameraSystem 		= Systems.get(CameraSystem.class,world);
-		this.mapSystem 			= Systems.get(MapSystem.class,world);
+		transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
+		cameraMapper 		= new ComponentMapper<Camera>(Camera.class, world);
+		spatialMapper 		= new ComponentMapper<SpatialForm>(SpatialForm.class, world);
+		cameraSystem		= Systems.get(CameraSystem.class, world);
 		container.getInput().addMouseListener(this);
+		mouseHitbox			= new BoxSpatial(1, 1);
+		mouseHitbox.initalize();
+	}
+	
+	@Override
+	protected void begin() {
 	}
 
 	@Override
-	protected void process(Entity e) {
-		if( mouseTransform == null )
-			mouseTransform = transformMapper.get(e);
+	protected void process(Entity camera) {
 		
-		if( mouseTransform != null ) {
-			if( cameraSystem != null ) {
-				mousePosition.add( cameraSystem.getCamera().getPosition().negate() );
+		Entity mouse;
+		double[] pt = {
+				mousePosition.x - cameraMapper.get(camera).getScreenX() + transformMapper.get(camera).getX(), 
+				mousePosition.y - cameraMapper.get(camera).getScreenY() + transformMapper.get(camera).getY()
+			};
+		AffineTransform.getRotateInstance(
+				Math.toRadians(-cameraMapper.get(camera).getScreenRotation()-transformMapper.get(camera).getRotation()), 
+				transformMapper.get(camera).getX(), 
+				transformMapper.get(camera).getY()
+			).transform(pt, 0, pt, 0, 1); // specifying to use this double[] to hold coords
+		float newX = (float) pt[0];
+		float newY = (float) pt[1];
+		Transform mouseTransform = new Transform(transformMapper.get(camera).getMapId(), newX, newY);
+
+		if( cameraSystem.isVisible(mouseTransform, mouseHitbox, camera) ) {
+			if( cameraMapper.get(camera).getMouse() == null ) {
+				mouse = EntityFactory.createMouse(
+						world, 
+						mouseTransform,
+						camera 
+					);
+				cameraMapper.get(camera).setMouse(mouse);
 			}
-			if( mapSystem != null ) {
-				mouseTransform.setMapId(mapSystem.getCurrentMap());
+			else {
+				mouse = cameraMapper.get(camera).getMouse();
+				transformMapper.get(mouse).setMapId( transformMapper.get(camera).getMapId() );
+				transformMapper.get(mouse).setX(newX);
+				transformMapper.get(mouse).setY(newY);
 			}
-			mouseTransform.setLocation(mousePosition);
+		}
+		else if( cameraMapper.get(camera).getMouse() != null ) {
+			cameraMapper.get(camera).getMouse().delete();
+			cameraMapper.get(camera).setMouse(null);
 		}
 	}
 	

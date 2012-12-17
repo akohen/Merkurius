@@ -14,10 +14,10 @@ import fr.kohen.alexandre.examples.pong.systems.CollisionSystemPong;
 import fr.kohen.alexandre.examples.pong.systems.EnemySystem;
 import fr.kohen.alexandre.examples.pong.systems.ScoreSystem;
 import fr.kohen.alexandre.framework.engine.C;
-import fr.kohen.alexandre.framework.systems.base.ControlSystemMouse;
 import fr.kohen.alexandre.framework.systems.base.MapSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MovementSystem;
 import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
+import fr.kohen.alexandre.framework.systems.unused.ControlSystemMouse;
 
 
 public class GameState extends BasicGameState {

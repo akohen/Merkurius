@@ -10,6 +10,8 @@ public class CircleSpatial extends Spatial {
 
 	public CircleSpatial(int radius) {
 		super();
+		size.set(radius*2, radius*2);
+		offset.set(radius, radius);
 		this.radius = radius;
 	}
 

@@ -124,13 +124,13 @@ public class EntityFactory {
 	}
 	
 	
-	public static Entity createMouse(World world) {
+	public static Entity createMouse(World world, Transform transform, Entity camera) {
 		Entity e = world.createEntity();
 		e.setTag("mouse");
-		e.addComponent(new Transform(-1, 0, 0));
-		//e.addComponent(new SpatialForm(new SquareSpatial(10, 10)));
+		e.addComponent(transform);
+		e.addComponent(new SpatialForm(new BoxSpatial(10, 10)));
 		e.addComponent(new HitboxForm(new BoxSpatial(1, 1), "mouse"));
-		e.addComponent(new Mouse());
+		e.addComponent(new Mouse(camera));
 		e.refresh();
 		return e;
 	}

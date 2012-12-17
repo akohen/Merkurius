@@ -79,7 +79,6 @@ public class ActionsSystemBase extends EntityProcessingSystem implements MouseLi
 		} // If mouseSystem && collisionSystem	
 	}
 	
-
 	@Override
 	public void setInput(Input input) { }
 
