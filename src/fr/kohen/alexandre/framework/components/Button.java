@@ -5,7 +5,6 @@ import org.newdawn.slick.Image;
 
 import com.artemis.Component;
 
-import fr.kohen.alexandre.framework.engine.Camera;
 import fr.kohen.alexandre.framework.engine.resources.ResourceManager;
 import fr.kohen.alexandre.framework.spatials.TextSpatial;
 
@@ -53,13 +52,13 @@ public class Button extends Component {
 			if( imageSelect!= null )
 				this.imageSelect.draw(loc.getX(), loc.getY());
 			else
-				this.text.render(null, loc, new Camera(), Color.red);
+				this.text.render(null, loc, Color.red);
 		}
 		else {
 			if( imageDefault!= null )
 				this.imageDefault.draw(loc.getX(), loc.getY());
 			else
-				this.text.render(null, loc, new Camera(), Color.white);
+				this.text.render(null, loc, Color.white);
 		}
 	}
 	

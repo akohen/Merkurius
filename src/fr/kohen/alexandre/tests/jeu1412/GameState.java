@@ -12,9 +12,12 @@ import com.artemis.World;
 
 import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.systems.base.CameraSystemBase;
+import fr.kohen.alexandre.framework.systems.base.CollisionSystemFast;
+import fr.kohen.alexandre.framework.systems.base.ControlSystemBase;
 import fr.kohen.alexandre.framework.systems.base.DebugSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MapSystemBase;
 import fr.kohen.alexandre.framework.systems.base.MouseSystemBase;
+import fr.kohen.alexandre.framework.systems.base.MovementSystemFloat;
 import fr.kohen.alexandre.framework.systems.base.RenderSystemBase;
 
 
@@ -24,6 +27,9 @@ public class GameState extends BasicGameState {
 	private EntitySystem debugSystem;
 	private EntitySystem cameraSystem;
 	private EntitySystem mouseSystem;
+	private EntitySystem controlSystem;
+	private EntitySystem movementSystem;
+	private EntitySystem collisionSystem;
 
 	
 	@Override
@@ -34,6 +40,9 @@ public class GameState extends BasicGameState {
 		debugSystem 		= 	systemManager.setSystem(new DebugSystemBase(gc));
 		cameraSystem 		= 	systemManager.setSystem(new CameraSystemBase(gc));
 		mouseSystem 		= 	systemManager.setSystem(new MouseSystemBase(gc));
+		controlSystem 		= 	systemManager.setSystem(new ControlSystemBase(gc, 0.5f));
+		movementSystem 		= 	systemManager.setSystem(new MovementSystemFloat());
+		collisionSystem 	= 	systemManager.setSystem(new CollisionSystemFast());
 		systemManager.setSystem(new MapSystemBase());
 		systemManager.initializeAll();
 
@@ -53,7 +62,7 @@ public class GameState extends BasicGameState {
 		EntityFactory1412.createCamera(world, 1, 0, 0, 0, 200, 150, 400, 300, 0, "camera1");
 		EntityFactory1412.createCamera(world, 1, 0, 0, 0, 400, 300, 400, 300, 45, "camera2");
 		EntityFactory1412.createCamera(world, 2, 0, 0, 0, 600, 150, 400, 300, 0, "camera3");
-		EntityFactory1412.createCamera(world, 1, 0, 0, 10, 200, 450, 400, 300, 0, "camera4");
+		EntityFactory1412.createCamera(world, 1, 0, 0, 10, 200, 450, 400, 300, 0, "cameraFollowPlayer");
 	}
 
 	
@@ -71,6 +80,9 @@ public class GameState extends BasicGameState {
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {	
 		world.loopStart();
 		world.setDelta(delta);
+		controlSystem	.process();
+		collisionSystem	.process();
+		movementSystem	.process();
 	}
 
 	

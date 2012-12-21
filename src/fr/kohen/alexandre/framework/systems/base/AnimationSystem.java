@@ -36,6 +36,8 @@ public class AnimationSystem extends EntityProcessingSystem {
 		Vector2f 		speed 	= velocityMapper.get(e).getSpeed();
 		Spatial 		spatial	= spatialMapper.get(e).getSpatial();
 		
+		spatial.update(world.getDelta());
+		
 		if( spatial.hasAnim() ) {
 			if( state.getState() == STATES.MOVING ) {
 				spatial.setCurrentAnim(getAnim(spatial, speed));

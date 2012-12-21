@@ -7,10 +7,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
-import org.newdawn.slick.geom.Vector2f;
 
 import fr.kohen.alexandre.framework.components.Transform;
-import fr.kohen.alexandre.framework.engine.Camera;
 import fr.kohen.alexandre.framework.engine.Spatial;
 
 public class TextSpatial extends Spatial {
@@ -56,20 +54,19 @@ public class TextSpatial extends Spatial {
 	@Override
 	public void initalize() { }
 
-	public void render(Graphics g, Transform transform, Camera camera, Color color) {
-		Vector2f shift = camera.getPosition();
+	
+	public void render(Graphics g, Transform transform, Color color) {
 		if( lineWidth > 0 ) {
 			int lines = (int) Math.ceil( (float) text.length()/lineWidth);
 			for (int line = 0; line<lines; line ++) {
 				uFont.drawString(
-						transform.getX()+shift.x, 
-						transform.getY()+shift.y + uFont.getLineHeight()*line, 
+						transform.getX(), 
+						transform.getY() + uFont.getLineHeight()*line, 
 						text.substring(line*lineWidth, Math.min(text.length(),(line+1)*lineWidth)), 
 						color);
 			}
 		}
-		else this.uFont.drawString(transform.getX()+shift.x, transform.getY()+shift.y, this.text, color);
-		
+		else this.uFont.drawString(transform.getX(), transform.getY(), this.text, color);
 	}
 
 }

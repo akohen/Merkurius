@@ -4,10 +4,10 @@ package fr.kohen.alexandre.examples.miniRPG;
 import com.artemis.Entity;
 import com.artemis.World;
 
-import fr.kohen.alexandre.examples.miniRPG.hitboxes.LordLardHitbox;
 import fr.kohen.alexandre.examples.miniRPG.spatials.LordLard;
 import fr.kohen.alexandre.framework.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
+import fr.kohen.alexandre.framework.spatials.BoxSpatial;
 
 /**
  * Methods for creating entities
@@ -35,7 +35,7 @@ public class EntityFactoryMiniRPG extends EntityFactory {
 		
 		// Physical
 		e.addComponent(new SpatialForm(new LordLard()));
-		e.addComponent(new HitboxForm(new LordLardHitbox(), "actor"));
+		e.addComponent(new HitboxForm(new BoxSpatial(16, 30), "actor"));
 		
 		// Technical
 		e.addComponent(new Player());

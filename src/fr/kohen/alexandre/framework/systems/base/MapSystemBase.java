@@ -9,17 +9,17 @@ import com.artemis.EntityProcessingSystem;
 import com.artemis.utils.Bag;
 
 import fr.kohen.alexandre.framework.components.Map;
-import fr.kohen.alexandre.framework.engine.Camera;
-import fr.kohen.alexandre.framework.engine.Systems;
+import fr.kohen.alexandre.framework.components.Camera;
+import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
-import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
 
 
 public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
-	protected RenderSystem 			renderSystem;
-	protected ComponentMapper<Map> 	mapMapper;
-	protected Bag<Entity> 			maps;
-	protected int					currentMap =-1;
+	protected ComponentMapper<Map> 			mapMapper;
+	protected ComponentMapper<Camera> 		cameraMapper;
+	protected ComponentMapper<Transform>	transformMapper;
+	protected Bag<Entity> 					maps;
+	protected int							currentMap =-1;
 
 	@SuppressWarnings("unchecked")
 	public MapSystemBase() {
@@ -29,8 +29,9 @@ public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
 
 	@Override
 	public void initialize() {
-		mapMapper 		= new ComponentMapper<Map>(Map.class, world);
-		renderSystem	= Systems.get(RenderSystem.class, world);
+		mapMapper 			= new ComponentMapper<Map>		(Map.class, world);
+		cameraMapper 		= new ComponentMapper<Camera>	(Camera.class, world);
+		transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
 	}
 	
 
@@ -39,9 +40,8 @@ public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
 	 * Rendering of the selected layers on the current map
 	 * @param layers
 	 * @param camera
-	 * @param screen
 	 */
-	public void renderLayers(String layers, Camera camera) {
+	public void renderLayers(String layers, Entity camera) {
 		renderLayers(currentMap, layers, camera);
 	}
 	
@@ -51,9 +51,8 @@ public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
 	 * @param map
 	 * @param type
 	 * @param camera
-	 * @param screen
 	 */
-	public void renderLayers(int mapId, String type, Camera camera) {
+	public void renderLayers(int mapId, String type, Entity camera) {
 		Map map = mapMapper.get(maps.get(mapId));
 		if( !map.isTiledMap() )
 			return;
@@ -94,27 +93,21 @@ public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
 	 * @param layer
 	 * @param camera
 	 */
-	public void renderLayer(int mapId, int layer, Camera camera) {
-		/*if( layer == collisionLayer )
-			return; // The collision layer should not be rendered
-		else if( layer == backgroundLayer )
-			tmap.render(0, 0, layer); //No position adjustment for the background layer
-			*/
-		
+	public void renderLayer(int mapId, int layer, Entity camera) {
 		// default rendering, rendering only tiles visible on the screen + 2 tiles on each side
 		Map 		map 	= mapMapper.get(maps.get(mapId));
 		TiledMap 	tmap 	= map.getMap();
-		int startX = (int) (-camera.getPosition().x / tmap.getTileWidth()) -2;
-		int startY = (int) (-camera.getPosition().y / tmap.getTileHeight()) -2;
+		int startX = (int) ( (transformMapper.get(camera).getX() - cameraMapper.get(camera).getScreenWidth()/2 ) / tmap.getTileWidth()) -1;
+		int startY = (int) ( (transformMapper.get(camera).getY() - cameraMapper.get(camera).getScreenHeight()/2) / tmap.getTileHeight()) -1;
 		tmap.render(
-				(int) camera.getPosition().x + startX * tmap.getTileWidth(),
-				(int) camera.getPosition().y + startY * tmap.getTileHeight(), 
+				- tmap.getTileWidth()/2  + startX * tmap.getTileWidth(),
+				- tmap.getTileHeight()/2 + startY * tmap.getTileHeight(),
 				startX, startY,
-				(int) (camera.getScreenSize().x / tmap.getTileWidth())+4, 
-				(int) (camera.getScreenSize().y / tmap.getTileHeight())+4,
-				layer, false);
+				(int) (cameraMapper.get(camera).getScreenWidth() / tmap.getTileWidth()) +4, 
+				(int) (cameraMapper.get(camera).getScreenHeight() / tmap.getTileHeight()) +4,
+				layer, false
+			);
 	}
-	
 	
 
 	@Override

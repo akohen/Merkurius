@@ -7,6 +7,12 @@ import com.artemis.EntityProcessingSystem;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
 
+/**
+ * Updates the entities position according to the velocity.
+ * This system must me called after all other systems affecting the entities position (such as control or collision systems for example)
+ * 
+ * @author Alexandre
+ */
 public class MovementSystemFloat extends EntityProcessingSystem {
 	private ComponentMapper<Velocity> velocityMapper;
 	private ComponentMapper<Transform> transformMapper;

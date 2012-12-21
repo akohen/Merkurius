@@ -6,7 +6,11 @@ import fr.kohen.alexandre.framework.engine.Spatial;
 
 public class LordLardHitbox extends Spatial {
 
-	public LordLardHitbox() { super(); }
+	public LordLardHitbox() { 
+		super();
+		size.set(32, 32);
+		offset.set(16, 16);
+	}
 
 	@Override
 	public void initalize() {

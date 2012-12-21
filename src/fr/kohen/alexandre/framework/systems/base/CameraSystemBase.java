@@ -45,10 +45,23 @@ public class CameraSystemBase extends EntityProcessingSystem implements CameraSy
 
 
 	@Override
-	protected void process(Entity e) { }
+	protected void process(Entity camera) { 
+		
+		if( cameraMapper.get(camera).getName().startsWith("cameraFollowPlayer") ) {
+			Entity player = world.getTagManager().getEntity("player");
+			if( player != null ) {
+				camera.addComponent(transformMapper.get(player));
+				camera.refresh();
+			}
+		}
+		
+	}
 
 	@Override
 	protected void added(Entity e) { cameras.add(e); }
+	
+	@Override
+	protected void removed(Entity e) { cameras.remove(e); };
 	
 	public List<Entity> getCameras() { return cameras; }
 
