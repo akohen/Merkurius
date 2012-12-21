@@ -3,8 +3,9 @@ package fr.kohen.alexandre.framework.systems.interfaces;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 
+import com.artemis.Entity;
+
 import fr.kohen.alexandre.framework.components.Map;
-import fr.kohen.alexandre.framework.engine.Camera;
 
 public interface MapSystem {
 	
@@ -56,7 +57,7 @@ public interface MapSystem {
 	 * @param layers
 	 * @param camera
 	 */
-	public void renderLayers(String layers, Camera camera);
+	public void renderLayers(String layers, Entity camera);
 	
 	/**
 	 * @return Dimensions of the current map

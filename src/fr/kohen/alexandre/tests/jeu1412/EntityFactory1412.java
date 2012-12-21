@@ -37,7 +37,7 @@ public class EntityFactory1412 extends EntityFactory {
 		SpatialForm spatial = new SpatialForm(new BoxSpatial(50, 30));
 		spatial.getSpatial().setColor(Color.white);
 		e.addComponent(spatial);
-		//e.addComponent(new HitboxForm(new BoxSpatial(50, 30), "actor"));
+		e.addComponent(new HitboxForm(new BoxSpatial(50, 30), "actor"));
 		
 		// Technical
 		e.addComponent(new Player());

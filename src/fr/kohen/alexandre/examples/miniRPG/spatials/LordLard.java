@@ -12,10 +12,8 @@ public class LordLard extends Spatial {
 	public LordLard() {
 		super();
 		color = new Color(Color.white);
-	}
-	
-	public void update(int delta) {
-		updateAnimation(delta);
+		size.set(32, 32);
+		offset.set(16, 16);
 	}
 
 	@Override

@@ -15,7 +15,6 @@ import fr.kohen.alexandre.framework.engine.ActionList;
 import fr.kohen.alexandre.framework.engine.Systems;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.CollisionSystem;
-import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 
 public class ActionsSystemBase extends EntityProcessingSystem implements MouseListener {
 	protected GameContainer 				container;
@@ -25,7 +24,6 @@ public class ActionsSystemBase extends EntityProcessingSystem implements MouseLi
 	
 	protected CollisionSystem				collisionSystem;
 	protected CameraSystem 					cameraSystem;
-	protected MapSystem 					mapSystem;
 
 	protected Vector2f	 					mousePosition = new Vector2f( 0,0 );
 	protected Transform						mouseTransform;
@@ -44,7 +42,6 @@ public class ActionsSystemBase extends EntityProcessingSystem implements MouseLi
 		transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
 		actionsMapper 		= new ComponentMapper<Actions>(Actions.class, world);
 		cameraSystem 		= Systems.get(CameraSystem.class,world);
-		mapSystem 			= Systems.get(MapSystem.class,world);
 		collisionSystem		= Systems.get(CollisionSystem.class,world);
 		container.getInput().addMouseListener(this);
 	}

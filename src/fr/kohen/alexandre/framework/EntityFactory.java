@@ -6,7 +6,6 @@ import com.artemis.World;
 
 import fr.kohen.alexandre.framework.components.*;
 import fr.kohen.alexandre.framework.spatials.BoxSpatial;
-import fr.kohen.alexandre.framework.spatials.SquareSpatial;
 import fr.kohen.alexandre.framework.spatials.TextSpatial;
 
 /**
@@ -23,8 +22,8 @@ public class EntityFactory {
 	 * @param x camera X position in the game world
 	 * @param y camera Y position in the game world
 	 * @param rotation camera rotation in the game world
-	 * @param screenX viewport top-left corner X position on the screen
-	 * @param screenY viewport top-left corner Y position on the screen
+	 * @param screenX viewport center X position on the screen
+	 * @param screenY viewport center Y position on the screen
 	 * @param width viewport width
 	 * @param height viewport height
 	 * @param screenRotation viewport rotation
@@ -86,7 +85,7 @@ public class EntityFactory {
 	public static Entity createTeleport(World world, int mapId, float x, float y, int width, int height, int destMapId, int destX, int destY) {
 		Entity e = world.createEntity();
 		e.addComponent(new Transform(mapId, x, y));
-		e.addComponent(new SpatialForm(new SquareSpatial(width, height)));
+		e.addComponent(new SpatialForm(new BoxSpatial(width, height)));
 		e.addComponent(new HitboxForm(new BoxSpatial(width, height), "effect"));
 		e.addComponent(new Interactable(true, "teleport", destMapId, destX, destY));
 		e.refresh();

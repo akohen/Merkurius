@@ -7,50 +7,33 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 import fr.kohen.alexandre.framework.components.Transform;
 
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.World;
-
 public abstract class Spatial {
 	
-	protected World 		world;
-	protected Shape			shape;
+	protected Shape			shape		= new Rectangle(0,0,1,1);
 	protected SpriteSheet 	sheet;
 	protected Hashtable<String, Animation> animations = new Hashtable<String, Animation>();
 	protected String 		currentAnim;
 	protected Image 		currentImage;
 	protected int 			duration 	= 200;
 	protected Color			color		= Color.white;
-	protected Vector2f		size		= new Vector2f(0,0);
+	protected Vector2f		size		= new Vector2f(1,1);
 	protected Vector2f		offset 		= new Vector2f(0,0);
 	
-	//TODO remove
-	protected Entity 		owner;
-	protected Transform 	transform;
-	
 	public Spatial() {  }
-	public Spatial(Entity owner) { 
-		this.owner 		= owner;
-		this.transform 	= new ComponentMapper<Transform>(Transform.class, world).get(owner);
-	}
 
 	public abstract void initalize();
 	
 	public void render() { }
 
-	
-	
-	
 	public void render(Graphics g, Transform transform) { render(g,transform,color); }
 	
-	
 	/**
-	 * 
 	 * @param g graphics context
 	 * @param transform Transform component of the entity to draw
 	 */
@@ -89,13 +72,11 @@ public abstract class Spatial {
 	
 	public Vector2f getSize() { return size; }
 	
-	public void update(int delta) {	 }
+	public void update(int delta) {	updateAnimation(delta); }
 	
 	public void setText(String text) { }
 	
 	public void setColor(Color color) { this.color = color; }
-	
-	public void setTransform(Transform transform) { this.transform = transform; }
 	
 	public void setLineWidth(int width) { }
 	

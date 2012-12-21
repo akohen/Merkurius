@@ -12,7 +12,7 @@ import fr.kohen.alexandre.framework.engine.Spatial;
 public class BoxSpatial extends Spatial {
 
 	/**
-	 * Creates a solid green box
+	 * Creates a solid box
 	 * @param width
 	 * @param height
 	 */
@@ -21,6 +21,7 @@ public class BoxSpatial extends Spatial {
 		size.set(width, height);
 		offset.set(width/2, height/2);
 	}
+
 
 	@Override
 	public void initalize() {

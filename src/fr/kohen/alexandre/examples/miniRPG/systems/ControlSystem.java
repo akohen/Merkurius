@@ -11,7 +11,6 @@ import com.artemis.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Player;
-import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.engine.Systems;
 import fr.kohen.alexandre.framework.engine.C.STATES;
@@ -22,7 +21,6 @@ public class ControlSystem extends EntityProcessingSystem implements KeyListener
 	protected GameContainer container;
 	protected ComponentMapper<Velocity> 	velocityMapper;
 	protected ComponentMapper<EntityState> 	stateMapper;
-	protected ComponentMapper<Transform> 	transformMapper;	
 	protected boolean moveRight;
 	protected boolean moveLeft;
 	protected boolean moveUp;
@@ -39,7 +37,6 @@ public class ControlSystem extends EntityProcessingSystem implements KeyListener
 	public void initialize() {
 		this.velocityMapper 	= new ComponentMapper<Velocity>(Velocity.class, world);
 		this.stateMapper 		= new ComponentMapper<EntityState>(EntityState.class, world);
-		this.transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
 		this.mapSystem 			= Systems.get(MapSystem.class, 	world);
 		container.getInput().addKeyListener(this);
 	}
@@ -48,12 +45,11 @@ public class ControlSystem extends EntityProcessingSystem implements KeyListener
 	protected void process(Entity e) {
 		Velocity 	velocity 	= velocityMapper	.get(e);
 		EntityState	state		= stateMapper		.get(e);
-		Transform	transform	= transformMapper	.get(e);
 		Vector2f 	accel 		= new Vector2f(0,0);
 		
 		// Set the map where the player is as the active map
-		if( transform.getMapId() != mapSystem.getCurrentMap() )
-			mapSystem.enterMap( transform.getMapId() );
+		//if( transform.getMapId() != mapSystem.getCurrentMap() )
+		//	mapSystem.enterMap( transform.getMapId() );
 		
 		// Adding speed according to input if the player can move
 		if( state.getState() == STATES.IDLE || state.getState() == STATES.MOVING ) {

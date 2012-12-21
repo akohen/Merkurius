@@ -1,5 +1,6 @@
 package fr.kohen.alexandre.framework.systems.base;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.GameContainer;
@@ -10,6 +11,7 @@ import fr.kohen.alexandre.framework.components.Camera;
 import fr.kohen.alexandre.framework.components.SpatialForm;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.engine.Systems;
+import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 
@@ -28,6 +30,7 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 	protected Vector2f 						screen;
 	protected float							rotation = 0;
 	protected CameraSystem 					cameraSystem;
+	protected MapSystem 					mapSystem;
 
 	@SuppressWarnings("unchecked")
 	public RenderSystemBase(GameContainer container) {
@@ -43,6 +46,8 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 		cameraMapper		= new ComponentMapper<Camera>		(Camera.class, world);
 		screen 				= new Vector2f(container.getWidth(), container.getHeight());
 		cameraSystem		= Systems.get(CameraSystem.class, world);
+		mapSystem			= Systems.get(MapSystem.class, world);
+		cameras				= new ArrayList<Entity>();
 	}
 
 	@Override
@@ -54,6 +59,8 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 	protected void begin() {
 		if( cameraSystem != null ) { // Getting camera list from the camera system
 			cameras = cameraSystem.getCameras();
+			for(Entity camera : cameras)
+				cameraMapper.get(camera).clearEntities();
 		}
 	}
 	
@@ -79,12 +86,20 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 		for(Entity camera : cameras) {
 			setCamera(camera);	// Setting graphics context according to camera
 			
+			
+			if( mapSystem != null && mapSystem.getCurrentMap() > -1 )
+				mapSystem.renderLayers("back", camera);
+			
 			// Drawing objects
-			for(Entity e : cameraMapper.get(camera).getEntities() ) {
+			for(Entity e : cameraMapper.get(camera).getEntities()) {
 				if( e.isActive() )
 					spatialFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e));	
 			}
-			cameraMapper.get(camera).clearEntities();
+			
+			//if( mapSystem != null && mapSystem.getCurrentMap() > -1 )
+			//	mapSystem.renderLayers("front", camera);
+			
+			
 			// Resetting graphics context for the next camera
 			resetCamera();
 		}
@@ -96,8 +111,6 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 		return true;
 	}
 	
-	
-
 
 	
 	@Override
