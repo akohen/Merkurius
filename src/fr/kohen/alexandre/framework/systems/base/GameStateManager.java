@@ -8,10 +8,11 @@ import com.artemis.systems.VoidEntitySystem;
 
 import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.engine.Systems;
+import fr.kohen.alexandre.framework.systems.interfaces.MenuSystem;
 
 public class GameStateManager extends VoidEntitySystem {
 	private StateBasedGame 	sb;
-	private MenuSystemBase 	menuSystem;
+	private MenuSystem 		menuSystem;
 	private GameContainer 	container;
 	private String			state = C.STATE_INIT;
 
@@ -23,7 +24,7 @@ public class GameStateManager extends VoidEntitySystem {
 
 	@Override
 	public void initialize() {
-		menuSystem		= Systems.get(MenuSystemBase.class, world);
+		menuSystem		= Systems.get(MenuSystem.class, world);
 	}
 	
 	

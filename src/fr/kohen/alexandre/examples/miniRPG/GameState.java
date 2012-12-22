@@ -8,6 +8,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import com.artemis.EntitySystem;
 import com.artemis.World;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
 
 import fr.kohen.alexandre.examples.miniRPG.systems.MapSystemMiniRPG;
 import fr.kohen.alexandre.framework.engine.C;
@@ -36,25 +38,28 @@ public class GameState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		world = new World();
-		renderSystem 		= 	world.setSystem(new RenderSystemBase(gc));
-		debugSystem 		= 	world.setSystem(new DebugSystemBase(gc));
-		cameraSystem 		= 	world.setSystem(new CameraSystemBase(gc));
-		controlSystem 		= 	world.setSystem(new ControlSystemBase(gc, 1.0f));
-		movementSystem 		= 	world.setSystem(new MovementSystemFloat());
-		frictionSystem 		= 	world.setSystem(new FrictionSystem(0.5f));
-		collisionSystem 	= 	world.setSystem(new CollisionSystemFast());
-		animationSystem 	= 	world.setSystem(new AnimationSystem());
+		world.setManager(new TagManager());
+		world.setManager(new GroupManager());
+		renderSystem 		= 	world.setSystem(new RenderSystemBase(gc), true);
+		debugSystem 		= 	world.setSystem(new DebugSystemBase(gc), true);
+		cameraSystem 		= 	world.setSystem(new CameraSystemBase(gc), true);
+		controlSystem 		= 	world.setSystem(new ControlSystemBase(gc, 1.0f), true);
+		movementSystem 		= 	world.setSystem(new MovementSystemFloat(), true);
+		frictionSystem 		= 	world.setSystem(new FrictionSystem(0.5f), true);
+		collisionSystem 	= 	world.setSystem(new CollisionSystemFast(), true);
+		animationSystem 	= 	world.setSystem(new AnimationSystem(), true);
 		//scriptSystem 		= 	world.setSystem(new ScriptSystemMiniRPG(gc));
-		world.setSystem(new MapSystemMiniRPG());
+		world.setSystem(new MapSystemMiniRPG(), true);
 		world.initialize();
 
 		EntityFactoryMiniRPG.createMap(world, 1, "map1");
 		EntityFactoryMiniRPG.createPlayer(world, 1, 200, 200);
+		//EntityFactoryMiniRPG.createPlayer(world, 1, 200, 200);
 		EntityFactoryMiniRPG.createCamera(world, 1, 32, 0, 0, 400, 300, 800, 600, 0, "cameraFollowPlayer");
 		
 		// Creating an empty level and placing a box in it
-		EntityFactoryMiniRPG.createMap(world, 2, 2000,2000);
-		EntityFactoryMiniRPG.createBox(world, 2, 200, 200, 20);
+		//EntityFactoryMiniRPG.createMap(world, 2, 2000,2000);
+		//EntityFactoryMiniRPG.createBox(world, 2, 200, 200, 20);
 	}
 
 	
@@ -70,6 +75,7 @@ public class GameState extends BasicGameState {
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
 		world.setDelta(delta);
+		world.process();
 		controlSystem	.process();
 		frictionSystem	.process();
 		collisionSystem	.process();

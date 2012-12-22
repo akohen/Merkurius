@@ -71,12 +71,12 @@ public class ControlSystemBase extends EntityProcessingSystem implements KeyList
 	protected void process(Entity e) {
 		Velocity 	velocity 	= velocityMapper	.get(e);
 		EntityState	state		= stateMapper		.get(e);
-		Transform	transform	= transformMapper	.get(e);
+		//Transform	transform	= transformMapper	.get(e);
 		Vector2f 	accel 		= new Vector2f(0,0);
 		
 		// Set the map where the player is as the active map
-		if( transform.getMapId() != mapSystem.getCurrentMap() )
-			mapSystem.enterMap( transform.getMapId() );
+		//if( transform.getMapId() != mapSystem.getCurrentMap() )
+		//	mapSystem.enterMap( transform.getMapId() );
 		
 		// Adding speed according to input if the player can move
 		if( state.getState() == STATES.IDLE || state.getState() == STATES.MOVING ) {

@@ -33,7 +33,7 @@ public class CollisionSystemBase extends EntitySystem implements CollisionSystem
 	protected void processEntities(ImmutableBag<Entity> entities) {
 		for( int i=0; entities.size() > i; i++) {
 			Entity 		e1 			= entities.get(i);
-			Velocity 	velocity 	= velocityMapper.get(e1);
+			Velocity 	velocity 	= velocityMapper.getSafe(e1);
 			
 			if(velocity != null && 0 < velocity.getSpeed().length() ) {
 				

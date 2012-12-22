@@ -1,13 +1,11 @@
 package fr.kohen.alexandre.examples.miniRPG.systems;
 
-
 import org.newdawn.slick.tiled.TiledMap;
 
 import fr.kohen.alexandre.examples.miniRPG.EntityFactoryMiniRPG;
 import fr.kohen.alexandre.framework.systems.base.MapSystemBase;
 
 public class MapSystemMiniRPG extends MapSystemBase {
-
 	public MapSystemMiniRPG() {
 		super();
 	}

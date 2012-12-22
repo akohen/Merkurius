@@ -6,7 +6,6 @@ import org.newdawn.slick.tiled.TiledMap;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.Bag;
 
@@ -17,11 +16,11 @@ import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 
 
 public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
-	@Mapper ComponentMapper<Transform> 		transformMapper;
-	@Mapper ComponentMapper<Map> 			mapMapper;
-	@Mapper ComponentMapper<Camera> 		cameraMapper;
 	protected Bag<Entity> 					maps;
 	protected int							currentMap =-1;
+	protected ComponentMapper<Transform> transformMapper;
+	protected ComponentMapper<Map> mapMapper;
+	protected ComponentMapper<Camera> cameraMapper;
 
 	@SuppressWarnings("unchecked")
 	public MapSystemBase() {
@@ -31,6 +30,9 @@ public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
 
 	@Override
 	public void initialize() {
+		transformMapper = ComponentMapper.getFor(Transform.class, world);
+		mapMapper = ComponentMapper.getFor(Map.class, world);
+		cameraMapper = ComponentMapper.getFor(Camera.class, world);
 	}
 	
 
