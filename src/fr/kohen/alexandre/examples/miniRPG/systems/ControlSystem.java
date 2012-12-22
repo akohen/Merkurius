@@ -5,9 +5,11 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Player;
@@ -17,10 +19,9 @@ import fr.kohen.alexandre.framework.engine.C.STATES;
 import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 
 public class ControlSystem extends EntityProcessingSystem implements KeyListener {
-
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
+	@Mapper ComponentMapper<EntityState> 	stateMapper;
 	protected GameContainer container;
-	protected ComponentMapper<Velocity> 	velocityMapper;
-	protected ComponentMapper<EntityState> 	stateMapper;
 	protected boolean moveRight;
 	protected boolean moveLeft;
 	protected boolean moveUp;
@@ -29,14 +30,12 @@ public class ControlSystem extends EntityProcessingSystem implements KeyListener
 
 	@SuppressWarnings("unchecked")
 	public ControlSystem(GameContainer container) {
-		super(Player.class);
+		super( Aspect.getAspectForAll(Player.class) );
 		this.container = container;
 	}
 
 	@Override
 	public void initialize() {
-		this.velocityMapper 	= new ComponentMapper<Velocity>(Velocity.class, world);
-		this.stateMapper 		= new ComponentMapper<EntityState>(EntityState.class, world);
 		this.mapSystem 			= Systems.get(MapSystem.class, 	world);
 		container.getInput().addKeyListener(this);
 	}

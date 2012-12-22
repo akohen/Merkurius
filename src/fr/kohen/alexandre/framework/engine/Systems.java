@@ -2,7 +2,7 @@ package fr.kohen.alexandre.framework.engine;
 
 import com.artemis.EntitySystem;
 import com.artemis.World;
-import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
 
 /**
  * Used to retrieve easily a system when different versions of the same system can exist.
@@ -20,7 +20,7 @@ public class Systems {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Class<T> type, World world) {
-		Bag<EntitySystem> systems = world.getSystemManager().getSystems();
+		ImmutableBag<EntitySystem> systems = world.getSystems();
 		for( int i=0; i<systems.size();i++ ) {
 			EntitySystem system = systems.get(i);
 			Class<? extends EntitySystem> systemClass = system.getClass();

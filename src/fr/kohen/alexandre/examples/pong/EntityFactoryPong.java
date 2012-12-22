@@ -4,6 +4,8 @@ import org.newdawn.slick.Color;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
 
 import fr.kohen.alexandre.examples.pong.components.Ball;
 import fr.kohen.alexandre.examples.pong.components.Enemy;
@@ -29,8 +31,8 @@ public class EntityFactoryPong extends EntityFactory {
 	 */
 	public static Entity createPlayer(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
-		e.setTag("player");
-		e.setGroup("ACTOR");
+		world.getManager(TagManager.class).register("player", e);
+		world.getManager(GroupManager.class).add(e, "ACTOR");
 		
 		// Position and movement
 		e.addComponent(new Transform(mapId, x, y));
@@ -46,15 +48,15 @@ public class EntityFactoryPong extends EntityFactory {
 		e.addComponent(new Player());
 		e.addComponent(new EntityState());
 		
-		e.refresh();
+		e.addToWorld();
 		return e;
 	}
 	
 	
 	public static Entity createEnemy(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
-		e.setTag("enemy");
-		e.setGroup("ACTOR");
+		world.getManager(TagManager.class).register("enemy", e);
+		world.getManager(GroupManager.class).add(e, "ACTOR");
 		
 		// Position and movement
 		e.addComponent(new Transform(mapId, x, y));
@@ -70,15 +72,15 @@ public class EntityFactoryPong extends EntityFactory {
 		e.addComponent(new Enemy());
 		e.addComponent(new EntityState());
 		
-		e.refresh();
+		e.addToWorld();
 		return e;
 	}
 	
 	
 	public static Entity createBall(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
-		e.setTag("ball");
-		e.setGroup("ACTOR");
+		world.getManager(TagManager.class).register("ball", e);
+		world.getManager(GroupManager.class).add(e, "ACTOR");
 		
 		// Position and movement
 		e.addComponent(new Transform(mapId, x, y));
@@ -96,7 +98,7 @@ public class EntityFactoryPong extends EntityFactory {
 		e.addComponent(new Ball());
 		e.addComponent(new EntityState());
 		
-		e.refresh();
+		e.addToWorld();
 		return e;
 	}
 }

@@ -15,8 +15,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.artemis.Aspect;
 import com.artemis.Entity;
-import com.artemis.IntervalEntityProcessingSystem;
+import com.artemis.systems.IntervalEntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.Synchronize;
 import fr.kohen.alexandre.framework.engine.network.GameClient;
@@ -42,13 +43,13 @@ public class SyncSystemBase extends IntervalEntityProcessingSystem implements Co
 	
 	@SuppressWarnings("unchecked")
 	public SyncSystemBase(int delta, int port) {
-		super(delta, Synchronize.class);
+		super(Aspect.getAspectForAll(Synchronize.class), delta );
 		this.portIn = port;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public SyncSystemBase(int delta) {
-		super(delta, Synchronize.class);
+		super(Aspect.getAspectForAll(Synchronize.class), delta );
 	}
 
 	

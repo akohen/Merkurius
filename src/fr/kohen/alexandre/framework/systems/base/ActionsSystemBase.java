@@ -5,9 +5,12 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.MouseListener;
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.managers.TagManager;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.Actions;
 import fr.kohen.alexandre.framework.components.Transform;
@@ -17,14 +20,11 @@ import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.CollisionSystem;
 
 public class ActionsSystemBase extends EntityProcessingSystem implements MouseListener {
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Actions> 		actionsMapper;
 	protected GameContainer 				container;
-	
-	protected ComponentMapper<Transform> 	transformMapper;
-	protected ComponentMapper<Actions> 		actionsMapper;
-	
 	protected CollisionSystem				collisionSystem;
 	protected CameraSystem 					cameraSystem;
-
 	protected Vector2f	 					mousePosition = new Vector2f( 0,0 );
 	protected Transform						mouseTransform;
 	protected Entity						mouse;
@@ -33,14 +33,12 @@ public class ActionsSystemBase extends EntityProcessingSystem implements MouseLi
 
 	@SuppressWarnings("unchecked")
 	public ActionsSystemBase(GameContainer container) {
-		super(Actions.class);
+		super( Aspect.getAspectForAll(Actions.class) );
 		this.container = container;
 	}
 
 	@Override
 	public void initialize() {
-		transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
-		actionsMapper 		= new ComponentMapper<Actions>(Actions.class, world);
 		cameraSystem 		= Systems.get(CameraSystem.class,world);
 		collisionSystem		= Systems.get(CollisionSystem.class,world);
 		container.getInput().addMouseListener(this);
@@ -54,7 +52,7 @@ public class ActionsSystemBase extends EntityProcessingSystem implements MouseLi
 	protected void process(Entity e) {
 		
 		if( mouse == null )
-			mouse = world.getTagManager().getEntity("mouse");
+			mouse = world.getManager(TagManager.class).getEntity("mouse");
 		
 		ActionList actions = actionsMapper.get(e).getActionList();
 		

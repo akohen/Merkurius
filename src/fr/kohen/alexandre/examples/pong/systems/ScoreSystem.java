@@ -1,11 +1,13 @@
 package fr.kohen.alexandre.examples.pong.systems;
 
-
 import java.util.Random;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.managers.TagManager;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.examples.pong.EntityFactoryPong;
 import fr.kohen.alexandre.examples.pong.components.Ball;
@@ -14,10 +16,9 @@ import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
 
 public class ScoreSystem extends EntityProcessingSystem {
-
-	private ComponentMapper<Transform> 	transformMapper;
-	private ComponentMapper<Velocity> 	velocityMapper;
-	private ComponentMapper<SpatialForm> spatialMapper;
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<SpatialForm> 	spatialMapper;
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
 	private Entity textPlayer;
 	private Entity textEnemy;
 	private int scorePlayer = 0;
@@ -25,14 +26,11 @@ public class ScoreSystem extends EntityProcessingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public ScoreSystem() {
-		super(Ball.class);
+		super( Aspect.getAspectForAll(Ball.class) );
 	}
 
 	@Override
 	public void initialize() {
-		this.transformMapper	= new ComponentMapper<Transform>	(Transform.class, world);
-		this.velocityMapper		= new ComponentMapper<Velocity>		(Velocity.class, world);
-		this.spatialMapper		= new ComponentMapper<SpatialForm>	(SpatialForm.class, world);
 		this.textPlayer			= EntityFactoryPong.createGuiText(world, 75, 10, "Score: 0");
 		this.textEnemy			= EntityFactoryPong.createGuiText(world, 600, 10, "Score: 0");
 	}
@@ -58,7 +56,7 @@ public class ScoreSystem extends EntityProcessingSystem {
 	
 	public void restartGame() {
 		
-		Entity e = world.getTagManager().getEntity("ball");
+		Entity e = world.getManager(TagManager.class).getEntity("ball");
 		
 		Transform 	transform 	= transformMapper.get(e);
 		Velocity 	velocity 	= velocityMapper.get(e);

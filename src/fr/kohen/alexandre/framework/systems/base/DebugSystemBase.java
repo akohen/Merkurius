@@ -19,17 +19,18 @@ import fr.kohen.alexandre.framework.spatials.CircleSpatial;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
-
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 public class DebugSystemBase extends EntityProcessingSystem implements KeyListener {
+	@Mapper ComponentMapper<HitboxForm> 	hitboxFormMapper;
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Camera> 		cameraMapper;
 	protected Graphics 						graphics;
 	protected GameContainer 				container;
-	protected ComponentMapper<HitboxForm> 	hitboxFormMapper;
-	protected ComponentMapper<Transform> 	transformMapper;
-	protected ComponentMapper<Camera> 		cameraMapper;
 	protected List<Entity>					cameras;
 	protected RenderSystem 					renderSystem;
 	protected CameraSystem 					cameraSystem;
@@ -41,16 +42,13 @@ public class DebugSystemBase extends EntityProcessingSystem implements KeyListen
 
 	@SuppressWarnings("unchecked")
 	public DebugSystemBase(GameContainer container) {
-		super(Camera.class);
+		super( Aspect.getAspectForAll(Camera.class) );
 		this.container = container;
 		this.graphics = container.getGraphics();
 	}
 
 	@Override
 	public void initialize() {
-		hitboxFormMapper	= new ComponentMapper<HitboxForm>	(HitboxForm.class, world);
-		transformMapper		= new ComponentMapper<Transform>	(Transform.class, world);
-		cameraMapper		= new ComponentMapper<Camera>		(Camera.class, world);
 		container.getInput().addKeyListener(this);
 		renderSystem		= Systems.get(RenderSystem.class, world);
 		cameraSystem		= Systems.get(CameraSystem.class, world);

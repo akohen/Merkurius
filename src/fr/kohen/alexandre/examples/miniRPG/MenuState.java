@@ -7,7 +7,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.artemis.EntitySystem;
-import com.artemis.SystemManager;
 import com.artemis.World;
 
 import fr.kohen.alexandre.framework.EntityFactory;
@@ -28,11 +27,10 @@ public class MenuState extends BasicGameState {
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		world = new World();
 		
-		SystemManager systemManager = world.getSystemManager();
-		menuSystem 			= 	systemManager.setSystem(new MenuSystemBase(gc));
-		renderSystem 		= 	systemManager.setSystem(new RenderSystemBase(gc));
-		gameStateManager 	= 	systemManager.setSystem(new GameStateManager(gc,sb));
-		systemManager.initializeAll();
+		menuSystem 			= 	world.setSystem(new MenuSystemBase(gc));
+		renderSystem 		= 	world.setSystem(new RenderSystemBase(gc));
+		gameStateManager 	= 	world.setSystem(new GameStateManager(gc,sb));
+		world.initialize();
 		
 		EntityFactory.createButton(world, 100, 100, "Play", "Main Menu", C.ACTION_ENTERGAMESTATE);
 		EntityFactory.createButton(world, 100, 150, "Exit", "Main Menu", C.ACTION_EXIT);
@@ -49,7 +47,6 @@ public class MenuState extends BasicGameState {
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
-		world.loopStart();
 		world.setDelta(delta);
 		gameStateManager.process();
 	}

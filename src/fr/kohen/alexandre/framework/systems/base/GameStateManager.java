@@ -3,31 +3,35 @@ package fr.kohen.alexandre.framework.systems.base;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.state.StateBasedGame;
 
-import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.managers.TagManager;
+import com.artemis.systems.VoidEntitySystem;
 
-import fr.kohen.alexandre.framework.components.Unused;
 import fr.kohen.alexandre.framework.engine.C;
+import fr.kohen.alexandre.framework.engine.Systems;
 
-public class GameStateManager extends EntityProcessingSystem {
+public class GameStateManager extends VoidEntitySystem {
 	private StateBasedGame 	sb;
 	private MenuSystemBase 	menuSystem;
 	private GameContainer 	container;
 	private String			state = C.STATE_INIT;
 
-	@SuppressWarnings("unchecked")
 	public GameStateManager(GameContainer container, StateBasedGame sb) {
-		super(Unused.class);
+		super();
 		this.sb = sb;
 		this.container = container;
 	}
 
 	@Override
 	public void initialize() {
-		this.menuSystem = world.getSystemManager().getSystem(MenuSystemBase.class);
+		menuSystem		= Systems.get(MenuSystemBase.class, world);
 	}
 	
-	protected void begin() {
+	
+	public String 	getState() 				{ return state; }
+	public void 	setState(String state) 	{ this.state = state; }
+
+	@Override
+	protected void processSystem() {
 		if ( this.menuSystem.getAction() != null  )
 			if( this.menuSystem.getAction().equalsIgnoreCase(C.ACTION_ENTERGAMESTATE) ) {
 				sb.enterState(C.GAME_STATE);
@@ -36,24 +40,14 @@ public class GameStateManager extends EntityProcessingSystem {
 				container.exit();
 			}
 		
-		if( world.getTagManager().getEntity("fade_out") != null )
+		if( world.getManager(TagManager.class).getEntity("fade_out") != null )
 			state = C.STATE_FADE_OUT;
 		
-		if( state.equalsIgnoreCase(C.STATE_FADE_OUT) && world.getTagManager().getEntity("fade_out") == null ) {
+		if( state.equalsIgnoreCase(C.STATE_FADE_OUT) && world.getManager(TagManager.class).getEntity("fade_out") == null ) {
 			state = C.STATE_PLAYING;
 		}
 		
 		if( state.equalsIgnoreCase(C.STATE_EXIT) ) { container.exit(); }
 		
-			
-		
 	}
-
-	@Override
-	protected void process(Entity e) {
-		
-	}
-	
-	public String 	getState() 				{ return state; }
-	public void 	setState(String state) 	{ this.state = state; }
 }	

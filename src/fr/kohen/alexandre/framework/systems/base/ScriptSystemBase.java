@@ -13,17 +13,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
-import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.managers.TagManager;
+import com.artemis.systems.VoidEntitySystem;
 
 import fr.kohen.alexandre.framework.EntityFactory;
-import fr.kohen.alexandre.framework.components.Unused;
 import fr.kohen.alexandre.framework.engine.resources.ResourceManager;
 import fr.kohen.alexandre.framework.systems.interfaces.ScriptSystem;
 
-
-
-public class ScriptSystemBase extends EntityProcessingSystem implements ScriptSystem {
+public class ScriptSystemBase extends VoidEntitySystem implements ScriptSystem {
 	protected 	boolean 						consolePrinted;
 	protected 	Context 						scriptContext;
 	protected 	ScriptableObject 				gameProxy;
@@ -32,9 +29,8 @@ public class ScriptSystemBase extends EntityProcessingSystem implements ScriptSy
 	protected 	Class<?> 						scriptClass;
 
 	
-	@SuppressWarnings("unchecked")
 	public ScriptSystemBase(GameContainer container) {
-		super(Unused.class);
+		super();
 		this.container = container;
 		this.scriptClass = ScriptProxy.class;
 	}
@@ -109,11 +105,7 @@ public class ScriptSystemBase extends EntityProcessingSystem implements ScriptSy
     	Object result = scriptContext.evaluateString(gameProxy, cmd, "<exec>", 1, null);
     	return Context.toString(result);
     }
-    
-	@Override
-	protected void process(Entity e) {
-	}
-	
+
 	protected void begin() {
 		if(!consolePrinted) {
     	    System.out.print("> ");
@@ -137,7 +129,7 @@ public class ScriptSystemBase extends EntityProcessingSystem implements ScriptSy
 		ArrayList<String> expiredScripts = new ArrayList<String>();
 		
 		for( String tag : waitingScripts.keySet() ) {
-			if( world.getTagManager().getEntity(tag) == null ) {
+			if( world.getManager(TagManager.class).getEntity(tag) == null ) {
 				exec(waitingScripts.get(tag));
 				expiredScripts.add(tag);
 			}
@@ -162,5 +154,11 @@ public class ScriptSystemBase extends EntityProcessingSystem implements ScriptSy
 			        source += new String(contents, 0, bytesRead); }
 		} catch (IOException e1) { e1.printStackTrace(); }
         scriptContext.evaluateString(gameProxy, source, "<source>", 1, null);
+	}
+
+	@Override
+	protected void processSystem() {
+		// TODO Auto-generated method stub
+		
 	}
 }

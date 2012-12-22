@@ -8,7 +8,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import com.artemis.EntitySystem;
-import com.artemis.SystemManager;
 import com.artemis.World;
 
 import fr.kohen.alexandre.framework.engine.C;
@@ -23,9 +22,8 @@ public class GameState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		world = new World();
-		SystemManager systemManager = world.getSystemManager();
-		renderSystem 		= 	systemManager.setSystem(new RenderSystemBase(gc));
-		systemManager.initializeAll();
+		renderSystem 		= 	world.setSystem(new RenderSystemBase(gc));
+		world.initialize();
 	}
 
 	
@@ -37,7 +35,6 @@ public class GameState extends BasicGameState {
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
-		world.loopStart();
 		world.setDelta(delta);
 	}
 

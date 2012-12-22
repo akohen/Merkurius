@@ -2,20 +2,22 @@ package fr.kohen.alexandre.framework.systems.base;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.Velocity;
 
 public class FrictionSystem extends EntityProcessingSystem {
-	protected ComponentMapper<Velocity> velocityMapper;
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
 	protected float xFriction;
 	protected float yFriction;
 
 	@SuppressWarnings("unchecked")
 	public FrictionSystem(float xFriction, float yFriction) {
-		super(Velocity.class);
+		super( Aspect.getAspectForAll(Velocity.class) );
 		this.xFriction = xFriction;
 		this.yFriction = yFriction;
 	}
@@ -26,7 +28,6 @@ public class FrictionSystem extends EntityProcessingSystem {
 
 	@Override
 	public void initialize() {
-		velocityMapper 	= new ComponentMapper<Velocity>(Velocity.class, world);
 	}
 
 	@Override

@@ -2,27 +2,27 @@ package fr.kohen.alexandre.examples.canabalt.systems;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.examples.canabalt.EntityFactoryCana;
 import fr.kohen.alexandre.framework.components.Player;
 import fr.kohen.alexandre.framework.components.Transform;
 
 public class SpawnSystem extends EntityProcessingSystem {
-
-	private ComponentMapper<Transform> 	transformMapper;
+	@Mapper ComponentMapper<Transform> transformMapper;
 	private float lastSpawned = 600;
 	
 	@SuppressWarnings("unchecked")
 	public SpawnSystem() {
-		super(Player.class);
+		super(Aspect.getAspectForAll(Player.class));
 	}
 
 	@Override
 	public void initialize() {
-		this.transformMapper	= new ComponentMapper<Transform>	(Transform.class, world);
 	}
 	
 	

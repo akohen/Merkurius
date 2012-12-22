@@ -3,9 +3,11 @@ package fr.kohen.alexandre.framework.systems.base;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
+import com.artemis.annotations.Mapper;
 import com.artemis.utils.ImmutableBag;
 
 import fr.kohen.alexandre.framework.components.HitboxForm;
@@ -14,20 +16,17 @@ import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.systems.interfaces.CollisionSystem;
 
 public class CollisionSystemBase extends EntitySystem implements CollisionSystem {
-	protected ComponentMapper<Transform> 		transformMapper;
-	protected ComponentMapper<Velocity> 		velocityMapper;
-	protected ComponentMapper<HitboxForm> 	hitboxFormMapper;
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
+	@Mapper ComponentMapper<HitboxForm> 	hitboxFormMapper;
 
 	@SuppressWarnings("unchecked")
 	public CollisionSystemBase() {
-		super(HitboxForm.class, Transform.class);
+		super( Aspect.getAspectForAll(HitboxForm.class, Transform.class) );
 	}
 
 	@Override
 	public void initialize() {
-		transformMapper 	= new ComponentMapper<Transform>	(Transform.class, world);
-		velocityMapper 		= new ComponentMapper<Velocity>		(Velocity.class, world);
-		hitboxFormMapper 	= new ComponentMapper<HitboxForm>	(HitboxForm.class, world);
 	}
 	
 	@Override

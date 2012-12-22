@@ -5,10 +5,12 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.KeyListener;
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Player;
@@ -20,10 +22,10 @@ import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 
 public class ControlSystemBase extends EntityProcessingSystem implements KeyListener {
 
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
+	@Mapper ComponentMapper<EntityState> 	stateMapper;
 	protected GameContainer container;
-	protected ComponentMapper<Velocity> 	velocityMapper;
-	protected ComponentMapper<EntityState> 	stateMapper;
-	protected ComponentMapper<Transform> 	transformMapper;	
 	protected boolean moveRight;
 	protected boolean moveLeft;
 	protected boolean moveUp;
@@ -33,7 +35,7 @@ public class ControlSystemBase extends EntityProcessingSystem implements KeyList
 
 	@SuppressWarnings("unchecked")
 	public ControlSystemBase(GameContainer container, float speedUp, float speedDown, float speedLeft, float speedRight) {
-		super(Player.class);
+		super( Aspect.getAspectForAll(Player.class) );
 		this.container = container;
 		this.speedUp = speedUp;
 		this.speedDown = speedDown;
@@ -51,7 +53,7 @@ public class ControlSystemBase extends EntityProcessingSystem implements KeyList
 	
 	@SuppressWarnings("unchecked")
 	public ControlSystemBase(GameContainer container, Class<? extends Component> componentType, float speedUp, float speedDown, float speedLeft, float speedRight) {
-		super(componentType);
+		super( Aspect.getAspectForAll(componentType) );
 		this.container = container;
 		this.speedUp = speedUp;
 		this.speedDown = speedDown;
@@ -61,9 +63,6 @@ public class ControlSystemBase extends EntityProcessingSystem implements KeyList
 
 	@Override
 	public void initialize() {
-		this.velocityMapper 	= new ComponentMapper<Velocity>(Velocity.class, world);
-		this.stateMapper 		= new ComponentMapper<EntityState>(EntityState.class, world);
-		this.transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
 		this.mapSystem 			= Systems.get(MapSystem.class, 	world);
 		container.getInput().addKeyListener(this);
 	}

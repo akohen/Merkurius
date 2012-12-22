@@ -7,7 +7,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.artemis.EntitySystem;
-import com.artemis.SystemManager;
 import com.artemis.World;
 
 import fr.kohen.alexandre.examples.miniRPG.systems.MapSystemMiniRPG;
@@ -37,18 +36,17 @@ public class GameState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		world = new World();
-		SystemManager systemManager = world.getSystemManager();
-		renderSystem 		= 	systemManager.setSystem(new RenderSystemBase(gc));
-		debugSystem 		= 	systemManager.setSystem(new DebugSystemBase(gc));
-		cameraSystem 		= 	systemManager.setSystem(new CameraSystemBase(gc));
-		controlSystem 		= 	systemManager.setSystem(new ControlSystemBase(gc, 1.0f));
-		movementSystem 		= 	systemManager.setSystem(new MovementSystemFloat());
-		frictionSystem 		= 	systemManager.setSystem(new FrictionSystem(0.5f));
-		collisionSystem 	= 	systemManager.setSystem(new CollisionSystemFast());
-		animationSystem 	= 	systemManager.setSystem(new AnimationSystem());
-		//scriptSystem 		= 	systemManager.setSystem(new ScriptSystemMiniRPG(gc));
-		systemManager.setSystem(new MapSystemMiniRPG());
-		systemManager.initializeAll();
+		renderSystem 		= 	world.setSystem(new RenderSystemBase(gc));
+		debugSystem 		= 	world.setSystem(new DebugSystemBase(gc));
+		cameraSystem 		= 	world.setSystem(new CameraSystemBase(gc));
+		controlSystem 		= 	world.setSystem(new ControlSystemBase(gc, 1.0f));
+		movementSystem 		= 	world.setSystem(new MovementSystemFloat());
+		frictionSystem 		= 	world.setSystem(new FrictionSystem(0.5f));
+		collisionSystem 	= 	world.setSystem(new CollisionSystemFast());
+		animationSystem 	= 	world.setSystem(new AnimationSystem());
+		//scriptSystem 		= 	world.setSystem(new ScriptSystemMiniRPG(gc));
+		world.setSystem(new MapSystemMiniRPG());
+		world.initialize();
 
 		EntityFactoryMiniRPG.createMap(world, 1, "map1");
 		EntityFactoryMiniRPG.createPlayer(world, 1, 200, 200);
@@ -71,7 +69,6 @@ public class GameState extends BasicGameState {
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
-		world.loopStart();
 		world.setDelta(delta);
 		controlSystem	.process();
 		frictionSystem	.process();
