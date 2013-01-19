@@ -6,14 +6,12 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Logo {
+import fr.kohen.alexandre.framework.Visual;
 
-	private Texture texture;
-	private Sprite sprite;
-
+public class Logo extends Visual {
 
 	public Logo() {
-		texture = new Texture(Gdx.files.internal("data/example1/libgdx.png"));
+		Texture texture = new Texture(Gdx.files.internal("data/example1/libgdx.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		TextureRegion region = new TextureRegion(texture, 0, 0, 512, 275);

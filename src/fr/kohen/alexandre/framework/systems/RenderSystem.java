@@ -11,10 +11,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.kohen.alexandre.framework.components.Transform;
-import fr.kohen.alexandre.framework.components.Visual;
+import fr.kohen.alexandre.framework.components.VisualComponent;
 
 public class RenderSystem extends EntityProcessingSystem {
-	protected ComponentMapper<Visual> 		visualMapper;
+	protected ComponentMapper<VisualComponent> 		visualMapper;
 	protected ComponentMapper<Transform> 	transformMapper;
 	protected OrthographicCamera 			camera;
 	protected SpriteBatch 					batch;
@@ -23,17 +23,18 @@ public class RenderSystem extends EntityProcessingSystem {
 	
 	@SuppressWarnings("unchecked")
 	public RenderSystem() {
-		super(Aspect.getAspectForAll(Transform.class, Visual.class));
+		super(Aspect.getAspectForAll(Transform.class, VisualComponent.class));
+	}
+	
+	@Override
+	public void initialize() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
 		camera 			= new OrthographicCamera(w, h);
 		batch 			= new SpriteBatch();
-	}
-	
-	@Override
-	public void initialize() {
-		visualMapper 	= ComponentMapper.getFor(Visual.class, world);
+		
+		visualMapper 	= ComponentMapper.getFor(VisualComponent.class, world);
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 	}
 
@@ -50,13 +51,7 @@ public class RenderSystem extends EntityProcessingSystem {
 	
 	@Override
 	protected void process(Entity e) {
-		sprite = visualMapper.get(e).getSprite();
-		
-		sprite.setPosition(
-				transformMapper.get(e).getX() - sprite.getOriginX(), 
-				transformMapper.get(e).getY() - sprite.getOriginY()
-			);
-		sprite.draw(batch);
+		visualMapper.get(e).draw(transformMapper.get(e), batch);
 	}
 
 	
