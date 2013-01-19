@@ -14,11 +14,11 @@ import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.VisualComponent;
 
 public class RenderSystem extends EntityProcessingSystem {
-	protected ComponentMapper<VisualComponent> 		visualMapper;
-	protected ComponentMapper<Transform> 	transformMapper;
-	protected OrthographicCamera 			camera;
-	protected SpriteBatch 					batch;
-	protected Sprite 						sprite;
+	protected ComponentMapper<VisualComponent> 	visualMapper;
+	protected ComponentMapper<Transform> 		transformMapper;
+	protected OrthographicCamera 				camera;
+	protected SpriteBatch 						batch;
+	protected Sprite 							sprite;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -30,7 +30,7 @@ public class RenderSystem extends EntityProcessingSystem {
 	public void initialize() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		
+
 		camera 			= new OrthographicCamera(w, h);
 		batch 			= new SpriteBatch();
 		

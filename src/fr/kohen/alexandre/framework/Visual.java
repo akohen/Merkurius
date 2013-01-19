@@ -13,6 +13,10 @@ public abstract class Visual {
 				transform.getX() - sprite.getOriginX(), 
 				transform.getY() - sprite.getOriginY()
 			);
+		
+		sprite.setRotation(transform.getRotation());
+		sprite.setScale(transform.getScale());
+		
 		sprite.draw(batch);
 	}
 

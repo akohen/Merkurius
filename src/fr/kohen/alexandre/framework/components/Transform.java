@@ -13,25 +13,35 @@ public class Transform extends Component {
 	private float x;
 	private float y;
 	private float rotation;
+	private float scale;
 	private int mapId;
 
 	public Transform() {
+		this.x = 0;
+		this.y = 0;
+		this.mapId = -1;
+		this.rotation = 0;
+		this.scale = 1;
 	}
 
 	public Transform(float x, float y) {
-		this.x = x;
-		this.y = y;
-		this.mapId = -1;
+		this();
+		this.setLocation(x, y);
 	}
 
 	public Transform(int mapId, float x, float y) {
 		this(x, y);
-		this.mapId = mapId;
+		this.setMapId(mapId);
 	}
 
 	public Transform(int mapId, float x, float y, float rotation) {
 		this(mapId, x, y);
 		this.setRotation(rotation);
+	}
+
+	public Transform(int mapId, float x, float y, float rotation, float scale) {
+		this(mapId, x, y, rotation);
+		this.setScale(scale);
 	}
 	
 	public void addX(float x) {
@@ -121,6 +131,14 @@ public class Transform extends Component {
 				);
 		}
 		return null;
+	}
+
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		this.scale = scale;
 	}
 
 }
