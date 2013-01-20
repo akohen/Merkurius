@@ -33,7 +33,7 @@ public class CameraSystem extends EntityProcessingSystem implements ICameraSyste
 
 	@Override
 	protected void process(Entity camera) { 
-		if( cameraMapper.get(camera).getName().startsWith("cameraFollowPlayer") ) {
+		if( cameraMapper.get(camera).name.startsWith("cameraFollowPlayer") ) {
 			Entity player = world.getManager(TagManager.class).getEntity("player");
 			if( player != null ) {
 				camera.addComponent(transformMapper.get(player));

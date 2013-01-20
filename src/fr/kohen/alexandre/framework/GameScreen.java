@@ -1,6 +1,8 @@
 package fr.kohen.alexandre.framework;
 
 import com.artemis.World;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 
@@ -10,6 +12,8 @@ public abstract class GameScreen implements Screen {
 
 	public GameScreen() {
 		world = new World();
+		world.setManager(new TagManager());
+		world.setManager(new GroupManager());
 		setSystems();
 		world.initialize();
 		addEntities();
