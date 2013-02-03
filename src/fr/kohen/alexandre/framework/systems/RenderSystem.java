@@ -1,5 +1,9 @@
 package fr.kohen.alexandre.framework.systems;
 
+import java.nio.DoubleBuffer;
+
+import org.lwjgl.BufferUtils;
+
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -12,6 +16,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.lwjgl.opengl.GL11;
 
 import fr.kohen.alexandre.framework.Systems;
 import fr.kohen.alexandre.framework.components.CameraComponent;
@@ -49,6 +54,7 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 		camera 			= new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 		batch 			= new SpriteBatch();
 		cameras			= new Bag<Entity>();
+		
 	}
 
 	
@@ -102,11 +108,22 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 
 	@Override
 	public void setCamera(Entity e) {
-		camera = new OrthographicCamera( cameraMapper.get(e).size.x, cameraMapper.get(e).size.y );
-		camera.translate( cameraMapper.get(e).position );
-		camera.rotate( cameraMapper.get(e).rotation );
+		camera = new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
+		camera.translate( 
+				transformMapper.get(e).x - cameraMapper.get(e).position.x, 
+				transformMapper.get(e).y - cameraMapper.get(e).position.y
+			);
+		camera.rotate( cameraMapper.get(e).rotation - transformMapper.get(e).rotation );
 		camera.zoom = cameraMapper.get(e).zoom;
 		camera.update();
+		
+		setWorldClip(
+				transformMapper.get(e).x - cameraMapper.get(e).size.x/2,
+				transformMapper.get(e).y - cameraMapper.get(e).size.y/2,
+				cameraMapper.get(e).size.x,
+				cameraMapper.get(e).size.y
+			);
+		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 	}
@@ -119,6 +136,26 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 	@Override
 	public void resetCamera() {	
 		batch.end();
+	}
+	
+	public void setWorldClip(float x, float y, float width, float height) {
+		DoubleBuffer worldClip = BufferUtils.createDoubleBuffer(4);
+		
+		Gdx.gl11.glEnable(GL11.GL_CLIP_PLANE0);
+		worldClip.put(1).put(0).put(0).put(-x).flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, worldClip);
+		
+		Gdx.gl11.glEnable(GL11.GL_CLIP_PLANE1);
+		worldClip.put(-1).put(0).put(0).put(x + width).flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE1, worldClip);
+		
+		Gdx.gl11.glEnable(GL11.GL_CLIP_PLANE2);
+		worldClip.put(0).put(1).put(0).put(-y).flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE2, worldClip);
+		
+		Gdx.gl11.glEnable(GL11.GL_CLIP_PLANE3);
+		worldClip.put(0).put(-1).put(0).put(y + height).flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE3, worldClip);
 	}
 	
 }

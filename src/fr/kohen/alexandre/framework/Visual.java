@@ -22,5 +22,9 @@ public abstract class Visual {
 
 	public void update(float delta) {	
 	}
+	
+	public Sprite getSprite() {
+		return sprite;
+	}
 
 }

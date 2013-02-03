@@ -10,11 +10,11 @@ import com.badlogic.gdx.math.Vector2;
  *
  */
 public class Transform extends Component {
-	private float x;
-	private float y;
-	private float rotation;
-	private float scale;
-	private int mapId;
+	public float x;
+	public float y;
+	public float rotation;
+	public float scale;
+	public int mapId;
 
 	public Transform() {
 		this.x = 0;

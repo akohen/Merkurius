@@ -51,7 +51,7 @@ public class CameraSystem extends EntityProcessingSystem implements ICameraSyste
 	
 	@Override
 	public boolean isVisible(Transform transform, Entity camera) {
-		if( transformMapper.get(camera).getMapId() == transform.getMapId() ) {			
+		if( transformMapper.get(camera).mapId == transform.mapId ) {			
 			return true;
 		}
 		else return false;
