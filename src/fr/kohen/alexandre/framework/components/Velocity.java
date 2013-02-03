@@ -4,11 +4,11 @@ import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
 
 public class Velocity extends Component {
-	private Vector2 	speed;
-	private Vector2 	maxVector;
-	private float		maxSpeed = -1f;
-	private float		maxRotation = -1f;
-	private float		rotation;
+	public Vector2 	speed;
+	public Vector2 	maxVector;
+	public float		maxSpeed = -1f;
+	public float		maxRotation = -1f;
+	public float		rotation;
 
 	public Velocity() {
 		speed 		= new Vector2(0,0);

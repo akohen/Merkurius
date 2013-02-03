@@ -13,7 +13,7 @@ public class EntityFactory {
 		Entity e = world.createEntity();
 		world.getManager(TagManager.class).register(name, e);
 		world.getManager(GroupManager.class).add(e, "CAMERA");
-		e.addComponent(new Transform(mapId, x, y, rotation));
+		e.addComponent(new Transform(mapId, x, y, 1, rotation));
 		e.addComponent(new CameraComponent(width, height, screenX, screenY, 1.0f, screenRotation, name));
 		e.addToWorld();
 		return e;

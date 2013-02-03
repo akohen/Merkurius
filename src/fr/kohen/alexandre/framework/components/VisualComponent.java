@@ -5,6 +5,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import fr.kohen.alexandre.framework.Visual;
 
+/**
+ * Holds the visual representation of the entity
+ * @author Alexandre
+ *
+ */
 public class VisualComponent extends Component {
 	private Visual visual;
 	

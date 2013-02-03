@@ -18,7 +18,8 @@ public class ControlSystem extends EntityProcessingSystem {
 
 	protected ComponentMapper<Velocity> 	velocityMapper;
 	protected ComponentMapper<EntityState> 	stateMapper;
-	protected float speedUp, speedDown, speedLeft, speedRight;
+	protected float 						speedUp, speedDown, speedLeft, speedRight;
+	protected boolean						simpleScheme = true;
 
 	@SuppressWarnings("unchecked")
 	public ControlSystem(float speedUp, float speedDown, float speedLeft, float speedRight) {
@@ -61,20 +62,36 @@ public class ControlSystem extends EntityProcessingSystem {
 		
 		// Adding speed according to input if the player can move
 		if( state.getState() == STATES.IDLE || state.getState() == STATES.MOVING ) {
-			if( Gdx.input.isKeyPressed(Keys.LEFT) ) 
+			
+			if ( Gdx.input.isKeyPressed(Keys.LEFT) ) {
 				accel.x = -speedLeft;
-			if( Gdx.input.isKeyPressed(Keys.RIGHT) ) 
+			}
+			
+			if ( Gdx.input.isKeyPressed(Keys.RIGHT) ) {
 				accel.x = speedRight;
-			if( Gdx.input.isKeyPressed(Keys.UP) ) 
+			} 
+			
+			if ( Gdx.input.isKeyPressed(Keys.UP) ) {
 				accel.y = speedUp;
-			if( Gdx.input.isKeyPressed(Keys.DOWN) ) 
+			}
+			
+			if ( Gdx.input.isKeyPressed(Keys.DOWN) ) {
 				accel.y = -speedDown;
-			velocity.addSpeed(accel);
+			}
+			
+			if ( simpleScheme ) {
+				velocity.setSpeed(accel);
+			} else {
+				velocity.addSpeed(accel);
+			}
+			
 		
-			if( velocity.getSpeed().len() == 0 )
+			if( velocity.getSpeed().len() == 0 ) {
 				state.setState(STATES.IDLE);
-			else 
+			} else { 
 				state.setState(STATES.MOVING);
+			}
+			
 		}	
 	}
 

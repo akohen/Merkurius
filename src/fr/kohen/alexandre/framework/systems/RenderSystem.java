@@ -106,6 +106,7 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 		}
 	}
 
+	//TODO move to cameraSystem
 	@Override
 	public void setCamera(Entity e) {
 		camera = new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );

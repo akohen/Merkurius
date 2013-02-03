@@ -3,6 +3,7 @@ package fr.kohen.alexandre.framework.components;
 import com.artemis.Component;
 import com.artemis.utils.Utils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Position component
@@ -12,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Transform extends Component {
 	public float x;
 	public float y;
+	public float z;
 	public float rotation;
 	public float scale;
 	public int mapId;
@@ -19,58 +21,41 @@ public class Transform extends Component {
 	public Transform() {
 		this.x = 0;
 		this.y = 0;
+		this.z = 0;
 		this.mapId = -1;
 		this.rotation = 0;
 		this.scale = 1;
 	}
 
-	public Transform(float x, float y) {
+	public Transform(int mapId, float x, float y, float z) {
 		this();
-		this.setLocation(x, y);
-	}
-
-	public Transform(int mapId, float x, float y) {
-		this(x, y);
+		this.setLocation(x, y, z);
 		this.setMapId(mapId);
 	}
+	
+	public Transform(int mapId, float x, float y) {
+		this(mapId, x, y, 0);
+	}
 
-	public Transform(int mapId, float x, float y, float rotation) {
-		this(mapId, x, y);
+	public Transform(int mapId, float x, float y, float z, float rotation) {
+		this(mapId, x, y, z);
 		this.setRotation(rotation);
 	}
 
-	public Transform(int mapId, float x, float y, float rotation, float scale) {
-		this(mapId, x, y, rotation);
+	public Transform(int mapId, float x, float y, float z, float rotation, float scale) {
+		this(mapId, x, y, z, rotation);
 		this.setScale(scale);
-	}
-	
-	public void addX(float x) {
-		this.x += x;
-	}
-
-	public void addY(float y) {
-		this.y += y;
-	}
-
-	public float getX() {
-		return x;
-	}
-
-	public void setX(float x) {
-		this.x = x;
-	}
-
-	public float getY() {
-		return y;
-	}
-
-	public void setY(float y) {
-		this.y = y;
 	}
 
 	public void setLocation(float x, float y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public void setLocation(float x, float y, float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
 	public void setLocation(Vector2 loc) {
@@ -78,9 +63,21 @@ public class Transform extends Component {
 		this.y = loc.y;
 	}
 	
+	public void setLocation(Vector3 loc) {
+		this.x = loc.x;
+		this.y = loc.y;
+		this.z = loc.z;
+	}
+	
 	public void addVector(Vector2 loc) {
 		this.x += loc.x;
 		this.y += loc.y;
+	}
+	
+	public void addVector(Vector3 loc) {
+		this.x += loc.x;
+		this.y += loc.y;
+		this.z += loc.z;
 	}
 
 	public float getRotation() {
@@ -99,8 +96,8 @@ public class Transform extends Component {
 		return (float) Math.toRadians(rotation);
 	}
 	
-	public float getDistanceTo(Transform t) {
-		return Utils.distance(t.getX(), t.getY(), x, y);
+	public float getDistanceTo2D(Transform t) {
+		return Utils.distance(t.x, t.y, x, y);
 	}
 	
 	public Vector2 getLocation() {
@@ -125,9 +122,10 @@ public class Transform extends Component {
 		if( this.getMapId() == t.getMapId() ) {
 			return new Transform(
 					this.mapId, 
-					this.x - t.getX(), 
-					this.y - t.getY(), 
-					this.rotation - t.getRotation()
+					this.x - t.x, 
+					this.y - t.y, 
+					this.z - t.z, 
+					this.rotation - t.rotation
 				);
 		}
 		return null;

@@ -10,7 +10,6 @@ import com.artemis.Entity;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
 
-
 public class CameraSystem extends EntityProcessingSystem implements ICameraSystem {
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
 	protected ComponentMapper<Transform> 		transformMapper;

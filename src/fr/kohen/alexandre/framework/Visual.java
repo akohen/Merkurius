@@ -10,8 +10,8 @@ public abstract class Visual {
 	
 	public void draw(Transform transform, SpriteBatch batch) {
 		sprite.setPosition(
-				transform.getX() - sprite.getOriginX(), 
-				transform.getY() - sprite.getOriginY()
+				transform.x - sprite.getOriginX(), 
+				transform.y - sprite.getOriginY()
 			);
 		
 		sprite.setRotation(transform.getRotation());
