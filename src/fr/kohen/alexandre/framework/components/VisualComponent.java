@@ -32,4 +32,8 @@ public class VisualComponent extends Component {
 	public void update(float delta) {
 		this.visual.update(delta);
 	}
+	
+	public void updateDraw(float delta, Transform transform, SpriteBatch batch) {
+		this.visual.updateDraw(delta,transform,batch);
+	}
 }

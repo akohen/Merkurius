@@ -94,8 +94,13 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 			
 			// Drawing objects
 			for ( Entity e : cameraMapper.get(camera).entities ) {
-				if ( e.isActive() )
-					visualMapper.get(e).draw(transformMapper.get(e), batch);
+				if ( e.isActive() ) {
+					visualMapper.get(e).updateDraw(
+							Gdx.graphics.getDeltaTime(),
+							transformMapper.get(e), 
+							batch
+						);
+				}
 			}
 			
 			if( mapSystem != null && mapSystem.getCurrentMap() > -1 )
@@ -142,19 +147,19 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 	public void setWorldClip(float x, float y, float width, float height) {
 		DoubleBuffer worldClip = BufferUtils.createDoubleBuffer(4);
 		
-		Gdx.gl11.glEnable(GL11.GL_CLIP_PLANE0);
+		Gdx.gl.glEnable(GL11.GL_CLIP_PLANE0);
 		worldClip.put(1).put(0).put(0).put(-x).flip();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, worldClip);
 		
-		Gdx.gl11.glEnable(GL11.GL_CLIP_PLANE1);
+		Gdx.gl.glEnable(GL11.GL_CLIP_PLANE1);
 		worldClip.put(-1).put(0).put(0).put(x + width).flip();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE1, worldClip);
 		
-		Gdx.gl11.glEnable(GL11.GL_CLIP_PLANE2);
+		Gdx.gl.glEnable(GL11.GL_CLIP_PLANE2);
 		worldClip.put(0).put(1).put(0).put(-y).flip();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE2, worldClip);
 		
-		Gdx.gl11.glEnable(GL11.GL_CLIP_PLANE3);
+		Gdx.gl.glEnable(GL11.GL_CLIP_PLANE3);
 		worldClip.put(0).put(-1).put(0).put(y + height).flip();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE3, worldClip);
 	}

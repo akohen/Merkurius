@@ -20,7 +20,7 @@ public class MainScreen extends GameScreen {
 	
 	@Override
 	protected void addEntities() {
-		//EntityFactoryEx2.addLogo(world, 1, 0, 0);
+		EntityFactoryEx2.addTest(world, 1, -100, 0);
 		
 		EntityFactoryEx2.createBox(world, 1, 0, 0, 50);
 		EntityFactoryEx2.createBox(world, 1, 0, 75, 50);

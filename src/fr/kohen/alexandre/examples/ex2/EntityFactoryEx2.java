@@ -23,6 +23,16 @@ public class EntityFactoryEx2 extends EntityFactory {
 		return e;
 	}
 	
+	public static Entity addTest(World world, int mapId, float x, float y) {
+		Entity e = world.createEntity();
+		e.addComponent( new Transform(mapId, x, y) );
+		e.addComponent( new VisualComponent(new AnimationTest()) );
+		e.addComponent( new Velocity(1,1) );
+		e.addComponent( new EntityState() );
+		e.addToWorld();
+		return e;
+	}
+	
 	public static Entity addPlayer(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
 		e.addComponent( new Transform(mapId, x, y) );

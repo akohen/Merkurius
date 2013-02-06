@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import fr.kohen.alexandre.framework.components.Transform;
 
 public abstract class Visual {
-	protected Sprite sprite;
+	protected Sprite sprite = null;
+	protected boolean animated = false;
 	
 	public void draw(Transform transform, SpriteBatch batch) {
 		sprite.setPosition(
@@ -21,6 +22,11 @@ public abstract class Visual {
 	}
 
 	public void update(float delta) {	
+	}
+	
+	public void updateDraw(float delta, Transform transform, SpriteBatch batch) {
+		update(delta);
+		draw(transform, batch);
 	}
 	
 	public Sprite getSprite() {
