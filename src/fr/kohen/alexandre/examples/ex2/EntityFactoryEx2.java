@@ -26,9 +26,11 @@ public class EntityFactoryEx2 extends EntityFactory {
 	public static Entity addTest(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
 		e.addComponent( new Transform(mapId, x, y) );
-		e.addComponent( new VisualComponent(new AnimationTest()) );
+		e.addComponent( new VisualComponent(new LordLardVisual()) );
+		e.addComponent( new PhysicsBodyComponent(new LordLardBody()) );
 		e.addComponent( new Velocity(1,1) );
 		e.addComponent( new EntityState() );
+		e.addComponent( new Player() );
 		e.addToWorld();
 		return e;
 	}

@@ -12,7 +12,6 @@ public class VisualAnimation extends Visual {
 	protected Animation 					currentAnimation;
 	protected String 						currentAnimationName;
 	protected float 						stateTime = 0f;
-	protected boolean						animated = true;
 	
 	public void addAnimation(String name, float frameDuration, int mode, TextureRegion... frames) {
 		Animation animation = new Animation(frameDuration, frames);
@@ -40,4 +39,6 @@ public class VisualAnimation extends Visual {
 	}
 	
 	public Set<String> getAnimations() { return animations.keySet(); }
+	
+	public boolean isAnimated() { return true; }
 }

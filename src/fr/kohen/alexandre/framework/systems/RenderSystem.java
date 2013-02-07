@@ -95,11 +95,7 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 			// Drawing objects
 			for ( Entity e : cameraMapper.get(camera).entities ) {
 				if ( e.isActive() ) {
-					visualMapper.get(e).updateDraw(
-							Gdx.graphics.getDeltaTime(),
-							transformMapper.get(e), 
-							batch
-						);
+					visualMapper.get(e).draw( transformMapper.get(e), batch );
 				}
 			}
 			
@@ -142,6 +138,7 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 	@Override
 	public void resetCamera() {	
 		batch.end();
+		resetWorldClip();
 	}
 	
 	public void setWorldClip(float x, float y, float width, float height) {
@@ -162,6 +159,13 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 		Gdx.gl.glEnable(GL11.GL_CLIP_PLANE3);
 		worldClip.put(0).put(-1).put(0).put(y + height).flip();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE3, worldClip);
+	}
+	
+	public void resetWorldClip() {
+		Gdx.gl.glDisable(GL11.GL_CLIP_PLANE0);
+		Gdx.gl.glDisable(GL11.GL_CLIP_PLANE1);
+		Gdx.gl.glDisable(GL11.GL_CLIP_PLANE2);
+		Gdx.gl.glDisable(GL11.GL_CLIP_PLANE3);
 	}
 	
 }

@@ -1,5 +1,7 @@
 package fr.kohen.alexandre.framework.systems;
 
+import java.util.Hashtable;
+
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -24,31 +26,38 @@ import fr.kohen.alexandre.framework.components.PhysicsBodyComponent;
  * @author Alexandre
  */
 public class Box2DSystem extends EntityProcessingSystem {
-	private ComponentMapper<Transform> 				transformMapper;
-	private ComponentMapper<Velocity> 				velocityMapper;
-	private ComponentMapper<CameraComponent> 		cameraMapper;
-	private ComponentMapper<PhysicsBodyComponent> 	bodyMapper;
-	private Box2DDebugRenderer 						debugRenderer;
-	private World 									box2dworld;
+	protected ComponentMapper<Transform> 			transformMapper;
+	protected ComponentMapper<Velocity> 			velocityMapper;
+	protected ComponentMapper<CameraComponent> 		cameraMapper;
+	protected ComponentMapper<PhysicsBodyComponent> bodyMapper;
+	protected Box2DDebugRenderer 					debugRenderer;
+	private Hashtable<Integer, World> 				universe;
 
 	@SuppressWarnings("unchecked")
 	public Box2DSystem() {
-		super( Aspect.getAspectForAll(Transform.class, Velocity.class, PhysicsBodyComponent.class) );
+		super( Aspect.getAspectForAll(Transform.class, PhysicsBodyComponent.class) );
 	}
 
 	@Override
 	public void initialize() {
-		box2dworld 		= new World(new Vector2(0, 0), true); 
-		debugRenderer 	= new Box2DDebugRenderer();
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		velocityMapper 	= ComponentMapper.getFor(Velocity.class, world);
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
 		bodyMapper 		= ComponentMapper.getFor(PhysicsBodyComponent.class, world);
+		debugRenderer 	= new Box2DDebugRenderer();
+		universe		= new Hashtable<Integer,World>();
 	}
 	
 	@Override
 	protected void inserted(Entity e) {
-		bodyMapper.get(e).physicsBody.initialize( box2dworld );
+		World b2World;
+		if( universe.containsKey(transformMapper.get(e).mapId) ) {
+			b2World = universe.get(transformMapper.get(e).mapId);
+		} else {
+			b2World = new World(new Vector2(0, 0), true);
+			universe.put( transformMapper.get(e).mapId, b2World );
+		}
+		bodyMapper.get(e).physicsBody.initialize( b2World );
 		
 		bodyMapper.get(e).getBody().setTransform(
 				transformMapper.get(e).x,
@@ -59,12 +68,17 @@ public class Box2DSystem extends EntityProcessingSystem {
 	
 	@Override
 	protected void removed(Entity e) {
-		box2dworld.destroyBody( bodyMapper.get(e).getBody() );
+		universe.get( transformMapper.get(e).mapId ).destroyBody( bodyMapper.get(e).getBody() );
+		if( universe.get( transformMapper.get(e).mapId ).getBodyCount() == 0 ) {
+			universe.remove( transformMapper.get(e).mapId );
+		}
 	}
 	
 	@Override
 	protected void process(Entity e) {
-		bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed.cpy().mul(60));
+		if( velocityMapper.getSafe(e) != null ) {
+			bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed.cpy().mul(60));			
+		}
 	}
 	
 	protected void end() {
@@ -79,8 +93,13 @@ public class Box2DSystem extends EntityProcessingSystem {
 		camera.zoom = cameraMapper.get(e).zoom;
 		camera.update();
 
-		box2dworld.step(1/60f, 6, 2);
-		debugRenderer.render(box2dworld, camera.combined);
+		for( Integer i : universe.keySet() ) {
+			World b2World = universe.get(i);
+			b2World.step(1/60f, 6, 2);
+			debugRenderer.render(b2World, camera.combined);
+		}
+		
+		
 		
 		for (int i = 0, s = getActives().size(); s > i; i++) {
 			e = getActives().get(i);

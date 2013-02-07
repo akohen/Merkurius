@@ -7,7 +7,6 @@ import fr.kohen.alexandre.framework.components.Transform;
 
 public abstract class Visual {
 	protected Sprite sprite = null;
-	protected boolean animated = false;
 	
 	public void draw(Transform transform, SpriteBatch batch) {
 		sprite.setPosition(
@@ -32,5 +31,7 @@ public abstract class Visual {
 	public Sprite getSprite() {
 		return sprite;
 	}
+	
+	public boolean isAnimated() { return false; }
 
 }
