@@ -1,10 +1,5 @@
 package fr.kohen.alexandre.framework.systems;
 
-import java.nio.DoubleBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-
 import fr.kohen.alexandre.framework.components.CameraComponent;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.systems.interfaces.ICameraSystem;
@@ -17,6 +12,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+
 
 public class CameraSystem extends EntityProcessingSystem implements ICameraSystem {
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
@@ -46,6 +42,11 @@ public class CameraSystem extends EntityProcessingSystem implements ICameraSyste
 				transformMapper.get(camera).mapId = transformMapper.get(player).mapId;
 				transformMapper.get(camera).setLocation( transformMapper.get(player).getLocation() );
 			}
+		} else if( cameraMapper.get(camera).name.startsWith("cameraRotationTest") ) {
+			//transformMapper.get(camera).rotation = 0;
+			//cameraMapper.get(camera).position.x = 0;
+			//cameraMapper.get(camera).position.y = 0;
+			cameraMapper.get(camera).rotation += 1;
 		}
 		
 	}
@@ -69,30 +70,35 @@ public class CameraSystem extends EntityProcessingSystem implements ICameraSyste
 	@Override
 	public Camera setCamera(Entity e) {
 		OrthographicCamera camera = new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
-		camera.translate( 
+		camera.rotate( - cameraMapper.get(e).rotation - transformMapper.get(e).rotation );
+		/*camera.translate(
 				transformMapper.get(e).x - cameraMapper.get(e).position.x, 
 				transformMapper.get(e).y - cameraMapper.get(e).position.y
-			);
-		camera.rotate( cameraMapper.get(e).rotation - transformMapper.get(e).rotation );
-		camera.zoom = cameraMapper.get(e).zoom;
-		camera.update();
+			);*/
 		
-		setWorldClip(
+		//camera.rotate( - transformMapper.get(e).rotation );
+		//TODO translation after camera rotation
+		
+		camera.zoom = cameraMapper.get(e).zoom;
+		
+		camera.update();
+		/*setWorldClip(
 				transformMapper.get(e).x - cameraMapper.get(e).size.x/2,
 				transformMapper.get(e).y - cameraMapper.get(e).size.y/2,
 				cameraMapper.get(e).size.x,
 				cameraMapper.get(e).size.y
-			);
+			);*/
+		
 		return camera;
 	}
 	
 	
 	@Override
 	public void resetCamera() {	
-		resetWorldClip();
+		//resetWorldClip();
 	}
 	
-	
+	/*
 	private void setWorldClip(float x, float y, float width, float height) {
 		DoubleBuffer worldClip = BufferUtils.createDoubleBuffer(4);
 		
@@ -119,4 +125,5 @@ public class CameraSystem extends EntityProcessingSystem implements ICameraSyste
 		Gdx.gl.glDisable(GL11.GL_CLIP_PLANE2);
 		Gdx.gl.glDisable(GL11.GL_CLIP_PLANE3);
 	}
+	*/
 }

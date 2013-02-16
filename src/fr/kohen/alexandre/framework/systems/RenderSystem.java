@@ -10,8 +10,11 @@ import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
 import fr.kohen.alexandre.framework.Systems;
 import fr.kohen.alexandre.framework.components.CameraComponent;
@@ -25,12 +28,11 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 	protected ComponentMapper<VisualComponent> 	visualMapper;
 	protected ComponentMapper<Transform> 		transformMapper;
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
-	protected OrthographicCamera 				camera;
 	protected SpriteBatch 						batch;
-	protected Sprite 							sprite;
 	protected ICameraSystem 					cameraSystem;
 	protected IMapSystem 						mapSystem;
 	protected ImmutableBag<Entity> 				cameras;
+	protected FrameBuffer 						framebuffer;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -46,9 +48,9 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 		cameraSystem	= Systems.get(ICameraSystem.class, world);
 		mapSystem		= Systems.get(IMapSystem.class, world);
 
-		camera 			= new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 		batch 			= new SpriteBatch();
 		cameras			= new Bag<Entity>();
+		framebuffer 	= new FrameBuffer(Format.RGBA4444, 640, 480, true);
 		
 	}
 
@@ -80,10 +82,24 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 	
 	@Override
 	protected void end() {
+		OrthographicCamera mainCamera = new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
+		mainCamera.setToOrtho(true);
+		
 		for ( int i = 0, s = cameras.size(); s > i; i++ ) {
+			framebuffer.begin();
+			Gdx.gl.glClearColor(1, 1, 1, 1);
+			Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			
 			Entity cameraEntity = cameras.get(i);
 			
-			camera = (OrthographicCamera) cameraSystem.setCamera(cameraEntity);	// Setting graphics context according to camera
+			OrthographicCamera camera = new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
+			camera.rotate( - transformMapper.get(cameraEntity).rotation );
+			camera.translate(
+					transformMapper.get(cameraEntity).x, 
+					transformMapper.get(cameraEntity).y
+				);
+			camera.update();
+			
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
 			
@@ -102,9 +118,31 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 			
 			
 			batch.end();
-			cameraSystem.resetCamera(); // Resetting graphics context
+			framebuffer.end();
+			//Gdx.app.log("render", "" + cameraMapper.get(cameraEntity).size.x);
+			TextureRegion region = new TextureRegion(
+					framebuffer.getColorBufferTexture(), 
+					(int) ((Gdx.graphics.getWidth() - cameraMapper.get(cameraEntity).size.x) / 2), 
+					(int) ((Gdx.graphics.getHeight() - cameraMapper.get(cameraEntity).size.y) / 2), 
+					(int) cameraMapper.get(cameraEntity).size.x, 
+					(int) cameraMapper.get(cameraEntity).size.y
+				);
 			
+			Sprite sprite = new Sprite(region);
+			batch.setProjectionMatrix(mainCamera.combined);
+			batch.begin();
+			
+			sprite.setPosition(
+					(Gdx.graphics.getWidth() - cameraMapper.get(cameraEntity).size.x)/2 + cameraMapper.get(cameraEntity).position.x, 
+					(Gdx.graphics.getHeight() - cameraMapper.get(cameraEntity).size.y)/2 - cameraMapper.get(cameraEntity).position.y
+				);
+			sprite.rotate(cameraMapper.get(cameraEntity).rotation);
+			sprite.draw(batch);
+			batch.end();
 		}
+		
+		
+		
 	}
 
 	

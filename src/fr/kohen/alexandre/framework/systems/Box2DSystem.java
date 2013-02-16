@@ -5,12 +5,9 @@ import java.util.Hashtable;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.managers.GroupManager;
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.utils.ImmutableBag;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
 import fr.kohen.alexandre.framework.Systems;
@@ -19,6 +16,7 @@ import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.components.PhysicsBodyComponent;
 import fr.kohen.alexandre.framework.systems.interfaces.ICameraSystem;
+import fr.kohen.alexandre.framework.systems.interfaces.IPhysicsSystem;
 
 /**
  * Updates the entities position according to the velocity.
@@ -26,13 +24,12 @@ import fr.kohen.alexandre.framework.systems.interfaces.ICameraSystem;
  * 
  * @author Alexandre
  */
-public class Box2DSystem extends EntityProcessingSystem {
+public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSystem {
 	protected ComponentMapper<Transform> 			transformMapper;
 	protected ComponentMapper<Velocity> 			velocityMapper;
 	protected ComponentMapper<CameraComponent> 		cameraMapper;
 	protected ComponentMapper<PhysicsBodyComponent> bodyMapper;
 	protected ICameraSystem 						cameraSystem;
-	protected Box2DDebugRenderer 					debugRenderer;
 	protected Hashtable<Integer, World> 			universe;
 	protected Hashtable<Entity, Integer> 			previousMap;
 
@@ -49,7 +46,6 @@ public class Box2DSystem extends EntityProcessingSystem {
 		bodyMapper 		= ComponentMapper.getFor(PhysicsBodyComponent.class, world);
 		cameraSystem	= Systems.get(ICameraSystem.class, world);
 		
-		debugRenderer 	= new Box2DDebugRenderer();
 		universe		= new Hashtable<Integer,World>();
 		previousMap		= new Hashtable<Entity, Integer>();
 	}
@@ -69,7 +65,7 @@ public class Box2DSystem extends EntityProcessingSystem {
 		bodyMapper.get(e).getBody().setTransform(
 				transformMapper.get(e).x,
 				transformMapper.get(e).y, 
-				transformMapper.get(e).rotation
+				transformMapper.get(e).rotation * MathUtils.degreesToRadians
 			);
 		previousMap.put(e, transformMapper.get(e).mapId);
 	}
@@ -92,7 +88,10 @@ public class Box2DSystem extends EntityProcessingSystem {
 		if( velocityMapper.getSafe(e) != null ) { // adding speed
 			bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed.cpy().mul(60));			
 		} else { // updating position
-			bodyMapper.get(e).getBody().setTransform( transformMapper.get(e).getLocation(), transformMapper.get(e).rotation );
+			bodyMapper.get(e).getBody().setTransform( 
+					transformMapper.get(e).getLocation(), 
+					transformMapper.get(e).rotation * MathUtils.degreesToRadians 
+				);
 		}
 		
 		if ( previousMap.get(e) != transformMapper.get(e).mapId ) { // Switching world
@@ -106,31 +105,21 @@ public class Box2DSystem extends EntityProcessingSystem {
 		// World iteration
 		for( Integer i : universe.keySet() ) {
 			World b2World = universe.get(i);
-			b2World.step(1/60f, 6, 2);
+			b2World.step( world.getDelta(), 6, 2);
 		}
-		
-		//TODO move rendering to debug system
-		// Rendering
-		ImmutableBag<Entity> cameras = world.getManager(GroupManager.class).getEntities("CAMERA");
-		for ( int i = 0, s = cameras.size(); s > i; i++ ) {
-			Entity cameraEntity = cameras.get(i);
-			OrthographicCamera camera = (OrthographicCamera) cameraSystem.setCamera(cameraEntity);
-			
-			for( Integer j : universe.keySet() ) {
-				World b2World = universe.get(j);
-				if ( transformMapper.get(cameraEntity).mapId == j ) { // Rendering world if the camera is in it
-					debugRenderer.render(b2World, camera.combined);					
-				}
-			}
-		}
-		
+
 		// Updating transform component
 		for (int i = 0, s = getActives().size(); s > i; i++) {
 			Entity e = getActives().get(i);
 			transformMapper.get(e).setLocation(bodyMapper.get(e).getBody().getPosition());
-			transformMapper.get(e).rotation = bodyMapper.get(e).getBody().getAngle();
+			transformMapper.get(e).rotation = bodyMapper.get(e).getBody().getAngle() * MathUtils.radiansToDegrees;
 			//TODO update speed component
 		}
+	}
+
+	@Override
+	public Hashtable<Integer, World> getUniverse() {
+		return universe;
 	}
 
 }	

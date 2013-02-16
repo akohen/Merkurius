@@ -23,9 +23,4 @@ public class Logo extends Visual {
 		//sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
 	}
 	
-	
-	public Sprite getSprite() {
-		return sprite;
-	}
-	
 }
