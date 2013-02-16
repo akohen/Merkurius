@@ -103,6 +103,10 @@ public class Transform extends Component {
 	public Vector2 getLocation() {
 		return new Vector2(this.x, this.y);
 	}
+	
+	public Vector3 getLocation3() {
+		return new Vector3(this.x, this.y, this.z);
+	}
 
 	public int getMapId() {
 		return mapId;

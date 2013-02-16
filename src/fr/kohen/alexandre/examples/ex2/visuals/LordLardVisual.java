@@ -41,6 +41,15 @@ public class LordLardVisual extends VisualAnimation {
 		addAnimation(C.WALK_DOWN, 0.15f, Animation.LOOP, 
 				tmp[0][0], tmp[0][1], tmp[0][2], tmp[0][3], tmp[0][4], tmp[0][5]
 			);
+
+		addAnimation(C.STAND_DOWN_RIGHT, 0.15f, Animation.LOOP, tmp[7][0]);
+		addAnimation(C.STAND_RIGHT, 0.15f, Animation.LOOP, tmp[6][0]);
+		addAnimation(C.STAND_UP_RIGHT, 0.15f, Animation.LOOP, tmp[5][0]);
+		addAnimation(C.STAND_UP, 0.15f, Animation.LOOP, tmp[4][0]);
+		addAnimation(C.STAND_UP_LEFT, 0.15f, Animation.LOOP, tmp[3][0]);
+		addAnimation(C.STAND_LEFT, 0.15f, Animation.LOOP, tmp[2][0]);
+		addAnimation(C.STAND_DOWN_LEFT, 0.15f, Animation.LOOP, tmp[1][0]);
+		addAnimation(C.STAND_DOWN, 0.15f, Animation.LOOP, tmp[0][0]);
 	}
 	
 }
