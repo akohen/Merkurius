@@ -30,11 +30,13 @@ public interface ISyncSystem {
 	 * @param packet
 	 */
 	public void receive(DatagramPacket packet);
-	
+	public void receiveFromThread(DatagramPacket packet);
 	/**
 	 * Connect to specified host
 	 * @param host
 	 * @throws UnknownHostException 
 	 */
 	public void connect(GameClient host) throws UnknownHostException;
+
+	
 }

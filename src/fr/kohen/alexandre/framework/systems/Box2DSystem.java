@@ -85,14 +85,13 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 	
 	@Override
 	protected void process(Entity e) {
+		bodyMapper.get(e).getBody().setTransform( // Updating position
+				transformMapper.get(e).getLocation(), 
+				transformMapper.get(e).rotation * MathUtils.degreesToRadians 
+			);
 		if( velocityMapper.getSafe(e) != null ) { // adding speed
 			bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed.cpy().mul(60));			
-		} else { // updating position
-			bodyMapper.get(e).getBody().setTransform( 
-					transformMapper.get(e).getLocation(), 
-					transformMapper.get(e).rotation * MathUtils.degreesToRadians 
-				);
-		}
+		} 
 		
 		if ( previousMap.get(e) != transformMapper.get(e).mapId ) { // Switching world
 			removed(e);

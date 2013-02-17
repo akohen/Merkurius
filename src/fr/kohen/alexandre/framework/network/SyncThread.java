@@ -27,7 +27,7 @@ public class SyncThread extends Thread {
 			DatagramPacket packet = new DatagramPacket(buf, buf.length);
 			try {
 				socket.receive(packet);
-				parentSystem.receive(packet);
+				parentSystem.receiveFromThread(packet);
 			} 
 			catch (IOException e) { e.printStackTrace(); }	
 		}

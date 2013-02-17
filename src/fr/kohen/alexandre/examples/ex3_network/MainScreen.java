@@ -29,14 +29,15 @@ public class MainScreen extends GameScreen {
 	@Override
 	protected void setSystems() {
 		world.setSystem(new CameraSystem());
-		world.setSystem(new ControlSystem(1));
+		if ( isServer )
+			world.setSystem(new ControlSystem(1));
 		world.setSystem(new AnimationSystem());
 		world.setSystem(new RenderSystem());
 		world.setSystem(new Box2DSystem());	
 		world.setSystem(new ExpirationSystem());
 		world.setSystem(new DebugSystem());	
 		if ( isServer ) {
-			world.setSystem(new ServerSystem(150, 4445));	
+			world.setSystem(new ServerSystem(0.1f, 4445));	
 			Gdx.app.log("MainScreen", "Server mode");
 		} else {
 			this.syncSystem = world.setSystem(new ClientSystem());	
@@ -55,7 +56,7 @@ public class MainScreen extends GameScreen {
 		EntityFactoryEx3.createBox(world, 1, -130, -100, 100);
 		EntityFactoryEx3.createBox(world, 1, -130, 100, 100);
 		
-		EntityFactoryEx3.addPlayer(world, 1, 75, 150);
+		//EntityFactoryEx3.addPlayer(world, 1, 75, 150);
 		
 		EntityFactoryEx3.addCamera(world, 1, 0, 0, 0, 0, 0, 640, 480, 0, "cameraWorld1");
 		

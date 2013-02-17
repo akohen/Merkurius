@@ -64,7 +64,7 @@ public class EntityFactoryEx3 extends EntityFactory {
 	}
 	
 
-	public static Entity createBox(World world, int mapId, int x, int y, int size) {
+	public static Entity createBox(World world, int mapId, float x, float y, int size) {
 		Entity e = world.createEntity();
 		e.addComponent( new Transform(mapId, x, y) );
 		e.addComponent( new VisualComponent(new BoxVisual(size, size, Color.RED)) );

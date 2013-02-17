@@ -1,5 +1,7 @@
 package fr.kohen.alexandre.examples.ex3_network.systems;
 
+import java.net.DatagramPacket;
+
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
@@ -22,7 +24,7 @@ public class ServerSystem extends SyncSystem {
 	private int								playerId = 0;
 	
 
-	public ServerSystem(int delta, int port) { super(delta, port); }
+	public ServerSystem(float delta, int port) { super(delta, port); }
 
 	@Override
 	public void initialize() {
@@ -34,36 +36,21 @@ public class ServerSystem extends SyncSystem {
 		syncMapper 		= ComponentMapper.getFor(Synchronize.class, world);
 	}
 	
+	
 	@Override
-	protected void end() {
-		for ( String event : events ) {
-			String[] data = event.split(" ");
-			if( data[0].equalsIgnoreCase("connect") ) {
-				Entity player = EntityFactoryEx3.addPlayer(world, 1, 100+50*playerId, 100+50*playerId);
-				GameClientImpl client = new GameClientImpl(packet.getAddress(), Integer.parseInt(data[1]), packet.getPort(), playerId++, player);
-				send(client, "connected " + client.getId() + " " + player.getId() );
-				clientList.add( client );
-				Gdx.app.log("New connection: ", packet.getAddress().toString() + ":" + packet.getPort() + " " + data[1] );
-			}
+	public void receive(DatagramPacket packet) { 
+		String message = new String(packet.getData(), 0, packet.getLength());
+		String[] data = message.split(" ");
+		
+		if( data[0].equalsIgnoreCase("connect") ) {
+			Entity player = EntityFactoryEx3.addPlayer(world, 1, 75, 150);
+			GameClientImpl client = new GameClientImpl(packet.getAddress(), Integer.parseInt(data[1]), packet.getPort(), playerId++, player);
+			send(client, "connected " + client.getId() + " " + player.getId() );
+			clientList.add( client );
+			Gdx.app.log("New connection: ", packet.getAddress().toString() + ":" + packet.getPort() + " " + data[1] );
 		}
-		
-		events.clear();
-		
-		/*
-		if( data[0].equalsIgnoreCase("turn") ) {
-			
-			for( GameClient client : clientList) {
-				if( client.checkPacket(packet) ) {
-					if( data[1].equalsIgnoreCase("left") )
-						destinationMapper.get(((GameClientImpl) client).getShip()).addRotation(-45);
-					else if( data[1].equalsIgnoreCase("right") )
-						destinationMapper.get(((GameClientImpl) client).getShip()).addRotation(45);
-				}
-			} // clients
-			
-		} // if turn
-		*/
 	}
+
 
 
 	@Override
@@ -83,11 +70,11 @@ public class ServerSystem extends SyncSystem {
 			message += " " + transform.x + " " + transform.y + " " + transform.getRotation();
 		
 		if( velocity != null )
-			message += " " + velocity.getY() + " " + velocity.getY() + " " + velocity.getRotation();
+			message += " " + velocity.getX() + " " + velocity.getY() + " " + velocity.getRotation();
 		
 
 		// Sending the message for each client
-		send(message);	
+		send(message);
 	}
 
 }

@@ -7,12 +7,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;
@@ -27,24 +23,19 @@ import fr.kohen.alexandre.framework.systems.interfaces.ISyncSystem;
 public class SyncSystem extends IntervalEntityProcessingSystem implements ISyncSystem {
 
 	protected List<GameClient>		clientList;
-	protected byte[] 				buf;
-	protected DatagramPacket 		packet;
 	protected DatagramSocket 		socket;	
-	protected ConcurrentHashMap<Integer,String>	messagesReceived;
-	protected Map<Integer, String> 	messages;
-	protected List<String> 			eventsReceived;
-	protected List<String> 			eventsRemoved;
-	protected List<String> 			events;
+	protected List<DatagramPacket> 	packets;
 	protected int					portIn = 0;
 	protected int					portOut = 0;
 	protected SyncThread 			syncThread;
 	
 	
 	@SuppressWarnings("unchecked")
-	public SyncSystem(int delta, int port) {
+	public SyncSystem(float delta, int port) {
 		super(Aspect.getAspectForAll(Synchronize.class), delta );
 		this.portIn = port;
 	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public SyncSystem(int delta) {
@@ -55,11 +46,7 @@ public class SyncSystem extends IntervalEntityProcessingSystem implements ISyncS
 	@Override
 	public void initialize() {
 		this.clientList 		= new ArrayList<GameClient>();
-		this.messagesReceived 	= new ConcurrentHashMap<Integer,String>();
-		this.messages			= new HashMap<Integer,String>();
-		this.eventsReceived		= Collections.synchronizedList(new ArrayList<String>());
-		this.eventsRemoved		= new ArrayList<String>();
-		this.events				= new ArrayList<String>();
+		this.packets			= Collections.synchronizedList(new ArrayList<DatagramPacket>());
 		
 		try { 
 			if( portIn > 0 )
@@ -76,16 +63,12 @@ public class SyncSystem extends IntervalEntityProcessingSystem implements ISyncS
 
 	
 	protected void begin() {
-		for (Entry<Integer, String> entry : messagesReceived.entrySet()) {
-			messages.put( entry.getKey(), entry.getValue() );
-			messagesReceived.remove( entry.getKey(), entry.getValue() );
-		}
-
-		synchronized(eventsReceived) {
-			Iterator<String> i = eventsReceived.iterator(); // Must be in synchronized block
-			while (i.hasNext())
-				events.add(i.next());
-			eventsReceived.clear();
+		synchronized(packets) {
+			Iterator<DatagramPacket> i = packets.iterator(); // Must be in synchronized block
+			while (i.hasNext()) {
+				receive(i.next());
+			}
+			packets.clear();
 		}
 	}
 	
@@ -106,33 +89,29 @@ public class SyncSystem extends IntervalEntityProcessingSystem implements ISyncS
 	
 	@Override
 	public void send(GameClient client, String message) {
-		buf = message.getBytes();
-		packet = new DatagramPacket( buf, buf.length, client.getAddress(), client.getPort() );
+		byte[] buf = message.getBytes();
+		DatagramPacket packet = new DatagramPacket( buf, buf.length, client.getAddress(), client.getPort() );
 		try { socket.send(packet); } catch (IOException e1) { e1.printStackTrace(); }		
 	}
 
 	
 	@Override
-	public void receive(DatagramPacket packet) {
-		String message = new String(packet.getData(), 0, packet.getLength());
-		Gdx.app.log("SyncSystem", message);
-		String[] data = message.split(" ");
-		
-		try {
-			messagesReceived.put(Integer.parseInt(data[0]), message);
-		} catch(NumberFormatException e) {
-			eventsReceived.add(message);
-		}
-		
+	public void receiveFromThread(DatagramPacket packet) {
+		packets.add(packet);
 	}
 
 	
 	@Override
 	public void connect(GameClient host) throws UnknownHostException {
-		//clientList.add(new GameClientImpl(InetAddress.getByName(host), port));
 		clientList.add(host);
 		send("CONNECT " + portIn);
-		Gdx.app.log("SyncSystem", "connect");
+		Gdx.app.log("SyncSystem", "connecting");
+	}
+
+
+	@Override
+	public void receive(DatagramPacket packet) { 
+		
 	}
 
 	
