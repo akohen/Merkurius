@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.ex2;
+package fr.kohen.alexandre.examples.ex2_camera;
 
 import fr.kohen.alexandre.framework.GameScreen;
 import fr.kohen.alexandre.framework.systems.AnimationSystem;
@@ -23,7 +23,7 @@ public class MainScreen extends GameScreen {
 	}
 	
 	@Override
-	protected void addEntities() {
+	protected void initialize() {
 		EntityFactoryEx2.addLordLard(world, 1, 0, 125);
 		
 		EntityFactoryEx2.createBox(world, 1, 0, 0, 50);

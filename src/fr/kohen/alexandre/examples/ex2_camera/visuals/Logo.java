@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.ex2.visuals;
+package fr.kohen.alexandre.examples.ex2_camera.visuals;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

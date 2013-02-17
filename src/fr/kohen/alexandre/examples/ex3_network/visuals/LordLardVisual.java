@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.ex2.visuals;
+package fr.kohen.alexandre.examples.ex3_network.visuals;
 
 import java.util.Hashtable;
 

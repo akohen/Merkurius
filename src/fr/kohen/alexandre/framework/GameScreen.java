@@ -11,22 +11,24 @@ public abstract class GameScreen implements Screen {
 	private FPSLogger fps;
 
 	public GameScreen() {
+	}
+
+	public void controllerInit() {
 		world = new World();
 		world.setManager(new TagManager());
 		world.setManager(new GroupManager());
 		setSystems();
 		world.initialize();
-		addEntities();
+		initialize();
 		fps = new FPSLogger();
 	}
-
 	/**
 	 * Setting systems for this screen.
 	 * Systems will be run in the order they are loaded
 	 * Example: renderSystem = world.setSystem(new RenderSystem());
 	 */
 	protected abstract void setSystems();
-	protected abstract void addEntities();
+	protected abstract void initialize();
 	
 	@Override
 	public void render(float delta) {

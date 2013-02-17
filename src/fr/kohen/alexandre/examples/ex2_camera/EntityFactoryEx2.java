@@ -1,11 +1,11 @@
-package fr.kohen.alexandre.examples.ex2;
+package fr.kohen.alexandre.examples.ex2_camera;
 
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.graphics.Color;
 
-import fr.kohen.alexandre.examples.ex2.visuals.*;
+import fr.kohen.alexandre.examples.ex2_camera.visuals.*;
 import fr.kohen.alexandre.framework.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
 import fr.kohen.alexandre.framework.physicsbodies.*;
