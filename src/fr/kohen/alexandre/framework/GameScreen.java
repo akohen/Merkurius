@@ -4,11 +4,9 @@ import com.artemis.World;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.FPSLogger;
 
 public abstract class GameScreen implements Screen {
 	protected World world;
-	private FPSLogger fps;
 
 	public GameScreen() {
 	}
@@ -20,7 +18,6 @@ public abstract class GameScreen implements Screen {
 		setSystems();
 		world.initialize();
 		initialize();
-		fps = new FPSLogger();
 	}
 	/**
 	 * Setting systems for this screen.
@@ -34,7 +31,6 @@ public abstract class GameScreen implements Screen {
 	public void render(float delta) {
 		world.setDelta(delta);
 		world.process();
-		fps.log();
 	}
 
 	@Override

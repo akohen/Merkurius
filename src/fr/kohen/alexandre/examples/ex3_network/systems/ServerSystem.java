@@ -2,7 +2,6 @@ package fr.kohen.alexandre.examples.ex3_network.systems;
 
 import java.net.DatagramPacket;
 
-import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 
@@ -16,11 +15,6 @@ import fr.kohen.alexandre.framework.systems.SyncSystem;
 
 
 public class ServerSystem extends SyncSystem {
-
-	private ComponentMapper<Velocity> 		velocityMapper;
-	private ComponentMapper<EntityState> 	stateMapper;
-	private ComponentMapper<Transform> 		transformMapper;
-	private ComponentMapper<Synchronize> 	syncMapper;
 	private int								playerId = 0;
 	
 
@@ -29,11 +23,6 @@ public class ServerSystem extends SyncSystem {
 	@Override
 	public void initialize() {
 		super.initialize();
-
-		transformMapper = ComponentMapper.getFor(Transform.class, world);
-		velocityMapper 	= ComponentMapper.getFor(Velocity.class, world);
-		stateMapper 	= ComponentMapper.getFor(EntityState.class, world);
-		syncMapper 		= ComponentMapper.getFor(Synchronize.class, world);
 	}
 	
 	
@@ -55,9 +44,9 @@ public class ServerSystem extends SyncSystem {
 
 	@Override
 	protected void process(Entity e) {
-		Velocity 	velocity 	= velocityMapper	.get(e);
-		EntityState	state		= stateMapper		.get(e);
-		Transform	transform	= transformMapper	.get(e);
+		Velocity 	velocity 	= velocityMapper	.getSafe(e);
+		EntityState	state		= stateMapper		.getSafe(e);
+		Transform	transform	= transformMapper	.getSafe(e);
 		Synchronize	sync		= syncMapper		.get(e);
 
 		// Creating the message

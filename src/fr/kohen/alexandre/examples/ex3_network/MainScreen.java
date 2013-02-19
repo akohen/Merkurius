@@ -30,7 +30,7 @@ public class MainScreen extends GameScreen {
 	protected void setSystems() {
 		world.setSystem(new CameraSystem());
 		if ( isServer )
-			world.setSystem(new ControlSystem(1));
+			world.setSystem(new ControlSystem(50));
 		world.setSystem(new AnimationSystem());
 		world.setSystem(new RenderSystem());
 		world.setSystem(new Box2DSystem());	

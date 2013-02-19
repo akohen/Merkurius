@@ -7,27 +7,38 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 
+import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Synchronize;
+import fr.kohen.alexandre.framework.components.Transform;
+import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.network.GameClient;
 import fr.kohen.alexandre.framework.network.SyncThread;
 import fr.kohen.alexandre.framework.systems.interfaces.ISyncSystem;
 
 public class SyncSystem extends IntervalEntityProcessingSystem implements ISyncSystem {
-
-	protected List<GameClient>		clientList;
-	protected DatagramSocket 		socket;	
-	protected List<DatagramPacket> 	packets;
-	protected int					portIn = 0;
-	protected int					portOut = 0;
-	protected SyncThread 			syncThread;
+	protected ComponentMapper<Velocity> 	velocityMapper;
+	protected ComponentMapper<EntityState> 	stateMapper;
+	protected ComponentMapper<Transform> 	transformMapper;
+	protected ComponentMapper<Synchronize> 	syncMapper;
+	protected List<GameClient>				clientList;
+	protected DatagramSocket 				socket;	
+	protected List<DatagramPacket> 			packets;
+	protected int							portIn = 0;
+	protected int							portOut = 0;
+	protected SyncThread 					syncThread;
+	protected Map<Integer, String> 			messages;
+	protected List<String> 					events;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -45,8 +56,15 @@ public class SyncSystem extends IntervalEntityProcessingSystem implements ISyncS
 	
 	@Override
 	public void initialize() {
-		this.clientList 		= new ArrayList<GameClient>();
-		this.packets			= Collections.synchronizedList(new ArrayList<DatagramPacket>());
+		transformMapper = ComponentMapper.getFor(Transform.class, world);
+		velocityMapper 	= ComponentMapper.getFor(Velocity.class, world);
+		stateMapper 	= ComponentMapper.getFor(EntityState.class, world);
+		syncMapper 		= ComponentMapper.getFor(Synchronize.class, world);
+		
+		messages		= new HashMap<Integer,String>();
+		events			= new ArrayList<String>();
+		clientList 		= new ArrayList<GameClient>();
+		packets			= Collections.synchronizedList(new ArrayList<DatagramPacket>());
 		
 		try { 
 			if( portIn > 0 )
@@ -111,9 +129,16 @@ public class SyncSystem extends IntervalEntityProcessingSystem implements ISyncS
 
 	@Override
 	public void receive(DatagramPacket packet) { 
+		String message = new String(packet.getData(), 0, packet.getLength());
+		String[] data = message.split(" ");
+		
+		try {
+			messages.put(Integer.parseInt(data[0]), message);
+		} catch(NumberFormatException e) {
+			events.add(message);			
+		}
 		
 	}
-
 	
 
 }

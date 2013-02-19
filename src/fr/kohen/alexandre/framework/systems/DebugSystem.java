@@ -9,6 +9,7 @@ import com.artemis.systems.VoidEntitySystem;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -39,6 +40,7 @@ public class DebugSystem extends VoidEntitySystem {
 	protected boolean 							acceptingInput;
 	protected boolean 							debugEnabled;
 	protected SpriteBatch 						batch;
+	protected FPSLogger 						fps;
 
 	public DebugSystem() {
 		super();
@@ -55,6 +57,7 @@ public class DebugSystem extends VoidEntitySystem {
 		debugRenderer 	= new Box2DDebugRenderer();
 		acceptingInput	= true;
 		debugEnabled	= false;
+		fps 			= new FPSLogger();
 	}
 	
 
@@ -76,6 +79,10 @@ public class DebugSystem extends VoidEntitySystem {
 			acceptingInput 	= true;
 		}
 		
+		// FPS logger
+		if ( debugEnabled ) {
+			fps.log();
+		}
 		
 		// Debug rendering
 		if ( physicsSystem != null && debugEnabled ) {

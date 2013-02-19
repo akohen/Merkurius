@@ -90,7 +90,8 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 				transformMapper.get(e).rotation * MathUtils.degreesToRadians 
 			);
 		if( velocityMapper.getSafe(e) != null ) { // adding speed
-			bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed.cpy().mul(60));			
+			bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed);
+			bodyMapper.get(e).getBody().setAngularVelocity(velocityMapper.get(e).getRotation());			
 		} 
 		
 		if ( previousMap.get(e) != transformMapper.get(e).mapId ) { // Switching world
@@ -112,6 +113,10 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 			Entity e = getActives().get(i);
 			transformMapper.get(e).setLocation(bodyMapper.get(e).getBody().getPosition());
 			transformMapper.get(e).rotation = bodyMapper.get(e).getBody().getAngle() * MathUtils.radiansToDegrees;
+			if( velocityMapper.getSafe(e) != null ) { // adding speed
+				//velocityMapper.get(e).speed = bodyMapper.get(e).getBody().getLinearVelocity();
+				velocityMapper.get(e).rotation = bodyMapper.get(e).getBody().getAngularVelocity();		
+			} 
 			//TODO update speed component
 		}
 	}

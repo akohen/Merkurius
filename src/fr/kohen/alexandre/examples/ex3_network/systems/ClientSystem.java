@@ -1,13 +1,7 @@
 package fr.kohen.alexandre.examples.ex3_network.systems;
 
-import java.net.DatagramPacket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
-import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 
@@ -21,43 +15,8 @@ import fr.kohen.alexandre.framework.systems.SyncSystem;
 import fr.kohen.alexandre.framework.C.STATES;
 
 public class ClientSystem extends SyncSystem {
-
-	private ComponentMapper<Velocity> 		velocityMapper;
-	private ComponentMapper<EntityState> 	stateMapper;
-	private ComponentMapper<Transform> 		transformMapper;
-	private ComponentMapper<Synchronize> 	syncMapper;
-	private Map<Integer, String> 			messages;
-	private List<String> 					events;
-	
 	public ClientSystem() {
 		super(0);
-	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
-
-		transformMapper = ComponentMapper.getFor(Transform.class, world);
-		velocityMapper 	= ComponentMapper.getFor(Velocity.class, world);
-		stateMapper 	= ComponentMapper.getFor(EntityState.class, world);
-		syncMapper 		= ComponentMapper.getFor(Synchronize.class, world);
-		
-		this.messages	= new HashMap<Integer,String>();
-		this.events		= new ArrayList<String>();
-	}
-	
-	
-	@Override
-	public void receive(DatagramPacket packet) { 
-		String message = new String(packet.getData(), 0, packet.getLength());
-		String[] data = message.split(" ");
-		
-		try {
-			messages.put(Integer.parseInt(data[0]), message);
-		} catch(NumberFormatException e) {
-			events.add(message);			
-		}
-		
 	}
 	
 	@Override
@@ -65,8 +24,7 @@ public class ClientSystem extends SyncSystem {
 		Velocity 	velocity 	= velocityMapper.getSafe(e);
 		EntityState state 		= stateMapper.getSafe(e);
 		Transform 	transform 	= transformMapper.getSafe(e);
-		Synchronize sync 		= syncMapper.getSafe(e);
-		
+		Synchronize sync 		= syncMapper.get(e);
 		
 		if( messages.containsKey(sync.getId()) ) {
 			String[] data = messages.get(sync.getId()).split(" ");
@@ -89,6 +47,7 @@ public class ClientSystem extends SyncSystem {
 			}
 			
 			if( velocity != null ) {
+				
 				velocity.setSpeed( Float.parseFloat(data[i++]), Float.parseFloat(data[i++]) );
 				velocity.setRotation( Float.parseFloat(data[i++]) );	
 			}

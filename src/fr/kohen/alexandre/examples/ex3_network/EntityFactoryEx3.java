@@ -19,7 +19,7 @@ public class EntityFactoryEx3 extends EntityFactory {
 		world.getManager(TagManager.class).register("player", e);
 		
 		e.addComponent( new Transform(mapId, x, y) );
-		e.addComponent( new Velocity(1,1) );
+		e.addComponent( new Velocity(100,100) );
 		
 		e.addComponent( new VisualComponent(new LordLardVisual()) );
 		e.addComponent( new PhysicsBodyComponent(new LordLardBody()) );
@@ -34,7 +34,7 @@ public class EntityFactoryEx3 extends EntityFactory {
 	public static Entity addPlayer(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
 		e.addComponent( new Transform(mapId, x, y) );
-		e.addComponent( new Velocity(1,1) );
+		e.addComponent( new Velocity(100,100) );
 		
 		e.addComponent( new VisualComponent(new BoxVisual(25, 25, Color.BLUE)) );
 		e.addComponent( new PhysicsBodyComponent(new BallBody()) );
@@ -51,7 +51,7 @@ public class EntityFactoryEx3 extends EntityFactory {
 	public static Entity addPlayerClient(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
 		e.addComponent( new Transform(mapId, x, y) );
-		e.addComponent( new Velocity(1,1) );
+		e.addComponent( new Velocity(100,100) );
 		
 		e.addComponent( new VisualComponent(new BoxVisual(25, 25, Color.BLUE)) );
 		e.addComponent( new PhysicsBodyComponent(new BallBody()) );

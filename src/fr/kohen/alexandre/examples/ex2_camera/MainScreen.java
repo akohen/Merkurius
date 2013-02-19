@@ -14,7 +14,7 @@ public class MainScreen extends GameScreen {
 	@Override
 	protected void setSystems() {
 		world.setSystem(new CameraSystem());
-		world.setSystem(new ControlSystem(1));
+		world.setSystem(new ControlSystem(50));
 		world.setSystem(new AnimationSystem());
 		world.setSystem(new RenderSystem());
 		world.setSystem(new Box2DSystem());	
