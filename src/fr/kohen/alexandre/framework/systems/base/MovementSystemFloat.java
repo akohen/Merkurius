@@ -1,8 +1,10 @@
 package fr.kohen.alexandre.framework.systems.base;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
@@ -14,18 +16,16 @@ import fr.kohen.alexandre.framework.components.Velocity;
  * @author Alexandre
  */
 public class MovementSystemFloat extends EntityProcessingSystem {
-	private ComponentMapper<Velocity> velocityMapper;
-	private ComponentMapper<Transform> transformMapper;
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
 
 	@SuppressWarnings("unchecked")
 	public MovementSystemFloat() {
-		super(Transform.class, Velocity.class);
+		super( Aspect.getAspectForAll(Transform.class, Velocity.class) );
 	}
 
 	@Override
 	public void initialize() {
-		velocityMapper 	= new ComponentMapper<Velocity>(Velocity.class, world);
-		transformMapper = new ComponentMapper<Transform>(Transform.class, world);
 	}
 
 	@Override

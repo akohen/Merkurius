@@ -4,6 +4,8 @@ import org.newdawn.slick.Color;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
 
 import fr.kohen.alexandre.framework.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
@@ -16,22 +18,6 @@ import fr.kohen.alexandre.framework.spatials.BoxSpatial;
  */
 public class EntityFactoryCana extends EntityFactory {
 	
-	
-	public static Entity testCamera(World world, int mapId, float x, float y, int screenX, int screenY, int width, int height, float screenRotation, String name) {
-		Entity e = world.createEntity();
-		e.setTag("camera");
-		e.setGroup("CAMERA");
-		
-		// Position and movement
-		e.addComponent(new Transform(mapId, x, y));
-		// Technical
-		e.addComponent(new Camera(screenX, screenY, width, height, screenRotation, name));
-		
-		e.refresh();
-		return e;
-	}
-	
-	
 	/**
 	 * Creates a player entity
 	 * @param world
@@ -42,8 +28,8 @@ public class EntityFactoryCana extends EntityFactory {
 	 */
 	public static Entity createPlayer(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
-		e.setTag("player");
-		e.setGroup("ACTOR");
+		world.getManager(TagManager.class).register("player", e);
+		world.getManager(GroupManager.class).add(e, "ACTOR");
 		
 		// Position and movement
 		e.addComponent(new Transform(mapId, x, y));
@@ -59,7 +45,7 @@ public class EntityFactoryCana extends EntityFactory {
 		e.addComponent(new Player());
 		e.addComponent(new EntityState());
 		
-		e.refresh();
+		e.addToWorld();
 		return e;
 	}
 	

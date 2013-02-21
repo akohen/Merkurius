@@ -4,6 +4,8 @@ import org.newdawn.slick.Color;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
 
 import fr.kohen.alexandre.framework.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
@@ -26,8 +28,8 @@ public class EntityFactory1412 extends EntityFactory {
 	 */
 	public static Entity createPlayer(World world, int mapId, float x, float y, int rotation) {
 		Entity e = world.createEntity();
-		e.setTag("player");
-		e.setGroup("ACTOR");
+		world.getManager(TagManager.class).register("player", e);
+		world.getManager(GroupManager.class).add(e, "ACTOR");
 		
 		// Position and movement
 		e.addComponent(new Transform(mapId, x, y, rotation));
@@ -43,7 +45,7 @@ public class EntityFactory1412 extends EntityFactory {
 		e.addComponent(new Player());
 		e.addComponent(new EntityState());
 		
-		e.refresh();
+		e.addToWorld();
 		return e;
 	}
 	

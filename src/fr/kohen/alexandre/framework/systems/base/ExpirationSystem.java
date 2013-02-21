@@ -1,29 +1,29 @@
 package fr.kohen.alexandre.framework.systems.base;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.Expires;
 
 public class ExpirationSystem extends EntityProcessingSystem {
-
-	private ComponentMapper<Expires> expiresMapper;
+	@Mapper ComponentMapper<Expires> expiresMapper;
 
 	@SuppressWarnings("unchecked")
 	public ExpirationSystem() {
-		super(Expires.class);
+		super( Aspect.getAspectForAll(Expires.class) );
 	}
 
 	@Override
 	public void initialize() {
-		expiresMapper = new ComponentMapper<Expires>(Expires.class, world);
 	}
 
 	@Override
 	protected void process(Entity e) {
 		Expires expires = expiresMapper.get(e);
-		expires.reduceLifeTime(world.getDelta());
+		expires.reduceLifeTime((int) world.getDelta());
 
 		if (expires.isExpired()) {
 			world.deleteEntity(e);

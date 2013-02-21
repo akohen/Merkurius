@@ -2,9 +2,10 @@ package fr.kohen.alexandre.framework.systems.base;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
@@ -15,13 +16,11 @@ public class MovementSystem extends EntityProcessingSystem {
 
 	@SuppressWarnings("unchecked")
 	public MovementSystem() {
-		super(Transform.class, Velocity.class);
+		super( Aspect.getAspectForAll(Transform.class, Velocity.class) );
 	}
 
 	@Override
 	public void initialize() {
-		velocityMapper 	= new ComponentMapper<Velocity>(Velocity.class, world);
-		transformMapper = new ComponentMapper<Transform>(Transform.class, world);
 	}
 
 	@Override

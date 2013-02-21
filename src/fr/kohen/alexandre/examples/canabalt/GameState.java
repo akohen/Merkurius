@@ -7,7 +7,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.artemis.EntitySystem;
-import com.artemis.SystemManager;
 import com.artemis.World;
 
 import fr.kohen.alexandre.examples.canabalt.systems.SpawnSystem;
@@ -35,23 +34,22 @@ public class GameState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		world = new World();
-		SystemManager systemManager = world.getSystemManager();
-		renderSystem 		= 	systemManager.setSystem(new RenderSystemBase(gc));
-		controlSystem 		= 	systemManager.setSystem(new ControlSystemMouse(gc, 15f, 15f));
-		movementSystem 		= 	systemManager.setSystem(new MovementSystem());
-		collisionSystem 	= 	systemManager.setSystem(new CollisionSystemBase());
-		cameraSystem 		= 	systemManager.setSystem(new CameraSystemBase(gc));
-		spawnSystem 		= 	systemManager.setSystem(new SpawnSystem());
-		gameState			=	(GameStateManager) systemManager.setSystem(new GameStateManager(gc, sb));
-		mapSystem			=	(MapSystemBase) systemManager.setSystem(new MapSystemBase());
-		systemManager.initializeAll();
+		renderSystem 		= 	world.setSystem(new RenderSystemBase(gc));
+		controlSystem 		= 	world.setSystem(new ControlSystemMouse(gc, 15f, 15f));
+		movementSystem 		= 	world.setSystem(new MovementSystem());
+		collisionSystem 	= 	world.setSystem(new CollisionSystemBase());
+		cameraSystem 		= 	world.setSystem(new CameraSystemBase(gc));
+		spawnSystem 		= 	world.setSystem(new SpawnSystem());
+		gameState			=	(GameStateManager) world.setSystem(new GameStateManager(gc, sb));
+		mapSystem			=	(MapSystemBase) world.setSystem(new MapSystemBase());
+		world.initialize();
 
 		// Creating the map
 		EntityFactoryCana.createMap(world, 1, 16000,600);
 		EntityFactoryCana.createPlayer(world, 1, 50, 50);
 		
 		EntityFactoryCana.createBox(world, 1, 50, 50, 15);
-		EntityFactoryCana.testCamera(world, 1, 0, 0, 0, 0, 400, 300, 0, "camera1");
+		EntityFactoryCana.createCamera(world, 1, 0, 0, 0, 0, 400, 300, 0, 0, "camera1");
 		
 	}
 
@@ -67,7 +65,6 @@ public class GameState extends BasicGameState {
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
-		world.loopStart();
 		world.setDelta(delta);
 		
 		if( mapSystem.getCurrentMap() != -1 )

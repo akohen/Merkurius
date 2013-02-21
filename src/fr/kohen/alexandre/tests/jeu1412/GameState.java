@@ -7,8 +7,9 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.artemis.EntitySystem;
-import com.artemis.SystemManager;
 import com.artemis.World;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
 
 import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.systems.base.CameraSystemBase;
@@ -35,16 +36,17 @@ public class GameState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		world = new World();
-		SystemManager systemManager = world.getSystemManager();
-		renderSystem 		= 	systemManager.setSystem(new RenderSystemBase(gc));
-		debugSystem 		= 	systemManager.setSystem(new DebugSystemBase(gc));
-		cameraSystem 		= 	systemManager.setSystem(new CameraSystemBase(gc));
-		mouseSystem 		= 	systemManager.setSystem(new MouseSystemBase(gc));
-		controlSystem 		= 	systemManager.setSystem(new ControlSystemBase(gc, 0.5f));
-		movementSystem 		= 	systemManager.setSystem(new MovementSystemFloat());
-		collisionSystem 	= 	systemManager.setSystem(new CollisionSystemFast());
-		systemManager.setSystem(new MapSystemBase());
-		systemManager.initializeAll();
+		world.setManager(new TagManager());
+		world.setManager(new GroupManager());
+		renderSystem 		= 	world.setSystem(new RenderSystemBase(gc), true);
+		debugSystem 		= 	world.setSystem(new DebugSystemBase(gc), true);
+		cameraSystem 		= 	world.setSystem(new CameraSystemBase(gc), true);
+		mouseSystem 		= 	world.setSystem(new MouseSystemBase(gc), true);
+		controlSystem 		= 	world.setSystem(new ControlSystemBase(gc, 0.5f), true);
+		movementSystem 		= 	world.setSystem(new MovementSystemFloat(), true);
+		collisionSystem 	= 	world.setSystem(new CollisionSystemFast(), true);
+		world.setSystem(new MapSystemBase(), true);
+		world.initialize();
 
 		// Creating the map
 		EntityFactory1412.createMap(world, 1, 16000,600);
@@ -78,8 +80,8 @@ public class GameState extends BasicGameState {
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {	
-		world.loopStart();
 		world.setDelta(delta);
+		world.process();
 		controlSystem	.process();
 		collisionSystem	.process();
 		movementSystem	.process();

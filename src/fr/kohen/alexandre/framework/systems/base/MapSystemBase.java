@@ -3,9 +3,10 @@ package fr.kohen.alexandre.framework.systems.base;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.Bag;
 
 import fr.kohen.alexandre.framework.components.Map;
@@ -15,23 +16,23 @@ import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 
 
 public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
-	protected ComponentMapper<Map> 			mapMapper;
-	protected ComponentMapper<Camera> 		cameraMapper;
-	protected ComponentMapper<Transform>	transformMapper;
 	protected Bag<Entity> 					maps;
 	protected int							currentMap =-1;
+	protected ComponentMapper<Transform> transformMapper;
+	protected ComponentMapper<Map> mapMapper;
+	protected ComponentMapper<Camera> cameraMapper;
 
 	@SuppressWarnings("unchecked")
 	public MapSystemBase() {
-		super(Map.class);
+		super( Aspect.getAspectForAll(Map.class) );
 		this.maps = new Bag<Entity>();
 	}
 
 	@Override
 	public void initialize() {
-		mapMapper 			= new ComponentMapper<Map>		(Map.class, world);
-		cameraMapper 		= new ComponentMapper<Camera>	(Camera.class, world);
-		transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
+		transformMapper = ComponentMapper.getFor(Transform.class, world);
+		mapMapper = ComponentMapper.getFor(Map.class, world);
+		cameraMapper = ComponentMapper.getFor(Camera.class, world);
 	}
 	
 
@@ -115,7 +116,7 @@ public class MapSystemBase extends EntityProcessingSystem implements MapSystem {
 	}
 	
 	@Override
-	protected void added(Entity e) {
+	protected void inserted(Entity e) {
 
 		Map 	 map  	= mapMapper.get(e);		
 		maps.set(map.getMapId(), e);

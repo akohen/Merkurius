@@ -4,6 +4,8 @@ import org.newdawn.slick.GameContainer;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.artemis.annotations.Mapper;
+import com.artemis.managers.TagManager;
 
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.engine.resources.ResourceManager;
@@ -11,8 +13,8 @@ import fr.kohen.alexandre.framework.systems.base.ScriptSystemBase;
 
 public class ScriptSystemMiniRPG extends ScriptSystemBase {
 
-	private 	ComponentMapper<Transform> 		transformMapper;
-    
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	
 	public ScriptSystemMiniRPG(GameContainer container) {
 		super(container);
 		this.scriptClass = ScriptMiniRPG.class;
@@ -20,7 +22,6 @@ public class ScriptSystemMiniRPG extends ScriptSystemBase {
 	
 	public void initialize() {
 		super.initialize();
-		transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
 		loadFile(ResourceManager.getFile("script"));
 	}
 
@@ -31,7 +32,7 @@ public class ScriptSystemMiniRPG extends ScriptSystemBase {
 		public ScriptMiniRPG() {super();}
 		
 		public void setPosition(String name, int mapId, int x, int y) {
-    		Entity entity = world.getTagManager().getEntity(name);
+    		Entity entity = world.getManager(TagManager.class).getEntity(name);
     		if( entity != null ) {
 	    		transformMapper.get(entity).setLocation(x,y);
 	    		transformMapper.get(entity).setMapId(mapId);

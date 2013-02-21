@@ -2,16 +2,23 @@ package fr.kohen.alexandre.examples.pong.systems;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.artemis.annotations.Mapper;
+import com.artemis.managers.TagManager;
 
+import fr.kohen.alexandre.framework.components.HitboxForm;
+import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.systems.base.CollisionSystemBase;
 
 public class CollisionSystemPong extends CollisionSystemBase {
-
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
+	@Mapper ComponentMapper<HitboxForm> 	hitboxFormMapper;
+	
 	protected int ballId;
 	
 	protected void begin() {
-		ballId = world.getTagManager().getEntity("ball").getId();
+		ballId = world.getManager(TagManager.class).getEntity("ball").getId();
 	}
 	
 	public boolean checkCollision(Entity e1, Entity e2, Vector2f mov) {

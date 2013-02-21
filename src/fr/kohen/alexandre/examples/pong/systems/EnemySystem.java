@@ -1,37 +1,37 @@
 package fr.kohen.alexandre.examples.pong.systems;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.managers.TagManager;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.examples.pong.components.Enemy;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
 
 public class EnemySystem extends EntityProcessingSystem {
-
-	private ComponentMapper<Transform> 	transformMapper;
-	private ComponentMapper<Velocity> 	velocityMapper;
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
 	private Entity ball;
 	private float accel;
 	
 	@SuppressWarnings("unchecked")
 	public EnemySystem(float accel) {
-		super(Enemy.class);
+		super( Aspect.getAspectForAll(Enemy.class) );
 		this.accel = accel;
 	}
 
 	@Override
 	public void initialize() {
-		this.transformMapper	= new ComponentMapper<Transform>	(Transform.class, world);
-		this.velocityMapper		= new ComponentMapper<Velocity>		(Velocity.class, world);
 	}
 	
 	@Override
 	protected void process(Entity e) {
 		// Checking that we know the ball entity
 		if( ball == null )
-			ball = world.getTagManager().getEntity("ball");
+			ball = world.getManager(TagManager.class).getEntity("ball");
 		
 		// Fetching components
 		Velocity 	velocityEnemy	= velocityMapper.get(e);
