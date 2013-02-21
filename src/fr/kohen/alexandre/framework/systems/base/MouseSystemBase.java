@@ -7,9 +7,11 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.MouseListener;
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.EntityFactory;
 import fr.kohen.alexandre.framework.components.SpatialForm;
@@ -21,26 +23,22 @@ import fr.kohen.alexandre.framework.spatials.BoxSpatial;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 
 public class MouseSystemBase extends EntityProcessingSystem implements MouseListener {
-
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Camera> 		cameraMapper;
+	@Mapper ComponentMapper<SpatialForm> 	spatialMapper;
 	protected GameContainer 				container;
-	protected ComponentMapper<Transform> 	transformMapper;
-	protected ComponentMapper<Camera> 		cameraMapper;
-	protected ComponentMapper<SpatialForm> 	spatialMapper;
 	protected Vector2f	 					mousePosition = new Vector2f( 0,0 );
 	protected CameraSystem 					cameraSystem;
 	protected Spatial 						mouseHitbox;
 
 	@SuppressWarnings("unchecked")
 	public MouseSystemBase(GameContainer container) {
-		super(Camera.class);
+		super( Aspect.getAspectForAll(Camera.class) );
 		this.container = container;
 	}
 
 	@Override
 	public void initialize() {
-		transformMapper 	= new ComponentMapper<Transform>(Transform.class, world);
-		cameraMapper 		= new ComponentMapper<Camera>(Camera.class, world);
-		spatialMapper 		= new ComponentMapper<SpatialForm>(SpatialForm.class, world);
 		cameraSystem		= Systems.get(CameraSystem.class, world);
 		container.getInput().addMouseListener(this);
 		mouseHitbox			= new BoxSpatial(1, 1);
@@ -85,7 +83,7 @@ public class MouseSystemBase extends EntityProcessingSystem implements MouseList
 			}
 		}
 		else if( cameraMapper.get(camera).getMouse() != null ) {
-			cameraMapper.get(camera).getMouse().delete();
+			cameraMapper.get(camera).getMouse().deleteFromWorld();
 			cameraMapper.get(camera).setMouse(null);
 		}
 	}

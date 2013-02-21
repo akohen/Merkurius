@@ -1,8 +1,5 @@
 package fr.kohen.alexandre.framework.systems.base;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -13,30 +10,28 @@ import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.engine.Spatial;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.managers.TagManager;
+import com.artemis.systems.EntityProcessingSystem;
 
 
 public class CameraSystemBase extends EntityProcessingSystem implements CameraSystem {
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<SpatialForm> 	spatialFormMapper;
+	@Mapper ComponentMapper<Camera> 		cameraMapper;
 	protected GameContainer 				container;
-	protected List<Entity>					cameras;
-	protected ComponentMapper<Transform> 	transformMapper;
-	protected ComponentMapper<SpatialForm> 	spatialFormMapper;
-	protected ComponentMapper<Camera> 		cameraMapper;
 
 	@SuppressWarnings("unchecked")
 	public CameraSystemBase(GameContainer container) {
-		super(Camera.class);
+		super( Aspect.getAspectForAll(Camera.class) );
 		this.container = container;
 	}
 
 	@Override
 	public void initialize() {
-		transformMapper		= new ComponentMapper<Transform>	(Transform.class, world);
-		cameraMapper		= new ComponentMapper<Camera>		(Camera.class, world);
-		spatialFormMapper	= new ComponentMapper<SpatialForm>	(SpatialForm.class, world);
-		cameras				= new ArrayList<Entity>();
 	}
 	
 	@Override
@@ -48,27 +43,20 @@ public class CameraSystemBase extends EntityProcessingSystem implements CameraSy
 	protected void process(Entity camera) { 
 		
 		if( cameraMapper.get(camera).getName().startsWith("cameraFollowPlayer") ) {
-			Entity player = world.getTagManager().getEntity("player");
+			Entity player = world.getManager(TagManager.class).getEntity("player");
 			if( player != null ) {
 				camera.addComponent(transformMapper.get(player));
-				camera.refresh();
 			}
 		}
 		
 	}
-
-	@Override
-	protected void added(Entity e) { cameras.add(e); }
 	
-	@Override
-	protected void removed(Entity e) { cameras.remove(e); };
 	
-	public List<Entity> getCameras() { return cameras; }
-
 	@Override
 	public boolean isVisible(Entity e, Entity camera) {
 		return isVisible(transformMapper.get(e), spatialFormMapper.get(e).getSpatial(), camera);
 	}
+	
 	
 	@Override
 	public boolean isVisible(Transform transform, Spatial spatial, Entity camera) {

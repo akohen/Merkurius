@@ -1,7 +1,5 @@
 package fr.kohen.alexandre.framework.systems.base;
 
-import java.util.List;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -12,6 +10,7 @@ import org.newdawn.slick.geom.Vector2f;
 
 import fr.kohen.alexandre.framework.components.Camera;
 import fr.kohen.alexandre.framework.components.HitboxForm;
+import fr.kohen.alexandre.framework.components.SpatialForm;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.engine.Spatial;
 import fr.kohen.alexandre.framework.engine.Systems;
@@ -19,18 +18,21 @@ import fr.kohen.alexandre.framework.spatials.CircleSpatial;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
-
+import com.artemis.annotations.Mapper;
+import com.artemis.managers.GroupManager;
+import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.utils.ImmutableBag;
 
 public class DebugSystemBase extends EntityProcessingSystem implements KeyListener {
+	@Mapper ComponentMapper<HitboxForm> 	hitboxFormMapper;
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Camera> 		cameraMapper;
 	protected Graphics 						graphics;
 	protected GameContainer 				container;
-	protected ComponentMapper<HitboxForm> 	hitboxFormMapper;
-	protected ComponentMapper<Transform> 	transformMapper;
-	protected ComponentMapper<Camera> 		cameraMapper;
-	protected List<Entity>					cameras;
+	protected ImmutableBag<Entity>			cameras;
 	protected RenderSystem 					renderSystem;
 	protected CameraSystem 					cameraSystem;
 	protected boolean						showDebug = false;
@@ -41,16 +43,13 @@ public class DebugSystemBase extends EntityProcessingSystem implements KeyListen
 
 	@SuppressWarnings("unchecked")
 	public DebugSystemBase(GameContainer container) {
-		super(Camera.class);
+		super( Aspect.getAspectForAll(Transform.class, HitboxForm.class).exclude(SpatialForm.class) );
 		this.container = container;
 		this.graphics = container.getGraphics();
 	}
 
 	@Override
 	public void initialize() {
-		hitboxFormMapper	= new ComponentMapper<HitboxForm>	(HitboxForm.class, world);
-		transformMapper		= new ComponentMapper<Transform>	(Transform.class, world);
-		cameraMapper		= new ComponentMapper<Camera>		(Camera.class, world);
 		container.getInput().addKeyListener(this);
 		renderSystem		= Systems.get(RenderSystem.class, world);
 		cameraSystem		= Systems.get(CameraSystem.class, world);
@@ -61,47 +60,59 @@ public class DebugSystemBase extends EntityProcessingSystem implements KeyListen
 	
 	@Override
 	protected void begin() {
+		cameras = world.getManager(GroupManager.class).getEntities("CAMERA");
 		colorCount = 0;
 	}
 	
 	
 	@Override
-	protected void process(Entity camera) {
-		renderSystem.setCamera(camera);	// Setting graphics context according to camera
-		
-		// Drawing objects
-		for(Entity e : cameraMapper.get(camera).getEntities() ) {
-			if( e.isActive() ) {
-				Vector2f location = transformMapper.get(e).getLocation();
-				
-				graphics.setColor(Color.green); 
-				graphics.drawLine(location.x-5, location.y, location.x+5, location.y);
-				graphics.drawLine(location.x, location.y-5, location.x, location.y+5);
-				
-				if( hitboxFormMapper.get(e) != null)
-					hitboxFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e), Color.red);	
-			}			
+	protected void process(Entity e) {
+		for (int i = 0, s = cameras.size(); s > i; i++) {		
+			if( cameraSystem.isVisible(transformMapper.get(e), hitboxFormMapper.get(e).getSpatial(), cameras.get(i)) ) // Adding visible entity to the camera rendering list
+				cameraMapper.get(cameras.get(i)).addEntity(e);
 		}
-		
-		// Mouse pointer
-		if( cameraMapper.get(camera).getMouse() != null )
-			mouseSpatial.render(graphics, transformMapper.get(cameraMapper.get(camera).getMouse()), cameraColors[colorCount%8]);
-		
-		// Camera box
-		Vector2f 	cameraLocation 	= transformMapper.get(camera).getLocation();
-		Rectangle cameraShape = new Rectangle(0,0,cameraMapper.get(camera).getScreenWidth()-1,cameraMapper.get(camera).getScreenHeight()-1 );
-		cameraShape.setLocation( 
-				cameraLocation.x-cameraMapper.get(camera).getScreenWidth()/2,
-				cameraLocation.y-cameraMapper.get(camera).getScreenHeight()/2
-			);
-		graphics.rotate( 0, 0, -transformMapper.get(camera).getRotation() );
-		graphics.setColor(cameraColors[colorCount%8]); 
-		graphics.draw(cameraShape);
-		
-		renderSystem.resetCamera();	
-		colorCount++;
 	}
 	
+	
+	@Override
+	protected void end() {
+		for (int i = 0, s = cameras.size(); s > i; i++) {
+			Entity camera = cameras.get(i);
+			renderSystem.setCamera(camera);	// Setting graphics context according to camera
+			
+			// Drawing objects
+			for(Entity e : cameraMapper.get(camera).getEntities() ) {
+				if( e.isActive() ) {
+					Vector2f location = transformMapper.get(e).getLocation();
+					
+					graphics.setColor(Color.green); 
+					graphics.drawLine(location.x-5, location.y, location.x+5, location.y);
+					graphics.drawLine(location.x, location.y-5, location.x, location.y+5);
+					
+					if( hitboxFormMapper.get(e) != null)
+						hitboxFormMapper.get(e).getSpatial().render(graphics, transformMapper.get(e), Color.red);	
+				}			
+			}
+			
+			// Mouse pointer
+			if( cameraMapper.get(camera).getMouse() != null )
+				mouseSpatial.render(graphics, transformMapper.get(cameraMapper.get(camera).getMouse()), cameraColors[colorCount%8]);
+			
+			// Camera box
+			Vector2f 	cameraLocation 	= transformMapper.get(camera).getLocation();
+			Rectangle cameraShape = new Rectangle(0,0,cameraMapper.get(camera).getScreenWidth()-1,cameraMapper.get(camera).getScreenHeight()-1 );
+			cameraShape.setLocation( 
+					cameraLocation.x-cameraMapper.get(camera).getScreenWidth()/2,
+					cameraLocation.y-cameraMapper.get(camera).getScreenHeight()/2
+				);
+			graphics.rotate( 0, 0, -transformMapper.get(camera).getRotation() );
+			graphics.setColor(cameraColors[colorCount%8]); 
+			graphics.draw(cameraShape);
+			
+			renderSystem.resetCamera();	
+			colorCount++;
+		}
+	}
 	
 	@Override
 	protected boolean checkProcessing() { return showDebug; }

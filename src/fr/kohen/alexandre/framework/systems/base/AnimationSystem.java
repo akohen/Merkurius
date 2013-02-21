@@ -2,9 +2,11 @@ package fr.kohen.alexandre.framework.systems.base;
 
 import org.newdawn.slick.geom.Vector2f;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.SpatialForm;
@@ -14,20 +16,17 @@ import fr.kohen.alexandre.framework.engine.C;
 import fr.kohen.alexandre.framework.engine.Spatial;
 
 public class AnimationSystem extends EntityProcessingSystem {
-	protected ComponentMapper<EntityState> stateMapper;
-	protected ComponentMapper<SpatialForm> spatialMapper;
-	protected ComponentMapper<Velocity> velocityMapper;
+	@Mapper ComponentMapper<EntityState> 	stateMapper;
+	@Mapper ComponentMapper<SpatialForm> 	spatialMapper;
+	@Mapper ComponentMapper<Velocity> 		velocityMapper;
 
 	@SuppressWarnings("unchecked")
 	public AnimationSystem() {
-		super(SpatialForm.class, EntityState.class);
+		super( Aspect.getAspectForAll(SpatialForm.class, EntityState.class) );
 	}
 
 	@Override
 	public void initialize() {
-		stateMapper 	= new ComponentMapper<EntityState>(EntityState.class, world);
-		spatialMapper 	= new ComponentMapper<SpatialForm>(SpatialForm.class, world);
-		velocityMapper 	= new ComponentMapper<Velocity>(Velocity.class, world);
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class AnimationSystem extends EntityProcessingSystem {
 		Vector2f 		speed 	= velocityMapper.get(e).getSpeed();
 		Spatial 		spatial	= spatialMapper.get(e).getSpatial();
 		
-		spatial.update(world.getDelta());
+		spatial.update((int) world.getDelta());
 		
 		if( spatial.hasAnim() ) {
 			if( state.getState() == STATES.MOVING ) {

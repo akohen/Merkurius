@@ -11,16 +11,18 @@ import fr.kohen.alexandre.framework.components.Button;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.systems.interfaces.MenuSystem;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.systems.EntityProcessingSystem;
 
 public class MenuSystemBase extends EntityProcessingSystem implements KeyListener, MenuSystem {
+	@Mapper ComponentMapper<Transform> 		transformMapper;
+	@Mapper ComponentMapper<Button> 		buttonMapper;
 	private GameContainer container;
-	private ComponentMapper<Button> buttonMapper;
 	private Hashtable<String, ArrayList<Entity>> menuList;
 	private Hashtable<String, Integer> activeButtons;
-	private ComponentMapper<Transform> transformMapper;
 	private boolean returnPressed;
 	private boolean moveUp;
 	private boolean moveDown;
@@ -29,14 +31,12 @@ public class MenuSystemBase extends EntityProcessingSystem implements KeyListene
 
 	@SuppressWarnings("unchecked")
 	public MenuSystemBase(GameContainer container) {
-		super(Transform.class, Button.class);
+		super( Aspect.getAspectForAll(Transform.class, Button.class) );
 		this.container = container;
 	}
 
 	@Override
 	public void initialize() {
-		buttonMapper 	= new ComponentMapper<Button>(Button.class, world);
-		transformMapper = new ComponentMapper<Transform>(Transform.class, world);
 		menuList 		= new Hashtable<String, ArrayList<Entity>>();
 		activeButtons 	= new Hashtable<String, Integer>();
 		activeGroup 	= null;
@@ -65,7 +65,7 @@ public class MenuSystemBase extends EntityProcessingSystem implements KeyListene
 		}
 	}
 	
-	protected void added(Entity e) {
+	protected void inserted(Entity e) {
 		ArrayList<Entity> menu;
 		String group = this.buttonMapper.get(e).getGroup();
 		if ( this.menuList.containsKey(group) ) {

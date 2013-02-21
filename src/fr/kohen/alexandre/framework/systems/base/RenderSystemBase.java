@@ -1,8 +1,5 @@
 package fr.kohen.alexandre.framework.systems.base;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Vector2f;
@@ -15,18 +12,22 @@ import fr.kohen.alexandre.framework.systems.interfaces.MapSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityProcessingSystem;
+import com.artemis.annotations.Mapper;
+import com.artemis.managers.GroupManager;
+import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.utils.ImmutableBag;
 
 
 public class RenderSystemBase extends EntityProcessingSystem implements RenderSystem {
+	@Mapper ComponentMapper<SpatialForm> 	spatialFormMapper;
+	@Mapper ComponentMapper<Camera> 		cameraMapper;
+	@Mapper ComponentMapper<Transform> 		transformMapper;
 	protected Graphics 						graphics;
 	protected GameContainer 				container;
-	protected ComponentMapper<SpatialForm> 	spatialFormMapper;
-	protected ComponentMapper<Transform> 	transformMapper;
-	protected ComponentMapper<Camera> 		cameraMapper;
-	protected List<Entity>					cameras;
+	protected ImmutableBag<Entity>			cameras;
 	protected Vector2f 						screen;
 	protected float							rotation = 0;
 	protected CameraSystem 					cameraSystem;
@@ -34,33 +35,23 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 
 	@SuppressWarnings("unchecked")
 	public RenderSystemBase(GameContainer container) {
-		super(Transform.class, SpatialForm.class);
+		super( Aspect.getAspectForAll(Transform.class, SpatialForm.class) );
 		this.container = container;
 		this.graphics = container.getGraphics();
 	}
 
 	@Override
 	public void initialize() {
-		spatialFormMapper	= new ComponentMapper<SpatialForm>	(SpatialForm.class, world);
-		transformMapper		= new ComponentMapper<Transform>	(Transform.class, world);
-		cameraMapper		= new ComponentMapper<Camera>		(Camera.class, world);
 		screen 				= new Vector2f(container.getWidth(), container.getHeight());
 		cameraSystem		= Systems.get(CameraSystem.class, world);
 		mapSystem			= Systems.get(MapSystem.class, world);
-		cameras				= new ArrayList<Entity>();
 	}
-
-	@Override
-	protected void added(Entity e) {
-	}
-	
 	
 	@Override
 	protected void begin() {
-		if( cameraSystem != null ) { // Getting camera list from the camera system
-			cameras = cameraSystem.getCameras();
-			for(Entity camera : cameras)
-				cameraMapper.get(camera).clearEntities();
+		cameras = world.getManager(GroupManager.class).getEntities("CAMERA");
+		for (int i = 0, s = cameras.size(); s > i; i++) {
+			cameraMapper.get(cameras.get(i)).clearEntities();
 		}
 	}
 	
@@ -72,9 +63,9 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 			defaultRender(e); // Default camera system if no camera is defined
 		}
 		else {
-			for(Entity camera : cameras) {			
-				if( cameraSystem.isVisible(e, camera) ) // Adding visible entity to the camera rendering list
-					cameraMapper.get(camera).addEntity(e);
+			for (int i = 0, s = cameras.size(); s > i; i++) {		
+				if( cameraSystem.isVisible(e, cameras.get(i)) ) // Adding visible entity to the camera rendering list
+					cameraMapper.get(cameras.get(i)).addEntity(e);
 			} // Foreach camera
 		}
 	}
@@ -83,7 +74,8 @@ public class RenderSystemBase extends EntityProcessingSystem implements RenderSy
 	@Override
 	protected void end() {
 		
-		for(Entity camera : cameras) {
+		for (int i = 0, s = cameras.size(); s > i; i++) {
+			Entity camera = cameras.get(i);
 			setCamera(camera);	// Setting graphics context according to camera
 			
 			

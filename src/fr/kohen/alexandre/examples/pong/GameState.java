@@ -7,7 +7,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import com.artemis.EntitySystem;
-import com.artemis.SystemManager;
 import com.artemis.World;
 
 import fr.kohen.alexandre.examples.pong.systems.CollisionSystemPong;
@@ -32,15 +31,14 @@ public class GameState extends BasicGameState {
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		world = new World();
-		SystemManager systemManager = world.getSystemManager();
-		renderSystem 		= 	systemManager.setSystem(new RenderSystemBase(gc));
-		controlSystem 		= 	systemManager.setSystem(new ControlSystemMouse(gc, 10f, 0));
-		enemySystem 		= 	systemManager.setSystem(new EnemySystem(1f));
-		movementSystem 		= 	systemManager.setSystem(new MovementSystem());
-		collisionSystem 	= 	systemManager.setSystem(new CollisionSystemPong());
-		scoreSystem 		= 	systemManager.setSystem(new ScoreSystem());
-		systemManager.setSystem(new MapSystemBase());
-		systemManager.initializeAll();
+		renderSystem 		= 	world.setSystem(new RenderSystemBase(gc));
+		controlSystem 		= 	world.setSystem(new ControlSystemMouse(gc, 10f, 0));
+		enemySystem 		= 	world.setSystem(new EnemySystem(1f));
+		movementSystem 		= 	world.setSystem(new MovementSystem());
+		collisionSystem 	= 	world.setSystem(new CollisionSystemPong());
+		scoreSystem 		= 	world.setSystem(new ScoreSystem());
+		world.setSystem(new MapSystemBase());
+		world.initialize();
 
 		// Creating the map
 		EntityFactoryPong.createMap(world, 1, 800,600);
@@ -67,7 +65,6 @@ public class GameState extends BasicGameState {
 	
 	@Override
 	public void update(GameContainer gc, StateBasedGame sb, int delta) throws SlickException {
-		world.loopStart();
 		world.setDelta(delta);
 		controlSystem	.process();
 		enemySystem		.process();
