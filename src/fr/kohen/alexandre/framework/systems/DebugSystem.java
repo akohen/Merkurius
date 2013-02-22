@@ -23,6 +23,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import fr.kohen.alexandre.framework.Systems;
 import fr.kohen.alexandre.framework.components.CameraComponent;
 import fr.kohen.alexandre.framework.components.Transform;
+import fr.kohen.alexandre.framework.systems.interfaces.ICameraSystem;
 import fr.kohen.alexandre.framework.systems.interfaces.IPhysicsSystem;
 
 /**
@@ -35,6 +36,7 @@ public class DebugSystem extends VoidEntitySystem {
 	protected ComponentMapper<Transform> 		transformMapper;
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
 	protected IPhysicsSystem 					physicsSystem;
+	protected ICameraSystem 					cameraSystem;
 	protected FrameBuffer 						framebuffer;
 	protected Box2DDebugRenderer 				debugRenderer;
 	protected boolean 							acceptingInput;
@@ -44,6 +46,12 @@ public class DebugSystem extends VoidEntitySystem {
 
 	public DebugSystem() {
 		super();
+		batch 			= new SpriteBatch();
+		framebuffer 	= new FrameBuffer(Format.RGBA4444, 640, 480, true);
+		debugRenderer 	= new Box2DDebugRenderer();
+		acceptingInput	= true;
+		debugEnabled	= false;
+		fps 			= new FPSLogger();
 	}
 
 	@Override
@@ -51,13 +59,7 @@ public class DebugSystem extends VoidEntitySystem {
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
 		physicsSystem	= Systems.get(IPhysicsSystem.class, world);
-		
-		batch 			= new SpriteBatch();
-		framebuffer 	= new FrameBuffer(Format.RGBA4444, 640, 480, true);
-		debugRenderer 	= new Box2DDebugRenderer();
-		acceptingInput	= true;
-		debugEnabled	= false;
-		fps 			= new FPSLogger();
+		cameraSystem	= Systems.get(ICameraSystem.class, world);
 	}
 	
 
@@ -86,7 +88,12 @@ public class DebugSystem extends VoidEntitySystem {
 		
 		// Debug rendering
 		if ( physicsSystem != null && debugEnabled ) {
-			ImmutableBag<Entity> 		cameras 	= world.getManager(GroupManager.class).getEntities("CAMERA");
+			ImmutableBag<Entity> cameras;
+			if ( cameraSystem != null ) {
+				cameras = cameraSystem.getCameras();
+			} else {
+				cameras = world.getManager(GroupManager.class).getEntities("CAMERA");
+			}
 			Hashtable<Integer, World> 	universe 	= physicsSystem.getUniverse();
 			OrthographicCamera 			mainCamera 	= new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 			mainCamera.setToOrtho(true);

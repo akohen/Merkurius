@@ -1,8 +1,7 @@
-package fr.kohen.alexandre.examples.ex4_physics;
+package fr.kohen.alexandre.examples.mouse;
 
 import com.artemis.Entity;
 import com.artemis.World;
-import com.artemis.managers.TagManager;
 import com.badlogic.gdx.graphics.Color;
 
 import fr.kohen.alexandre.framework.EntityFactory;
@@ -10,17 +9,18 @@ import fr.kohen.alexandre.framework.components.*;
 import fr.kohen.alexandre.framework.physicsbodies.*;
 import fr.kohen.alexandre.framework.visuals.*;
 
-public class EntityFactoryEx4 extends EntityFactory {
+public class EntityFactoryMouse extends EntityFactory {
+
+
 	
 	public static Entity addPlayer(World world, int mapId, float x, float y) {
 		Entity e = world.createEntity();
-		world.getManager(TagManager.class).register("player", e);
 		e.addComponent( new Transform(mapId, x, y) );
 		e.addComponent( new VisualComponent(new BoxVisual(25, 25, Color.BLUE)) );
 		e.addComponent( new Player() );
 		e.addComponent( new Velocity(100,100) );
 		e.addComponent( new EntityState() );
-		e.addComponent( new PhysicsBodyComponent(new PlayerBody()) );
+		e.addComponent( new PhysicsBodyComponent(new BallBody()) );
 		e.addToWorld();
 		return e;
 	}
@@ -29,6 +29,7 @@ public class EntityFactoryEx4 extends EntityFactory {
 		Entity e = world.createEntity();
 		e.addComponent( new Transform(mapId, x, y) );
 		e.addComponent( new VisualComponent(new BoxVisual(size, size, Color.RED)) );
+		e.addComponent( new Velocity(1,1) );
 		e.addComponent( new EntityState() );
 		e.addComponent( new PhysicsBodyComponent(new BoxBody(size)) );
 		e.addToWorld();

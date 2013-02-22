@@ -8,12 +8,13 @@ import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
 
 public class CameraComponent extends Component {
-	public Vector2 size;
-	public Vector2 position;
-	public float zoom;
-	public float rotation;
-	public String name;
+	public Vector2 		size;
+	public Vector2 		position;
+	public float 		zoom;
+	public float 		rotation;
+	public String 		name;
 	public List<Entity> entities;
+	public Entity 		mouse = null;
 	
 	public CameraComponent(int width, int height, String name) {
 		this.size 		= new Vector2(width,height);

@@ -10,7 +10,6 @@ import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -45,6 +44,10 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 	@SuppressWarnings("unchecked")
 	public Box2DSystem() {
 		super( Aspect.getAspectForAll(Transform.class, PhysicsBodyComponent.class) );
+		universe		= new Hashtable<Integer,World>();
+		contactListeners= new Hashtable<Integer, List<ContactListener>>();
+		globalListeners	= new ArrayList<ContactListener>();
+		previousMap		= new Hashtable<Entity, Integer>();
 	}
 
 	@Override
@@ -54,11 +57,6 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
 		bodyMapper 		= ComponentMapper.getFor(PhysicsBodyComponent.class, world);
 		cameraSystem	= Systems.get(ICameraSystem.class, world);
-		
-		universe		= new Hashtable<Integer,World>();
-		contactListeners= new Hashtable<Integer, List<ContactListener>>();
-		globalListeners	= new ArrayList<ContactListener>();
-		previousMap		= new Hashtable<Entity, Integer>();
 	}
 	
 	
@@ -70,7 +68,7 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 		if( universe.containsKey(transformMapper.get(e).mapId) ) {
 			b2World = universe.get(transformMapper.get(e).mapId);
 		} else {
-			b2World = new World(new Vector2(0, 0), true);
+			b2World = newWorld(e);
 			b2World.setContactListener(this);
 			universe.put( transformMapper.get(e).mapId, b2World );
 		}
@@ -82,7 +80,7 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 		
 		// Body initialization
 		bodyMapper.get(e).physicsBody.initialize( b2World );
-		
+		bodyMapper.get(e).getBody().setUserData(e);
 		bodyMapper.get(e).getBody().setTransform(
 				transformMapper.get(e).x,
 				transformMapper.get(e).y, 
@@ -106,30 +104,30 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 	
 	@Override
 	protected void process(Entity e) {
-		Body body = bodyMapper.get(e).getBody();
-		
-		// Linking the body to the entity
-		if ( body.getUserData() == null ) {
-			body.setUserData(e);
+		if ( e.isEnabled() ) {
+			bodyMapper.get(e).getBody().setAwake(true);
+			
+			// Updating position
+			bodyMapper.get(e).getBody().setTransform( 
+					transformMapper.get(e).getLocation(), 
+					transformMapper.get(e).rotation * MathUtils.degreesToRadians 
+				);
+			
+			// adding speed
+			if( velocityMapper.getSafe(e) != null ) { 
+				bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed);
+				bodyMapper.get(e).getBody().setAngularVelocity(velocityMapper.get(e).getRotation());			
+			} 
+			
+			// Switching world
+			if ( previousMap.get(e) != transformMapper.get(e).mapId ) { 
+				removed(e);
+				inserted(e);
+			}
+		} else {
+			bodyMapper.get(e).getBody().setAwake(false);
 		}
 		
-		// Updating position
-		body.setTransform( 
-				transformMapper.get(e).getLocation(), 
-				transformMapper.get(e).rotation * MathUtils.degreesToRadians 
-			);
-		
-		// adding speed
-		if( velocityMapper.getSafe(e) != null ) { 
-			body.setLinearVelocity(velocityMapper.get(e).speed);
-			body.setAngularVelocity(velocityMapper.get(e).getRotation());			
-		} 
-		
-		// Switching world
-		if ( previousMap.get(e) != transformMapper.get(e).mapId ) { 
-			removed(e);
-			inserted(e);
-		}
 	}
 	
 	
@@ -146,12 +144,21 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 			transformMapper.get(e).setLocation(bodyMapper.get(e).getBody().getPosition());
 			transformMapper.get(e).rotation = bodyMapper.get(e).getBody().getAngle() * MathUtils.radiansToDegrees;
 			if( velocityMapper.getSafe(e) != null ) { // adding speed
-				//velocityMapper.get(e).speed = bodyMapper.get(e).getBody().getLinearVelocity();
+				velocityMapper.get(e).speed = bodyMapper.get(e).getBody().getLinearVelocity();
 				velocityMapper.get(e).rotation = bodyMapper.get(e).getBody().getAngularVelocity();		
 			} 
 		}
 	}
 	
+	
+	/**
+	 * Return a new world to be added to the universe. Use this function to change default world behavior
+	 * @param e The entity causing the world creation
+	 * @return
+	 */
+	protected World newWorld(Entity e) {
+		return new World(new Vector2(0, 0), true);
+	}
 
 	@Override
 	public Hashtable<Integer, World> getUniverse() {
@@ -174,7 +181,7 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 	
 	// Contact listener
 	@Override
-	public void beginContact(Contact contact) {	
+	public void beginContact(Contact contact) {
 		int mapId = transformMapper.get((Entity) contact.getFixtureA().getBody().getUserData()).mapId;
 		for ( ContactListener listener : contactListeners.get(mapId)  ) { listener.beginContact(contact); }
 		for ( ContactListener listener : globalListeners  ) { listener.beginContact(contact); }
@@ -201,5 +208,7 @@ public class Box2DSystem extends EntityProcessingSystem implements IPhysicsSyste
 		for ( ContactListener listener : contactListeners.get(mapId)  ) { listener.postSolve(contact, impulse); }
 		for ( ContactListener listener : globalListeners  ) { listener.postSolve(contact, impulse); }
 	}
+
+	
 	
 }	

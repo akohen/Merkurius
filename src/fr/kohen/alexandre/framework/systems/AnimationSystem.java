@@ -38,11 +38,10 @@ public class AnimationSystem extends EntityProcessingSystem {
 	@Override
 	protected void process(Entity e) {
 		EntityState 	state 	= stateMapper.get(e);
-		Visual 			visual	= visualMapper.get(e).getVisual();
 		
-		visual.update( world.getDelta() );
-		if( visual.isAnimated() && velocityMapper.getSafe(e) != null ) {
-			setCurrentAnim( visual, state, velocityMapper.get(e).getSpeed() );
+		visualMapper.get(e).visual.update( world.getDelta() );
+		if( visualMapper.get(e).visual.isAnimated() && velocityMapper.getSafe(e) != null ) {
+			setCurrentAnim( visualMapper.get(e).visual, state, velocityMapper.get(e).getSpeed() );
 		}
 		
 	}

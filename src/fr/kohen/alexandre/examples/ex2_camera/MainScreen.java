@@ -7,19 +7,21 @@ import fr.kohen.alexandre.framework.systems.CameraSystem;
 import fr.kohen.alexandre.framework.systems.ControlSystem;
 import fr.kohen.alexandre.framework.systems.DebugSystem;
 import fr.kohen.alexandre.framework.systems.ExpirationSystem;
+import fr.kohen.alexandre.framework.systems.MouseSystem;
 import fr.kohen.alexandre.framework.systems.RenderSystem;
 
 public class MainScreen extends GameScreen {
 
 	@Override
-	protected void setSystems() {
+	protected void setSystems() {	
 		world.setSystem(new CameraSystem());
 		world.setSystem(new ControlSystem(50));
 		world.setSystem(new AnimationSystem());
 		world.setSystem(new RenderSystem());
-		world.setSystem(new Box2DSystem());	
+		world.setSystem(new Box2DSystem());
 		world.setSystem(new ExpirationSystem());
 		world.setSystem(new DebugSystem());	
+		world.setSystem(new MouseSystem());	
 	}
 	
 	@Override
@@ -44,7 +46,7 @@ public class MainScreen extends GameScreen {
 		EntityFactoryEx2.addCamera(world, 2, 0, 100, 0, 160, -120, 160, 120, 0, "cameraRotationTest");
 
 		EntityFactoryEx2.addCamera(world, 1, 0, 0, 0, -160, 120, 320, 240, 0, "cameraFollowPlayer");
-		EntityFactoryEx2.addCamera(world, 1, 0, 0, 0, -160, -120, 320, 240, 0, "cameraWorld1");
+		EntityFactoryEx2.testCamera(world, 1, 0, 0, 0, -160, -120, 320, 240, 0, "testCamera");
 	}
 
 }

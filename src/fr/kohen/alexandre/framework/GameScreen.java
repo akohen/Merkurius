@@ -12,6 +12,7 @@ public abstract class GameScreen implements Screen {
 	}
 
 	public void controllerInit() {
+		//TODO add support for returning to a previously initialized screen
 		world = new World();
 		world.setManager(new TagManager());
 		world.setManager(new GroupManager());

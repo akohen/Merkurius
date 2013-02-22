@@ -19,7 +19,7 @@ public class ControlSystem extends EntityProcessingSystem {
 	protected ComponentMapper<Velocity> 	velocityMapper;
 	protected ComponentMapper<EntityState> 	stateMapper;
 	protected float 						speedUp, speedDown, speedLeft, speedRight;
-	protected boolean						simpleScheme = true;
+	protected boolean						simpleScheme = false;
 
 	@SuppressWarnings("unchecked")
 	public ControlSystem(float speedUp, float speedDown, float speedLeft, float speedRight) {

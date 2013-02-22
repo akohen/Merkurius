@@ -11,17 +11,9 @@ import fr.kohen.alexandre.framework.Visual;
  *
  */
 public class VisualComponent extends Component {
-	private Visual visual;
+	public Visual visual;
 	
 	public VisualComponent(Visual visual) {
-		setVisual(visual);
-	}
-	
-	public Visual getVisual() {
-		return visual;
-	}
-
-	public void setVisual(Visual visual) {
 		this.visual = visual;
 	}
 	

@@ -3,7 +3,6 @@ package fr.kohen.alexandre.framework.systems;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.managers.GroupManager;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
@@ -57,10 +56,13 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 	
 	@Override
 	protected void begin() {
-		cameras = world.getManager(GroupManager.class).getEntities("CAMERA");
-		for (int i = 0, s = cameras.size(); s > i; i++) {
-			cameraMapper.get(cameras.get(i)).entities.clear();
+		if ( cameraSystem != null ) {
+			cameras = cameraSystem.getCameras();
 		}
+		//cameras = world.getManager(GroupManager.class).getEntities("CAMERA");
+		/*for (int i = 0, s = cameras.size(); s > i; i++) {
+			cameraMapper.get(cameras.get(i)).entities.clear();
+		}*/
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 	}
@@ -68,7 +70,7 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 	
 	@Override
 	protected void process(Entity e) {
-		if( cameras == null || cameras.isEmpty() ) {
+		/* if( cameras == null || cameras.isEmpty() ) {
 			//defaultRender(e); // Default camera system if no camera is defined
 		} else {
 			for (int i = 0, s = cameras.size(); s > i; i++) {		
@@ -76,7 +78,7 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 					cameraMapper.get(cameras.get(i)).entities.add(e);
 				}
 			} // Foreach camera
-		}
+		} */
 	}
 
 	
@@ -108,8 +110,10 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 			
 			// Drawing objects
 			for ( Entity e : cameraMapper.get(cameraEntity).entities ) {
-				if ( e.isActive() ) {
-					visualMapper.get(e).draw( transformMapper.get(e), batch );
+				if ( e.isActive() && e.isEnabled() ) {
+					if ( visualMapper.getSafe(e) != null ) {
+						visualMapper.get(e).draw( transformMapper.get(e), batch );
+					}
 				}
 			}
 			
@@ -119,7 +123,7 @@ public class RenderSystem extends EntityProcessingSystem implements IRenderSyste
 			
 			batch.end();
 			framebuffer.end();
-			//Gdx.app.log("render", "" + cameraMapper.get(cameraEntity).size.x);
+			
 			TextureRegion region = new TextureRegion(
 					framebuffer.getColorBufferTexture(), 
 					(int) ((Gdx.graphics.getWidth() - cameraMapper.get(cameraEntity).size.x) / 2), 

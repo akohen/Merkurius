@@ -1,7 +1,6 @@
 package fr.kohen.alexandre.examples.ex4_physics;
 
 import fr.kohen.alexandre.framework.GameScreen;
-import fr.kohen.alexandre.framework.systems.Box2DSystem;
 import fr.kohen.alexandre.framework.systems.CameraSystem;
 import fr.kohen.alexandre.framework.systems.ControlSystem;
 import fr.kohen.alexandre.framework.systems.DebugSystem;
@@ -10,11 +9,11 @@ import fr.kohen.alexandre.framework.systems.RenderSystem;
 public class MainScreen extends GameScreen {
 
 	@Override
-	protected void setSystems() {
+	protected void setSystems() {	
 		world.setSystem(new CameraSystem());
 		world.setSystem(new ControlSystem(50));
 		world.setSystem(new RenderSystem());
-		world.setSystem(new Box2DSystem());	
+		world.setSystem(new PhysicsSystem());
 		world.setSystem(new DebugSystem());	
 		world.setSystem(new CollisionSystem());
 	}
