@@ -16,6 +16,7 @@ public abstract class MouseAction implements IAction {
 	protected ComponentMapper<Mouse> mouseMapper;
 	protected List<Entity> mouseContacts = new ArrayList<Entity>();
 	protected List<Entity> mousePressed = new ArrayList<Entity>();
+	protected List<Entity> toRemove = new ArrayList<Entity>();
 	
 	public MouseAction(World world) {
 		mouseMapper 	= ComponentMapper.getFor(Mouse.class, world);
@@ -25,13 +26,17 @@ public abstract class MouseAction implements IAction {
 	public void beginContact(Entity e, Entity other, Contact contact) {
 		if ( mouseMapper.has(other) ) {
 			mouseContacts.add(other);
-			mouseOver(e, other);	
+			mouseOver(e, other);
+			if ( mouseMapper.get(other).clicked ) {
+				mousePressed.add(other);
+			}
 		}
 	}
 	
 	
 	@Override
 	public void process(Entity e) {	
+		
 		for( Entity mouse : mouseContacts ) {
 			if ( mouseMapper.get(mouse).clicked ) {
 				if ( !mousePressed.contains(mouse) ) {
@@ -44,7 +49,19 @@ public abstract class MouseAction implements IAction {
 					mouseRelease(e, mouse);
 				}
 			}
+			if ( !mouse.isEnabled() ) {
+				toRemove.add(mouse);
+				mouseOff(e, mouse);
+				if ( mousePressed.contains(mouse) ) {
+					mousePressed.remove(mouse);
+				}
+			}
 		}
+		
+		for( Entity mouse : toRemove ) {
+			mouseContacts.remove(mouse);
+		}
+		toRemove.clear();
 		
 	}
 	
