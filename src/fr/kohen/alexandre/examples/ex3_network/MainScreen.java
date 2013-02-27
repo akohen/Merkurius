@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 
 import fr.kohen.alexandre.examples.ex3_network.systems.ClientSystem;
 import fr.kohen.alexandre.examples.ex3_network.systems.ServerSystem;
-import fr.kohen.alexandre.framework.GameScreen;
+import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.AnimationSystem;
 import fr.kohen.alexandre.framework.systems.Box2DSystem;
 import fr.kohen.alexandre.framework.systems.CameraSystem;

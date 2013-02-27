@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.framework;
+package fr.kohen.alexandre.framework.base;
 
 public class C {
 	public static final String STAND_DOWN 		= "stand_down";

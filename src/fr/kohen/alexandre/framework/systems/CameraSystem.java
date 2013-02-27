@@ -1,6 +1,6 @@
 package fr.kohen.alexandre.framework.systems;
 
-import fr.kohen.alexandre.framework.Systems;
+import fr.kohen.alexandre.framework.base.Systems;
 import fr.kohen.alexandre.framework.components.CameraComponent;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.systems.interfaces.ICameraSystem;

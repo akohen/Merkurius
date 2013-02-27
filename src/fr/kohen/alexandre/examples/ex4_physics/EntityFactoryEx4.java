@@ -5,10 +5,10 @@ import com.artemis.World;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.graphics.Color;
 
-import fr.kohen.alexandre.framework.EntityFactory;
+import fr.kohen.alexandre.framework.base.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
-import fr.kohen.alexandre.framework.physicsbodies.*;
-import fr.kohen.alexandre.framework.visuals.*;
+import fr.kohen.alexandre.framework.model.physicsBodies.BoxBody;
+import fr.kohen.alexandre.framework.model.visuals.BoxVisual;
 
 public class EntityFactoryEx4 extends EntityFactory {
 	

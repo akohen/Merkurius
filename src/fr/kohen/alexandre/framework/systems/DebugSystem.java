@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
-import fr.kohen.alexandre.framework.Systems;
+import fr.kohen.alexandre.framework.base.Systems;
 import fr.kohen.alexandre.framework.components.CameraComponent;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.systems.interfaces.ICameraSystem;

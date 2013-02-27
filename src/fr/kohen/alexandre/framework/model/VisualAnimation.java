@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.framework;
+package fr.kohen.alexandre.framework.model;
 
 import java.util.Hashtable;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.framework.visuals;
+package fr.kohen.alexandre.framework.model.visuals;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import fr.kohen.alexandre.framework.Visual;
+import fr.kohen.alexandre.framework.model.Visual;
 
 public class BoxVisual extends Visual {
 

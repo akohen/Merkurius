@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import fr.kohen.alexandre.framework.Visual;
+import fr.kohen.alexandre.framework.model.Visual;
 
 public class Logo extends Visual {
 

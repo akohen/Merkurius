@@ -1,8 +1,8 @@
 package fr.kohen.alexandre.framework.components;
 
-import fr.kohen.alexandre.framework.C;
-import fr.kohen.alexandre.framework.C.SELECTION_STATE;
-import fr.kohen.alexandre.framework.C.STATES;
+import fr.kohen.alexandre.framework.base.C;
+import fr.kohen.alexandre.framework.base.C.SELECTION_STATE;
+import fr.kohen.alexandre.framework.base.C.STATES;
 
 import com.artemis.Component;
 

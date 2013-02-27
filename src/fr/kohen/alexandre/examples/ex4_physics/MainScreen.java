@@ -1,6 +1,6 @@
 package fr.kohen.alexandre.examples.ex4_physics;
 
-import fr.kohen.alexandre.framework.GameScreen;
+import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.CameraSystem;
 import fr.kohen.alexandre.framework.systems.ControlSystem;
 import fr.kohen.alexandre.framework.systems.DebugSystem;

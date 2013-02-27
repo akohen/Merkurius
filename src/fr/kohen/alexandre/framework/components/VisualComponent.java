@@ -3,7 +3,7 @@ package fr.kohen.alexandre.framework.components;
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.kohen.alexandre.framework.Visual;
+import fr.kohen.alexandre.framework.model.Visual;
 
 /**
  * Holds the visual representation of the entity

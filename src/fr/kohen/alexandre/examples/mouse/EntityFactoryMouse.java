@@ -4,10 +4,11 @@ import com.artemis.Entity;
 import com.artemis.World;
 import com.badlogic.gdx.graphics.Color;
 
-import fr.kohen.alexandre.framework.EntityFactory;
+import fr.kohen.alexandre.framework.base.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
-import fr.kohen.alexandre.framework.physicsbodies.*;
-import fr.kohen.alexandre.framework.visuals.*;
+import fr.kohen.alexandre.framework.model.physicsBodies.BallBody;
+import fr.kohen.alexandre.framework.model.physicsBodies.BoxBody;
+import fr.kohen.alexandre.framework.model.visuals.BoxVisual;
 
 public class EntityFactoryMouse extends EntityFactory {
 
@@ -21,6 +22,7 @@ public class EntityFactoryMouse extends EntityFactory {
 		e.addComponent( new Velocity(100,100) );
 		e.addComponent( new EntityState() );
 		e.addComponent( new PhysicsBodyComponent(new BallBody()) );
+		e.addComponent( new ActionsComponent(new ExampleAction(world)) );
 		e.addToWorld();
 		return e;
 	}

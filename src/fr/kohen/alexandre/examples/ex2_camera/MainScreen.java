@@ -1,6 +1,6 @@
 package fr.kohen.alexandre.examples.ex2_camera;
 
-import fr.kohen.alexandre.framework.GameScreen;
+import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.AnimationSystem;
 import fr.kohen.alexandre.framework.systems.Box2DSystem;
 import fr.kohen.alexandre.framework.systems.CameraSystem;

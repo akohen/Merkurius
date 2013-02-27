@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.framework;
+package fr.kohen.alexandre.framework.model;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import fr.kohen.alexandre.framework.C;
-import fr.kohen.alexandre.framework.VisualAnimation;
+import fr.kohen.alexandre.framework.base.C;
+import fr.kohen.alexandre.framework.model.VisualAnimation;
 
 public class LordLardVisual extends VisualAnimation {
 	private static final int        		FRAME_COLS = 6;

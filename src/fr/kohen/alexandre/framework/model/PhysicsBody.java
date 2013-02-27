@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.framework;
+package fr.kohen.alexandre.framework.model;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;

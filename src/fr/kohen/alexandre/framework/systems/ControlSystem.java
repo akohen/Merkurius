@@ -9,10 +9,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 
+import fr.kohen.alexandre.framework.base.C.STATES;
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Player;
 import fr.kohen.alexandre.framework.components.Velocity;
-import fr.kohen.alexandre.framework.C.STATES;
 
 public class ControlSystem extends EntityProcessingSystem {
 

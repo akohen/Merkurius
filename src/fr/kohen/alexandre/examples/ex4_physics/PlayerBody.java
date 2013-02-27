@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-import fr.kohen.alexandre.framework.PhysicsBody;
+import fr.kohen.alexandre.framework.model.PhysicsBody;
 
 public class PlayerBody extends PhysicsBody {
 	

@@ -6,13 +6,13 @@ import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.Vector2;
 
-import fr.kohen.alexandre.framework.C;
-import fr.kohen.alexandre.framework.C.STATES;
-import fr.kohen.alexandre.framework.Visual;
-import fr.kohen.alexandre.framework.VisualAnimation;
+import fr.kohen.alexandre.framework.base.C;
+import fr.kohen.alexandre.framework.base.C.STATES;
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.components.VisualComponent;
+import fr.kohen.alexandre.framework.model.Visual;
+import fr.kohen.alexandre.framework.model.VisualAnimation;
 
 /**
  * Updates the animations

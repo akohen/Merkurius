@@ -6,10 +6,13 @@ import com.artemis.managers.TagManager;
 import com.badlogic.gdx.graphics.Color;
 
 import fr.kohen.alexandre.examples.ex2_camera.visuals.*;
-import fr.kohen.alexandre.framework.EntityFactory;
+import fr.kohen.alexandre.framework.base.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
-import fr.kohen.alexandre.framework.physicsbodies.*;
-import fr.kohen.alexandre.framework.visuals.*;
+import fr.kohen.alexandre.framework.model.physicsBodies.BallBody;
+import fr.kohen.alexandre.framework.model.physicsBodies.BoxBody;
+import fr.kohen.alexandre.framework.model.physicsBodies.CameraBody;
+import fr.kohen.alexandre.framework.model.physicsBodies.LordLardBody;
+import fr.kohen.alexandre.framework.model.visuals.BoxVisual;
 
 public class EntityFactoryEx2 extends EntityFactory {
 	

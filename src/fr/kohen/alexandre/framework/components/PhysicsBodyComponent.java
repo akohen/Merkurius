@@ -3,7 +3,7 @@ package fr.kohen.alexandre.framework.components;
 import com.artemis.Component;
 import com.badlogic.gdx.physics.box2d.Body;
 
-import fr.kohen.alexandre.framework.PhysicsBody;
+import fr.kohen.alexandre.framework.model.PhysicsBody;
 
 /**
  * Holds the information about the body to be used by the physics system

@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.framework;
+package fr.kohen.alexandre.framework.base;
 
 import com.artemis.World;
 import com.artemis.managers.GroupManager;

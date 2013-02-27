@@ -1,7 +1,7 @@
 package fr.kohen.alexandre.examples.mouse;
 
-import fr.kohen.alexandre.framework.GameController;
-import fr.kohen.alexandre.framework.GameScreen;
+import fr.kohen.alexandre.framework.base.GameController;
+import fr.kohen.alexandre.framework.base.GameScreen;
 
 public class MouseExampleGameController extends GameController {
 

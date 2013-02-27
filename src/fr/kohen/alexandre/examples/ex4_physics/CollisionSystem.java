@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-import fr.kohen.alexandre.framework.Systems;
+import fr.kohen.alexandre.framework.base.Systems;
 import fr.kohen.alexandre.framework.systems.interfaces.IPhysicsSystem;
 
 public class CollisionSystem extends VoidEntitySystem implements ContactListener {

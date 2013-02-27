@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.framework.physicsbodies;
+package fr.kohen.alexandre.framework.model.physicsBodies;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-import fr.kohen.alexandre.framework.PhysicsBody;
+import fr.kohen.alexandre.framework.model.PhysicsBody;
 
 public class BoxBody extends PhysicsBody {
 

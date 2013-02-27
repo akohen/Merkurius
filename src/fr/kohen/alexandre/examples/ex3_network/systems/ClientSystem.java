@@ -6,13 +6,13 @@ import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 
 import fr.kohen.alexandre.examples.ex3_network.EntityFactoryEx3;
+import fr.kohen.alexandre.framework.base.C.STATES;
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Player;
 import fr.kohen.alexandre.framework.components.Synchronize;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.systems.SyncSystem;
-import fr.kohen.alexandre.framework.C.STATES;
 
 public class ClientSystem extends SyncSystem {
 	public ClientSystem() {

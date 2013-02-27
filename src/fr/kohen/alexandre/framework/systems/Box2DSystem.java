@@ -16,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 
-import fr.kohen.alexandre.framework.Systems;
+import fr.kohen.alexandre.framework.base.Systems;
 import fr.kohen.alexandre.framework.components.CameraComponent;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;

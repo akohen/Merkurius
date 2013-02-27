@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.framework;
+package fr.kohen.alexandre.framework.base;
 
 import com.badlogic.gdx.Game;
 
