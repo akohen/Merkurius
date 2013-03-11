@@ -1,0 +1,43 @@
+package fr.kohen.alexandre.examples.map;
+
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
+import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+
+import fr.kohen.alexandre.framework.components.Map;
+
+public class MapSystemTest extends EntityProcessingSystem {
+	protected ComponentMapper<Map> mapMapper;
+	
+	@SuppressWarnings("unchecked")
+	public MapSystemTest() {
+		super(Aspect.getAspectForAll(Map.class));
+		
+	}
+	
+	@Override
+	public void initialize() {
+		mapMapper 	= ComponentMapper.getFor(Map.class, world);
+	}
+
+	@Override
+	protected void process(Entity e) {
+		OrthographicCamera camera = new OrthographicCamera();
+		camera.setToOrtho(false, 30, 20);
+		camera.update();
+		
+		MapLayer layer = mapMapper.get(e).tmap.getLayers().getLayer(0);
+		layer.getName();
+		//mapMapper.get(e).tmap.getLayers().getLayersByType(null);
+		
+		OrthogonalTiledMapRenderer renderer = new OrthogonalTiledMapRenderer(mapMapper.get(e).tmap, 1 / 20f);
+		renderer.setView(camera);
+		renderer.render();
+
+	}
+
+}

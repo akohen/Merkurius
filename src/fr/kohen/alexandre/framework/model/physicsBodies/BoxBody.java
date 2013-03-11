@@ -2,6 +2,7 @@ package fr.kohen.alexandre.framework.model.physicsBodies;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -13,10 +14,20 @@ public class BoxBody extends PhysicsBody {
 
 	private int width;
 	private int length;
+	private short categoryBits = 0x0001;
+	private short maskBits = -1;
+	
 	
 	public BoxBody(int size) {
 		this.width = size;
 		this.length = size;
+	}
+	
+	public BoxBody(int size, short categoryBits, short maskBits) {
+		this.width = size;
+		this.length = size;
+		this.categoryBits = categoryBits;
+		this.maskBits = maskBits;
 	}
 	
 	@Override
@@ -38,6 +49,13 @@ public class BoxBody extends PhysicsBody {
 		// Create a fixture from our polygon shape and add it to our ground body  
 		Fixture fixture = body.createFixture(groundBox, 0.0f); 
 		fixture.setFriction(1.0f);
+		
+		Filter filter = new Filter();
+		filter.categoryBits = this.categoryBits;
+		filter.maskBits = this.maskBits;
+		
+		fixture.setFilterData(filter);
+
 		// Clean up after ourselves
 		groundBox.dispose();
 

@@ -3,19 +3,19 @@ package fr.kohen.alexandre.framework.network;
 import java.io.*;
 import java.net.*;
 
-import fr.kohen.alexandre.framework.systems.interfaces.ISyncSystem;
+import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
  
 public class SyncThread extends Thread {
 	protected DatagramSocket 		socket = null;
-	protected ISyncSystem 	parentSystem;
+	protected SyncSystem 	parentSystem;
     
-    public SyncThread(ISyncSystem system) throws IOException {
+    public SyncThread(SyncSystem system) throws IOException {
 		super("ServerThread");
 		this.parentSystem 	= system;
 		socket 				= new DatagramSocket();
     }
     
-    public SyncThread(ISyncSystem system, int port) throws IOException {
+    public SyncThread(SyncSystem system, int port) throws IOException {
 		super("ServerThread");
 		this.parentSystem 	= system;
 		socket 				= new DatagramSocket(port);

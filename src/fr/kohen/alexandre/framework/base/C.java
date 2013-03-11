@@ -33,4 +33,20 @@ public class C {
 	public static final String STATE_EXIT		= "exit";
 	public static final String STATE_INIT		= "init state";
 
+	public static final short	CATEGORY_DEFAULT	= 1;
+	public static final short	CATEGORY_PLAYER		= 2;
+	public static final short	CATEGORY_ENEMY		= 4;
+	public static final short	CATEGORY_ACTOR		= 8;
+	public static final short	CATEGORY_ACTOR2		= 16;
+	public static final short	CATEGORY_SCENERY	= 32;
+	public static final short	CATEGORY_FOREGROUND	= 64;
+	public static final short	CATEGORY_BACKGROUND	= 128;
+	public static final short	CATEGORY_ITEM		= 256;
+	public static final short	CATEGORY_ITEM2		= 512;
+	public static final short	CATEGORY_1			= 1024;
+	public static final short	CATEGORY_2			= 2048;
+	public static final short	CATEGORY_3			= 4096;
+	public static final short	CATEGORY_4			= 8192;
+	public static final short	CATEGORY_5			= 16384;
+
 }

@@ -6,38 +6,38 @@ import java.util.List;
 import com.artemis.Entity;
 import com.badlogic.gdx.physics.box2d.Contact;
 
-import fr.kohen.alexandre.framework.model.IAction;
+import fr.kohen.alexandre.framework.model.Action;
 
-public class ActionList implements IAction {
-	private List<IAction> actions = new ArrayList<IAction>();
+public class ActionList implements Action {
+	private List<Action> actions = new ArrayList<Action>();
 	
 	public ActionList() {}
 	
-	public ActionList(List<IAction> actions) { this.actions = actions; }
+	public ActionList(List<Action> actions) { this.actions = actions; }
 	
-	public ActionList(IAction action) { this.add(action); }
+	public ActionList(Action action) { this.add(action); }
 	
-	public void add(IAction action) { this.actions.add(action); }
+	public void add(Action action) { this.actions.add(action); }
 	
-	public void remove(IAction action) { this.actions.remove(action); }
+	public void remove(Action action) { this.actions.remove(action); }
 	
 	@Override
 	public void beginContact(Entity e, Entity other, Contact contact) {
-		for ( IAction action : actions ) {
+		for ( Action action : actions ) {
 			action.beginContact(e, other, contact);
 		}
 	}
 
 	@Override
 	public void endContact(Entity e, Entity other, Contact contact) {
-		for ( IAction action : actions ) {
+		for ( Action action : actions ) {
 			action.endContact(e, other, contact);
 		}
 	}
 
 	@Override
 	public void process(Entity e) {
-		for ( IAction action : actions ) {
+		for ( Action action : actions ) {
 			action.process(e);
 		}
 	}

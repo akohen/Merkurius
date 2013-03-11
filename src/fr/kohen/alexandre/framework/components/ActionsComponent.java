@@ -2,7 +2,7 @@ package fr.kohen.alexandre.framework.components;
 
 import com.artemis.Component;
 
-import fr.kohen.alexandre.framework.model.IAction;
+import fr.kohen.alexandre.framework.model.Action;
 
 /**
  * Holds the reactions of the entity to events
@@ -10,9 +10,9 @@ import fr.kohen.alexandre.framework.model.IAction;
  *
  */
 public class ActionsComponent extends Component {
-	public IAction action;
+	public Action action;
 	
-	public ActionsComponent(IAction action) {
+	public ActionsComponent(Action action) {
 		this.action = action;
 	}
 }

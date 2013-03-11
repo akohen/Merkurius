@@ -9,9 +9,9 @@ import com.artemis.World;
 import com.badlogic.gdx.physics.box2d.Contact;
 
 import fr.kohen.alexandre.framework.components.Mouse;
-import fr.kohen.alexandre.framework.model.IAction;
+import fr.kohen.alexandre.framework.model.Action;
 
-public abstract class MouseAction implements IAction {
+public abstract class MouseAction implements Action {
 
 	protected ComponentMapper<Mouse> mouseMapper;
 	protected List<Entity> mouseContacts = new ArrayList<Entity>();

@@ -36,6 +36,7 @@ public class CameraBody extends PhysicsBody {
 		// (setAsBox takes half-width and half-height as arguments)
 		groundBox.setAsBox(width/2, length/2);
 		// Create a fixture from our polygon shape and add it to our ground body  
+		
 		Fixture fixture = body.createFixture(groundBox, 0.0f); 
 		fixture.setSensor(true);
 		fixture.setUserData(new String("cameraSensor"));

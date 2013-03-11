@@ -12,6 +12,6 @@ public class MouseExample {
 		cfg.width = 640;
 		cfg.height = 480;
 		
-		new LwjglApplication(new MouseExampleGameController(), cfg);
+		new LwjglApplication(new MouseExampleController(), cfg);
 	}
 }
