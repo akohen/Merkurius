@@ -10,7 +10,6 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.VisualComponent;
 import fr.kohen.alexandre.framework.model.Visual;
@@ -26,7 +25,7 @@ public class DefaultVisualSystem extends EntityProcessingSystem implements Visua
 	
 	@SuppressWarnings("unchecked")
 	public DefaultVisualSystem() {
-		super( Aspect.getAspectForAll(VisualComponent.class, EntityState.class) );
+		super( Aspect.getAspectForAll(VisualComponent.class) );
 	}
 	
 	public DefaultVisualSystem(Map<String,Visual> newVisuals) {

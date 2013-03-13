@@ -47,7 +47,7 @@ public class EntityFactoryExamples extends EntityFactory {
 	
 	public static Entity newMap(World world, int mapId, String mapName) {
 		Entity e = world.createEntity();
-		e.addComponent( new Map(mapId,mapName) );
+		e.addComponent( new MapComponent(mapId,mapName) );
 		return e;
 	}
 	

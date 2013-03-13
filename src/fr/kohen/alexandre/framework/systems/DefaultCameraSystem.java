@@ -85,7 +85,8 @@ public class DefaultCameraSystem extends EntityProcessingSystem implements Camer
 	private List<Entity> getSortedEntities(List<Entity> entities) {
 		List<SortableEntity> sortableEntities = new ArrayList<SortableEntity>();
 		for( Entity e : entities ) {
-			sortableEntities.add( new SortableEntity(e, visualMapper.get(e).depth) ); //TODO check for VisualComponent
+			if( visualMapper.has(e) )
+				sortableEntities.add( new SortableEntity(e, visualMapper.get(e).depth) ); //TODO check for VisualComponent
 		}
 		Collections.sort(sortableEntities);
 		

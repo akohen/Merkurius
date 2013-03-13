@@ -8,20 +8,20 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import fr.kohen.alexandre.framework.components.Map;
+import fr.kohen.alexandre.framework.components.MapComponent;
 
 public class MapSystemTest extends EntityProcessingSystem {
-	protected ComponentMapper<Map> mapMapper;
+	protected ComponentMapper<MapComponent> mapMapper;
 	
 	@SuppressWarnings("unchecked")
 	public MapSystemTest() {
-		super(Aspect.getAspectForAll(Map.class));
+		super(Aspect.getAspectForAll(MapComponent.class));
 		
 	}
 	
 	@Override
 	public void initialize() {
-		mapMapper 	= ComponentMapper.getFor(Map.class, world);
+		mapMapper 	= ComponentMapper.getFor(MapComponent.class, world);
 	}
 
 	@Override

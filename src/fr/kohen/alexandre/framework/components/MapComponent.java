@@ -9,12 +9,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
  * @author Alexandre
  *
  */
-public class Map extends Component {
+public class MapComponent extends Component {
 	
 	public int mapId;
 	public TiledMap tmap;
 
-	public Map(int mapId, String mapName) {
+	public MapComponent(int mapId, String mapName) {
 		this.mapId = mapId;
 		this.tmap = new TmxMapLoader().load(mapName);
 	}
