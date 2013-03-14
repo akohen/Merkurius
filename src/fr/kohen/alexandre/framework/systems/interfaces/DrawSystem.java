@@ -6,4 +6,5 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public interface DrawSystem {
 
 	public void draw(Entity e, SpriteBatch batch);
+	public boolean canProcess(Entity e);
 }

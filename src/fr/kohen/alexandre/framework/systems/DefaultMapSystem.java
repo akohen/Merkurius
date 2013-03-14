@@ -36,5 +36,10 @@ public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawS
 	public void draw(Entity e, SpriteBatch batch) {
 		
 	}
+
+	@Override
+	public boolean canProcess(Entity e) {
+		return mapMapper.has(e);
+	}
 	
 }

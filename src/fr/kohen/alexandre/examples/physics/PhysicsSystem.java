@@ -8,6 +8,6 @@ import fr.kohen.alexandre.framework.systems.DefaultBox2DSystem;
 
 public class PhysicsSystem extends DefaultBox2DSystem {
 	protected World newWorld(Entity e) {
-		return new World(new Vector2(0, -10), true);
+		return new World(new Vector2(0, -500), true);
 	}
 }

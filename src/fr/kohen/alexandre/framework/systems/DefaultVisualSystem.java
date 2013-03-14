@@ -58,5 +58,10 @@ public class DefaultVisualSystem extends EntityProcessingSystem implements Visua
 	public void draw(Entity e, SpriteBatch batch) {
 		visuals.get(e).draw( visualMapper.get(e), transformMapper.get(e), batch );
 	}
+
+	@Override
+	public boolean canProcess(Entity e) {
+		return visualMapper.has(e);
+	}
 	
 }

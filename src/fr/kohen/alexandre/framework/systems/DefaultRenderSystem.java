@@ -16,20 +16,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
 import fr.kohen.alexandre.framework.base.Systems;
-import fr.kohen.alexandre.framework.components.CameraComponent;
-import fr.kohen.alexandre.framework.components.Transform;
-import fr.kohen.alexandre.framework.components.VisualComponent;
-import fr.kohen.alexandre.framework.systems.interfaces.RenderSystem;
-import fr.kohen.alexandre.framework.systems.interfaces.VisualDrawSystem;
+import fr.kohen.alexandre.framework.components.*;
+import fr.kohen.alexandre.framework.systems.interfaces.*;
 
 public class DefaultRenderSystem extends EntityProcessingSystem implements RenderSystem {
-	protected ComponentMapper<VisualComponent> 	visualMapper;
 	protected ComponentMapper<Transform> 		transformMapper;
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
-	protected SpriteBatch 						batch;
-	protected FrameBuffer 						framebuffer;
-	protected OrthographicCamera 				mainCamera;
-	protected VisualDrawSystem visualSystem;
+	private VisualDrawSystem 					visualSystem;
+	private TextDrawSystem 						textSystem;
+	private SpriteBatch 						batch;
+	private FrameBuffer 						framebuffer;
+	private OrthographicCamera 					mainCamera;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -42,11 +39,12 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 	
 	@Override
 	public void initialize() {
-		visualMapper 	= ComponentMapper.getFor(VisualComponent.class, world);
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
-		
+
 		visualSystem	= Systems.get(VisualDrawSystem.class, world);
+		textSystem		= Systems.get(TextDrawSystem.class, world);
+		
 		if( visualSystem == null ) throw new RuntimeException("A required system is not loaded");
 	}
 
@@ -100,12 +98,15 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 	
 	/**
 	 * Override this method to change or add drawing behavior
-	 * Default implementation uses the visualSystem for entities with a VisualComponent
+	 * Call to super
 	 * @param e
 	 */
 	protected void drawEntity(Entity e) {
-		if ( visualMapper.getSafe(e) != null ) {
+		if ( visualSystem != null && visualSystem.canProcess(e) ) {
 			visualSystem.draw(e, batch);
+		}
+		if ( textSystem != null && textSystem.canProcess(e) ) {
+			textSystem.draw(e, batch);
 		}
 	}
 	

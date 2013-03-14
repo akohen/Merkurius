@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.map;
+package fr.kohen.alexandre.examples.text;
 
 import fr.kohen.alexandre.examples._common.EntityFactoryExamples;
 import fr.kohen.alexandre.examples._common.ExampleVisuals;
@@ -7,6 +7,7 @@ import fr.kohen.alexandre.framework.systems.*;
 
 public class MainScreen extends GameScreen {
 
+
 	@Override
 	protected void setSystems() {
 		world.setSystem( new DefaultCameraSystem() );
@@ -14,9 +15,12 @@ public class MainScreen extends GameScreen {
 		world.setSystem( new DefaultControlSystem(50) );
 		world.setSystem( new DefaultRenderSystem() );
 		world.setSystem( new DefaultVisualSystem(ExampleVisuals.visuals) );
+		world.setSystem( new DefaultTextSystem() );
 		world.setSystem( new DefaultBox2DSystem() );
-		world.setSystem( new DefaultDebugSystem() );
-		world.setSystem( new MapSystemTest() );	
+		world.setSystem( new DefaultExpirationSystem() );
+		world.setSystem( new DefaultDebugSystem() );	
+		world.setSystem( new DefaultMouseSystem() );
+		world.setSystem( new ChatSystemTest() );
 	}
 	
 	@Override
@@ -30,9 +34,9 @@ public class MainScreen extends GameScreen {
 		
 		EntityFactoryExamples.newPlayer(world, 1, 75, 150).addToWorld();
 
-		EntityFactoryExamples.newCamera(world, 1, 0, 0, 0, 0, 0, 400, 300, 0, "world1").addToWorld();
+		EntityFactoryExamples.newCamera(world, 1, 0, 0, 0, 0, 0, 640, 480, 0, "world1").addToWorld();
 		
-		EntityFactoryExamples.newMap(world, 1, "data/examples/maps/map1.tmx").addToWorld();
+		EntityFactoryExamples.newText(world, 1, 100, 0, "Test String").addToWorld();
 	}
 
 }

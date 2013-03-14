@@ -113,7 +113,7 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 				);
 			
 			// adding speed
-			if( velocityMapper.getSafe(e) != null ) { 
+			if( velocityMapper.has(e) ) { 
 				bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed);
 				bodyMapper.get(e).getBody().setAngularVelocity(velocityMapper.get(e).getRotation());			
 			} 

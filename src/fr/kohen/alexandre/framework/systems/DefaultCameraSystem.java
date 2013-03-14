@@ -5,11 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.kohen.alexandre.framework.base.Systems;
-import fr.kohen.alexandre.framework.components.CameraComponent;
-import fr.kohen.alexandre.framework.components.Transform;
-import fr.kohen.alexandre.framework.components.VisualComponent;
-import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
-import fr.kohen.alexandre.framework.systems.interfaces.PhysicsSystem;
+import fr.kohen.alexandre.framework.components.*;
+import fr.kohen.alexandre.framework.systems.interfaces.*;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -21,14 +18,13 @@ import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 
 public class DefaultCameraSystem extends EntityProcessingSystem implements CameraSystem, ContactListener {
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
 	protected ComponentMapper<Transform> 		transformMapper;
-	protected ComponentMapper<VisualComponent> 	visualMapper;
+	protected ComponentMapper<DepthComponent> 	depthMapper;
 	protected ImmutableBag<Entity>				cameras;
 	protected PhysicsSystem 					box2dSystem;
 
@@ -42,7 +38,7 @@ public class DefaultCameraSystem extends EntityProcessingSystem implements Camer
 	public void initialize() {
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
-		visualMapper 	= ComponentMapper.getFor(VisualComponent.class, world);
+		depthMapper 	= ComponentMapper.getFor(DepthComponent.class, world);
 		box2dSystem		= Systems.get(PhysicsSystem.class, world);
 		
 		if ( box2dSystem == null ) {
@@ -85,8 +81,11 @@ public class DefaultCameraSystem extends EntityProcessingSystem implements Camer
 	private List<Entity> getSortedEntities(List<Entity> entities) {
 		List<SortableEntity> sortableEntities = new ArrayList<SortableEntity>();
 		for( Entity e : entities ) {
-			if( visualMapper.has(e) )
-				sortableEntities.add( new SortableEntity(e, visualMapper.get(e).depth) ); //TODO check for VisualComponent
+			if( depthMapper.has(e) ) {
+				sortableEntities.add( new SortableEntity(e, depthMapper.get(e).depth) );
+			} else {
+				sortableEntities.add( new SortableEntity(e, 0) );
+			}
 		}
 		Collections.sort(sortableEntities);
 		
@@ -106,34 +105,33 @@ public class DefaultCameraSystem extends EntityProcessingSystem implements Camer
 	@Override
 	public ImmutableBag<Entity> getCameras() { return cameras; }
 	
-
-	private void addToCamera(Fixture cameraFixture, Fixture entityFixture) {	
-		cameraMapper.get( (Entity) cameraFixture.getBody().getUserData() )
-			.entities.add((Entity) entityFixture.getBody().getUserData());
+	public void addToCamera(Entity camera, Entity entity) {	
+		if( ! cameraMapper.get( camera ).entities.contains(entity) ) {
+			cameraMapper.get( camera ).entities.add( entity );
+		}
 	}
-	private void removeFromCamera(Fixture cameraFixture, Fixture entityFixture) {	
-		cameraMapper.get( (Entity) cameraFixture.getBody().getUserData() )
-			.entities.remove((Entity) entityFixture.getBody().getUserData());
+	public void removeFromCamera(Entity camera, Entity entity) {
+		cameraMapper.get( camera ).entities.remove( entity );
 	}
 	
 	
 	@Override
 	public void beginContact(Contact contact) {
 		if ( contact.getFixtureA().getUserData() instanceof String && ((String) contact.getFixtureA().getUserData()).equalsIgnoreCase("cameraSensor") ) {
-			addToCamera( contact.getFixtureA(),contact.getFixtureB() );
+			addToCamera( (Entity) contact.getFixtureA().getBody().getUserData(), (Entity) contact.getFixtureB().getBody().getUserData() );
 		}
 		if ( contact.getFixtureB().getUserData() instanceof String && ((String) contact.getFixtureB().getUserData()).equalsIgnoreCase("cameraSensor") ) {
-			addToCamera( contact.getFixtureB(),contact.getFixtureA() );
+			addToCamera( (Entity) contact.getFixtureB().getBody().getUserData(), (Entity) contact.getFixtureA().getBody().getUserData() );
 		}
 	}
 
 	@Override
 	public void endContact(Contact contact) {
 		if ( contact.getFixtureA().getUserData() instanceof String && ((String) contact.getFixtureA().getUserData()).equalsIgnoreCase("cameraSensor") ) {
-			removeFromCamera( contact.getFixtureA(),contact.getFixtureB() );
+			removeFromCamera( (Entity) contact.getFixtureA().getBody().getUserData(), (Entity) contact.getFixtureB().getBody().getUserData() );
 		}
 		if ( contact.getFixtureB().getUserData() instanceof String && ((String) contact.getFixtureB().getUserData()).equalsIgnoreCase("cameraSensor") ) {
-			removeFromCamera( contact.getFixtureB(),contact.getFixtureA() );
+			removeFromCamera( (Entity) contact.getFixtureB().getBody().getUserData(), (Entity) contact.getFixtureA().getBody().getUserData() );
 		}
 	}
 
