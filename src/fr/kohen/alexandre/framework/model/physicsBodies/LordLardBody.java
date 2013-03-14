@@ -21,7 +21,8 @@ public class LordLardBody extends PhysicsBody {
 		groundBodyDef.position.set(new Vector2(50, 100));  
 		groundBodyDef.type = BodyType.DynamicBody;
 		// Create a body from the defintion and add it to the world
-		body = box2dworld.createBody(groundBodyDef);  
+		body = box2dworld.createBody(groundBodyDef); 
+		body.setLinearDamping(5f);
 
 		// Create a polygon shape
 		PolygonShape groundBox = new PolygonShape();  
