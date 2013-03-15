@@ -95,6 +95,13 @@ public class DefaultMouseSystem extends EntityProcessingSystem {
 			mouseMapper.get(mouse).clicked = false;
 		}
 		
+		// Updating mouse input
+		if ( Gdx.input.isButtonPressed(1) ) {
+			mouseMapper.get(mouse).rightClicked = true;
+		} else {
+			mouseMapper.get(mouse).rightClicked = false;
+		}
+		
 	}
 
 }

@@ -1,7 +1,6 @@
 package fr.kohen.alexandre.examples.physics;
 
 import fr.kohen.alexandre.examples._common.EntityFactoryExamples;
-import fr.kohen.alexandre.examples._common.ExampleVisuals;
 import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.DefaultCameraSystem;
 import fr.kohen.alexandre.framework.systems.DefaultControlSystem;
@@ -16,7 +15,7 @@ public class MainScreen extends GameScreen {
 		world.setSystem( new DefaultCameraSystem() );
 		world.setSystem( new DefaultControlSystem(50) );
 		world.setSystem( new DefaultRenderSystem() );
-		world.setSystem( new DefaultVisualSystem(ExampleVisuals.visuals) );
+		world.setSystem( new DefaultVisualSystem(EntityFactoryExamples.visuals) );
 		world.setSystem( new PhysicsSystem() );
 		world.setSystem( new DefaultDebugSystem() );	
 		world.setSystem( new CollisionSystem() );

@@ -6,7 +6,6 @@ import java.net.UnknownHostException;
 import com.badlogic.gdx.Gdx;
 
 import fr.kohen.alexandre.examples._common.EntityFactoryExamples;
-import fr.kohen.alexandre.examples._common.ExampleVisuals;
 import fr.kohen.alexandre.examples.network.systems.ClientSystem;
 import fr.kohen.alexandre.examples.network.systems.ServerSystem;
 import fr.kohen.alexandre.framework.base.GameScreen;
@@ -34,7 +33,7 @@ public class MainScreen extends GameScreen {
 		if ( isServer )
 			world.setSystem(new DefaultControlSystem(50));
 		world.setSystem(new DefaultRenderSystem());
-		world.setSystem( new DefaultVisualSystem(ExampleVisuals.visuals) );
+		world.setSystem( new DefaultVisualSystem(EntityFactoryExamples.visuals) );
 		world.setSystem(new DefaultBox2DSystem());	
 		world.setSystem(new DefaultExpirationSystem());
 		world.setSystem(new DefaultDebugSystem());	

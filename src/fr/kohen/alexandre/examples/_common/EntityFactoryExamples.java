@@ -1,27 +1,44 @@
 package fr.kohen.alexandre.examples._common;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.managers.TagManager;
+import com.badlogic.gdx.graphics.Color;
 
-import fr.kohen.alexandre.examples.mouse.ExampleAction;
+import fr.kohen.alexandre.examples._common.visuals.LordLardVisual;
+import fr.kohen.alexandre.examples.mouse.*;
 import fr.kohen.alexandre.framework.base.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
-import fr.kohen.alexandre.framework.model.Action;
+import fr.kohen.alexandre.framework.model.*;
+import fr.kohen.alexandre.framework.model.actions.ActionList;
 import fr.kohen.alexandre.framework.model.physicsBodies.BoxBody;
 import fr.kohen.alexandre.framework.model.physicsBodies.CameraBody;
 import fr.kohen.alexandre.framework.model.physicsBodies.LordLardBody;
+import fr.kohen.alexandre.framework.model.visuals.BoxVisual;
 
 public class EntityFactoryExamples extends EntityFactory {
+
+public static Map<String, Visual> visuals = new HashMap<String, Visual>();
+public static Map<String, Action> actions = new HashMap<String, Action>();
 	
-	
-	/* Demonstrates how a single model class (like Action or Visual) can be used for multiple entities
-	 * Note that the class state is shared between entities!
-	 */
-	private static Action action = null;
-	private static Action getAction(World world) {
-		if ( action == null ) { action = new ExampleAction(world); }
-		return action;
+	static {
+		visuals.put( "example_player_visual", new BoxVisual(25, 25, Color.BLUE) );
+		visuals.put( "lord_lard", new LordLardVisual() );
+		visuals.put( "example_box_50", new BoxVisual(50, 50, Color.RED) );
+		visuals.put( "example_box_100", new BoxVisual(100, 100, Color.RED) );
+		visuals.put( "example_box_green_50", new BoxVisual(50, 50, Color.GREEN) );
+		visuals.put( "example_box_green_100", new BoxVisual(100, 100, Color.GREEN) );
+
+		actions.put( "mouse_example_action", new ExampleAction() );
+		
+		ArrayList<Action> actionList = new ArrayList<Action>();
+		actionList.add( new ExampleAction() );
+		actionList.add( new ExampleActionRight() );
+		actions.put( "mouse_example_action_list", new ActionList(actionList) );
 	}
 	
 	public static Entity newPlayer(World world, int mapId, float x, float y) {
@@ -89,19 +106,29 @@ public class EntityFactoryExamples extends EntityFactory {
 	
 	public static Entity newMouseExamplePlayer(World world, int mapId, float x, float y) {
 		Entity e = newPlayer(world, mapId, x, y);
-		e.addComponent( new ActionsComponent(getAction(world)) );
+		e.addComponent( new ActionsComponent("mouse_example_action") );
 		return e;
 	}
 
 	public static Entity newMouseExampleBox(World world, int mapId, int x, int y, int size) {
 		Entity e = newBox(world, mapId, x, y, size);
-		e.addComponent( new ActionsComponent(getAction(world)) );
+		e.addComponent( new ActionsComponent("mouse_example_action") );
+		return e;		
+	}
+
+	public static Entity newMouseExampleBoxWithRightClick(World world, int mapId, int x, int y, int size) {
+		Entity e = world.createEntity();
+		e.addComponent( new Transform(mapId, x, y) );
+		e.addComponent( new VisualComponent("example_box_green_" + size) );
+		e.addComponent( new PhysicsBodyComponent(new BoxBody(size)) );
+		e.addComponent( new EntityState() );
+		e.addComponent( new ActionsComponent("mouse_example_action_list") );
 		return e;		
 	}
 	
 	public static Entity newNetworkExamplePlayer(World world, int mapId, float x, float y) {
 		Entity e = newPlayer(world, mapId, x, y);
-		e.addComponent( new ActionsComponent(getAction(world)) );
+		e.addComponent( new ActionsComponent("mouse_example_action") );
 		e.addComponent( new Synchronize("player") );
 		return e;
 	}

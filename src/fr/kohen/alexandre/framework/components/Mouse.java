@@ -11,6 +11,7 @@ import com.artemis.Entity;
 public class Mouse extends Component {
 	public Entity camera;
 	public boolean clicked = false;
+	public boolean rightClicked = false;
 
 	public Mouse(Entity camera) { this.camera = camera; }
 }

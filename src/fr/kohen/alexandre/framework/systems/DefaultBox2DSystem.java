@@ -16,12 +16,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 
-import fr.kohen.alexandre.framework.base.Systems;
-import fr.kohen.alexandre.framework.components.CameraComponent;
-import fr.kohen.alexandre.framework.components.Transform;
-import fr.kohen.alexandre.framework.components.Velocity;
-import fr.kohen.alexandre.framework.components.PhysicsBodyComponent;
-import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
+import fr.kohen.alexandre.framework.components.*;
 import fr.kohen.alexandre.framework.systems.interfaces.PhysicsSystem;
 
 /**
@@ -33,13 +28,12 @@ import fr.kohen.alexandre.framework.systems.interfaces.PhysicsSystem;
 public class DefaultBox2DSystem extends EntityProcessingSystem implements PhysicsSystem {
 	protected ComponentMapper<Transform> 				transformMapper;
 	protected ComponentMapper<Velocity> 				velocityMapper;
-	protected ComponentMapper<CameraComponent> 			cameraMapper;
 	protected ComponentMapper<PhysicsBodyComponent> 	bodyMapper;
-	protected CameraSystem 							cameraSystem;
-	protected Hashtable<Integer, World> 				universe;
-	protected Hashtable<Integer, List<ContactListener>> contactListeners;
-	protected List<ContactListener> 					globalListeners;
-	protected Hashtable<Entity, Integer> 				previousMap;
+	
+	private Hashtable<Integer, World> 					universe;
+	private Hashtable<Integer, List<ContactListener>> 	contactListeners;
+	private List<ContactListener> 						globalListeners;
+	private Hashtable<Entity, Integer> 					previousMap;
 
 	@SuppressWarnings("unchecked")
 	public DefaultBox2DSystem() {
@@ -54,9 +48,7 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 	public void initialize() {
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		velocityMapper 	= ComponentMapper.getFor(Velocity.class, world);
-		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
 		bodyMapper 		= ComponentMapper.getFor(PhysicsBodyComponent.class, world);
-		cameraSystem	= Systems.get(CameraSystem.class, world);
 	}
 	
 	
@@ -92,8 +84,8 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 	@Override
 	protected void removed(Entity e) {
 		World b2world = bodyMapper.get(e).getBody().getWorld();
-		b2world.destroyBody( bodyMapper.get(e).getBody() );
-		if( b2world.getBodyCount() == 0 ) {
+		b2world.destroyBody( bodyMapper.get(e).getBody() ); // Removing body from world
+		if( b2world.getBodyCount() == 0 ) { // Removing empty world
 			universe.remove( previousMap.get(e) );
 			b2world.dispose();
 		}
@@ -104,39 +96,50 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 	@Override
 	protected void process(Entity e) {
 		if ( e.isEnabled() ) {
-			bodyMapper.get(e).getBody().setAwake(true);
-			
-			// Updating position
-			bodyMapper.get(e).getBody().setTransform( 
-					transformMapper.get(e).getPosition2(), 
-					transformMapper.get(e).rotation * MathUtils.degreesToRadians 
-				);
-			
-			// adding speed
-			if( velocityMapper.has(e) ) { 
-				bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed);
-				bodyMapper.get(e).getBody().setAngularVelocity(velocityMapper.get(e).getRotation());			
-			} 
-			
-			// Switching world
-			if ( previousMap.get(e) != transformMapper.get(e).mapId ) { 
-				removed(e);
-				inserted(e);
-			}
+			bodyMapper.get(e).getBody().setAwake(true); // Make sure the body is processed
+			updateBody(e);
 		} else {
-			bodyMapper.get(e).getBody().setAwake(false);
+			bodyMapper.get(e).getBody().setAwake(false); // Inactive entities should not be processed
 		}
-		
 	}
 	
 	
+	private void updateBody(Entity e) {
+		// Updating position
+		bodyMapper.get(e).getBody().setTransform( 
+				transformMapper.get(e).getPosition2(), 
+				transformMapper.get(e).rotation * MathUtils.degreesToRadians 
+			);
+		
+		// Updating speed
+		if( velocityMapper.has(e) ) { 
+			bodyMapper.get(e).getBody().setLinearVelocity(velocityMapper.get(e).speed);
+			bodyMapper.get(e).getBody().setAngularVelocity(velocityMapper.get(e).getRotation());			
+		} 
+		
+		// Switching world
+		if ( previousMap.get(e) != transformMapper.get(e).mapId ) { 
+			removed(e);
+			inserted(e);
+		}
+	}
+
+	
 	protected void end() {
-		// World iteration
+		updateWorlds();	
+		updateEntitiesAfterWorldUpdate();
+	}
+	
+
+	private void updateWorlds() {
 		for( Integer i : universe.keySet() ) {
 			World b2World = universe.get(i);
 			b2World.step( world.getDelta(), 6, 2);
-		}
-
+		}	
+	}
+	
+	
+	private void updateEntitiesAfterWorldUpdate() {
 		// Updating transform component
 		for (int i = 0, s = getActives().size(); s > i; i++) {
 			Entity e = getActives().get(i);
@@ -158,6 +161,7 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 	protected World newWorld(Entity e) {
 		return new World(new Vector2(0, 0), true);
 	}
+
 
 	@Override
 	public Hashtable<Integer, World> getUniverse() {

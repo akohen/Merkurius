@@ -1,6 +1,5 @@
 package fr.kohen.alexandre.examples.layers;
 
-import fr.kohen.alexandre.examples._common.ExampleVisuals;
 import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.DefaultBox2DSystem;
 import fr.kohen.alexandre.framework.systems.DefaultCameraSystem;
@@ -18,7 +17,7 @@ public class MainScreen extends GameScreen {
 		world.setSystem( new DefaultRenderSystem() );
 		world.setSystem( new DefaultBox2DSystem() );
 		world.setSystem( new DefaultDebugSystem() );	
-		world.setSystem( new DefaultVisualSystem(ExampleVisuals.visuals) );
+		world.setSystem( new DefaultVisualSystem(LayersExampleFactory.visuals) );
 	}
 	
 	@Override

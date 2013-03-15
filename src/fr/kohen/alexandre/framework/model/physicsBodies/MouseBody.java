@@ -26,7 +26,7 @@ public class MouseBody extends PhysicsBody {
 		PolygonShape groundBox = new PolygonShape();  
 		// Set the polygon shape as a box which is twice the size of our view port and 20 high
 		// (setAsBox takes half-width and half-height as arguments)
-		groundBox.setAsBox(4, 4);
+		groundBox.setAsBox(1, 1);
 		// Create a fixture from our polygon shape and add it to our ground body  
 		Fixture fixture = body.createFixture(groundBox, 0.0f); 
 		fixture.setSensor(true);

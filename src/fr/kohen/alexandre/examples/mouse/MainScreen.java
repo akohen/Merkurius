@@ -1,7 +1,6 @@
 package fr.kohen.alexandre.examples.mouse;
 
 import fr.kohen.alexandre.examples._common.EntityFactoryExamples;
-import fr.kohen.alexandre.examples._common.ExampleVisuals;
 import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.DefaultActionSystem;
 import fr.kohen.alexandre.framework.systems.DefaultBox2DSystem;
@@ -17,11 +16,11 @@ public class MainScreen extends GameScreen {
 	protected void setSystems() {	
 		world.setSystem( new DefaultCameraSystem() );
 		world.setSystem( new DefaultRenderSystem() );
-		world.setSystem( new DefaultVisualSystem(ExampleVisuals.visuals) );
+		world.setSystem( new DefaultVisualSystem(EntityFactoryExamples.visuals) );
 		world.setSystem( new DefaultBox2DSystem() );
 		world.setSystem( new DefaultDebugSystem() );	
 		world.setSystem( new DefaultMouseSystem() );	
-		world.setSystem( new DefaultActionSystem() );	
+		world.setSystem( new DefaultActionSystem(EntityFactoryExamples.actions) );	
 	}
 	
 	@Override
@@ -33,6 +32,8 @@ public class MainScreen extends GameScreen {
 		EntityFactoryExamples.newMouseExampleBox(world, 1, 130, -100, 100).addToWorld();
 		EntityFactoryExamples.newMouseExampleBox(world, 1, -130, -100, 100).addToWorld();
 		EntityFactoryExamples.newMouseExampleBox(world, 1, -130, 100, 100).addToWorld();
+		
+		EntityFactoryExamples.newMouseExampleBoxWithRightClick(world, 1, 200, 100, 50).addToWorld();
 
 		EntityFactoryExamples.newMouseExamplePlayer(world, 1, 100, 50).addToWorld();
 

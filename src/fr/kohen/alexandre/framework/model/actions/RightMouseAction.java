@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import fr.kohen.alexandre.framework.components.Mouse;
 import fr.kohen.alexandre.framework.model.Action;
 
-public abstract class MouseAction implements Action {
+public abstract class RightMouseAction implements Action {
 
 	protected ComponentMapper<Mouse> mouseMapper;
 	protected List<Entity> mouseContacts = new ArrayList<Entity>();
@@ -38,7 +38,7 @@ public abstract class MouseAction implements Action {
 	public void process(Entity e) {	
 		
 		for( Entity mouse : mouseContacts ) {
-			if ( mouseMapper.get(mouse).clicked ) {
+			if ( mouseMapper.get(mouse).rightClicked ) {
 				if ( !mousePressed.contains(mouse) ) {
 					mousePressed.add(mouse);
 					mouseClick(e, mouse);
