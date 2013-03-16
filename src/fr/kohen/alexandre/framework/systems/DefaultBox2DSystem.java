@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 import fr.kohen.alexandre.framework.components.*;
@@ -45,7 +46,7 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 	}
 
 	@Override
-	public void initialize() {
+	protected void initialize() {
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		velocityMapper 	= ComponentMapper.getFor(Velocity.class, world);
 		bodyMapper 		= ComponentMapper.getFor(PhysicsBodyComponent.class, world);
@@ -103,8 +104,12 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 		}
 	}
 	
+	public void raycast(int worldId, RayCastCallback callback, Vector2 point1, Vector2 point2) {
+		universe.get(worldId).rayCast(callback, point1, point2);
+	}
 	
-	private void updateBody(Entity e) {
+	
+	protected void updateBody(Entity e) {
 		// Updating position
 		bodyMapper.get(e).getBody().setTransform( 
 				transformMapper.get(e).getPosition2(), 

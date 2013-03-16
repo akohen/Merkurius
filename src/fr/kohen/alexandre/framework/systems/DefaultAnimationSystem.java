@@ -58,7 +58,7 @@ public class DefaultAnimationSystem extends EntityProcessingSystem implements An
 	
 	protected String getAnim(VisualComponent visual, Vector2 speed) {
 		String currentAnim = visual.currentAnimationName;
-		if( speed.len() == 0 )
+		if( speed.len() < 1 )
 			return idleAnim(visual);
 			
 		if( speed.x < 0 ) {

@@ -15,32 +15,45 @@ import fr.kohen.alexandre.framework.systems.DefaultSyncSystem;
 
 
 public class ServerSystem extends DefaultSyncSystem {
-	private int								playerId = 0;
+	private int lastPlayerId = 0;
 	
-
 	public ServerSystem(float delta, int port) { super(delta, port); }
-
-	@Override
-	public void initialize() {
-		super.initialize();
-	}
-	
 	
 	@Override
-	public void receive(DatagramPacket packet) { 
-		String message = new String(packet.getData(), 0, packet.getLength());
-		String[] data = message.split(" ");
+	protected void begin() { 
+		super.begin();
 		
-		if( data[0].equalsIgnoreCase("connect") ) {
-			Entity player = EntityFactoryExamples.newNetworkExamplePlayer(world, 1, 75, 150);
-			player.addToWorld();
-			GameClientImpl client = new GameClientImpl(packet.getAddress(), Integer.parseInt(data[1]), packet.getPort(), playerId++, player);
-			send(client, "connected " + client.getId() + " " + player.getId() );
-			clientList.add( client );
-			Gdx.app.log("New connection: ", packet.getAddress().toString() + ":" + packet.getPort() + " " + data[1] );
+		for( DatagramPacket packet : events ) {
+			String message = new String(packet.getData(), 0, packet.getLength());
+			String[] data = message.split(" ");
+			
+			if( data[0].equalsIgnoreCase("connect") ) {
+				connectNewPlayer(packet, data);
+			} else if( message.startsWith("chat") ) {
+				send(message);
+			}
 		}
 	}
-
+	
+	private void connectNewPlayer(DatagramPacket packet, String[] data) {
+		// Set player id
+		int playerId = getPlayerId();
+		
+		// Create player entity
+		Entity player = EntityFactoryExamples.newServerPlayer(world, playerId);
+		player.addToWorld();
+		
+		int clientInPort = Integer.parseInt(data[1]);
+		GameClientImpl client = new GameClientImpl(packet.getAddress(), clientInPort, packet.getPort(), playerId, player);
+		send(client, "connected player " + client.getId() + " " + player.getId() );
+		
+		clientList.add( client );
+		Gdx.app.log("New connection: ", packet.getAddress().toString() + ":" + packet.getPort() + " " + data[1] );
+	}
+	
+	private int getPlayerId() {
+		return lastPlayerId++;
+	}
 
 
 	@Override
@@ -51,7 +64,7 @@ public class ServerSystem extends DefaultSyncSystem {
 		Synchronize	sync		= syncMapper		.get(e);
 
 		// Creating the message
-		String message = e.getId() + " " + sync.getType();
+		String message = "update " + sync.getType() + " " + e.getId();
 		
 		if( state != null )
 			message += " " + state.getState();

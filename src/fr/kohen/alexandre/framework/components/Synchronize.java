@@ -14,8 +14,9 @@ public class Synchronize extends Component {
 	public Synchronize() { }
 	
 	public Synchronize(int id) { this.id = id; }
-	
+
 	public Synchronize(String type) { this.type = type; }
+	public Synchronize(String type, int id) { this.type = type; this.id = id;}
 	
 	public int getId() { return id; }
 	public String getType() { return type; }

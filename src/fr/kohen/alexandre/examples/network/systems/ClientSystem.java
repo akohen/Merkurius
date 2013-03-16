@@ -1,20 +1,26 @@
 package fr.kohen.alexandre.examples.network.systems;
 
+import java.net.DatagramPacket;
 import java.util.Map.Entry;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 
 import fr.kohen.alexandre.examples._common.EntityFactoryExamples;
+import fr.kohen.alexandre.examples.multiplayerRogue.systems.ChatSystem;
+import fr.kohen.alexandre.framework.base.Systems;
 import fr.kohen.alexandre.framework.base.C.STATES;
 import fr.kohen.alexandre.framework.components.EntityState;
-import fr.kohen.alexandre.framework.components.Player;
 import fr.kohen.alexandre.framework.components.Synchronize;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.systems.DefaultSyncSystem;
 
 public class ClientSystem extends DefaultSyncSystem {
+	private boolean connected = false;
+
+
+
 	public ClientSystem() {
 		super(0);
 	}
@@ -26,8 +32,8 @@ public class ClientSystem extends DefaultSyncSystem {
 		Transform 	transform 	= transformMapper.getSafe(e);
 		Synchronize sync 		= syncMapper.get(e);
 		
-		if( messages.containsKey(sync.getId()) ) {
-			String[] data = messages.get(sync.getId()).split(" ");
+		if( updates.containsKey(sync.getId()) ) {
+			EntityUpdate update = updates.get( sync.getId() );
 			/*if( data[1].equalsIgnoreCase("remove") ) {
 				world.deleteEntity(e);
 			}
@@ -36,55 +42,54 @@ public class ClientSystem extends DefaultSyncSystem {
 				e.refresh();
 			}*/
 			
-			int i=2;
 			if( state != null ) {
-				state.setState( STATES.valueOf(data[i++]) );	
+				state.setState( STATES.valueOf(update.getNext()) );	
 			}
 			
 			if( transform != null ) {
-				transform.position.x 	= Float.parseFloat(data[i++]);
-				transform.position.y 	= Float.parseFloat(data[i++]);
-				transform.rotation 		= Float.parseFloat(data[i++]);
+				transform.position.x 	= update.getNextFloat();
+				transform.position.y 	= update.getNextFloat();
+				transform.rotation 		= update.getNextFloat();
 			}
 			
 			if( velocity != null ) {
 				
-				velocity.setSpeed( Float.parseFloat(data[i++]), Float.parseFloat(data[i++]) );
-				velocity.setRotation( Float.parseFloat(data[i++]) );	
+				velocity.setSpeed( update.getNextFloat(), update.getNextFloat() );
+				velocity.setRotation( update.getNextFloat() );	
 			}
 			
-			messages.remove(sync.getId());
-		}
-		
-		
-		for( String event : events ) {
-			String[] data = event.split(" ");
-			if( data[0].equalsIgnoreCase("connected") && Integer.parseInt(data[2]) == sync.getId() ) {
-				e.addComponent( new Player() ).changedInWorld();
-			}
+			updates.remove(sync.getId());
 		}
 		
 	}
 	
 	protected void end() {
 		// If the message has not been removed, the entity doesn't exist yet, so we're creating it here.
-		for (Entry<Integer, String> entry : messages.entrySet()) {
-			Gdx.app.log("creating: ", entry.getValue() );
-			String[] data = entry.getValue().split(" ");
+		for (Entry<Integer, EntityUpdate> entry : updates.entrySet()) {
+			Gdx.app.log("creating: ", entry.getValue().getType() );
+			EntityUpdate update = entry.getValue();
 			
-			if( data[1].equalsIgnoreCase("player") ) {
-				Entity e = EntityFactoryExamples.newNetworkExamplePlayerClient(world, 1, Float.parseFloat(data[3]), Float.parseFloat(data[4]) );
-				e.addToWorld();
-				Synchronize sync = syncMapper.get(e);
-				sync.setId(entry.getKey());
-			}
-			else if( data[1].equalsIgnoreCase("box") ) {
-				Entity e = EntityFactoryExamples.newBox(world, 1, Float.parseFloat(data[3]), Float.parseFloat(data[4]), 50 );
+			if( update.getType().equalsIgnoreCase("player") && connected  ) {
+				Entity e = EntityFactoryExamples.newClientOtherPlayer( world, 1, Float.parseFloat(update.getData()[5]), Float.parseFloat(update.getData()[6]) );
 				e.addToWorld();
 				Synchronize sync = syncMapper.get(e);
 				sync.setId(entry.getKey());
 			}
 		}
+		
+		for( DatagramPacket event : events ) {
+			String message = new String( event.getData(), 0, event.getLength() );
+			String[] data = message.split(" ");
+			
+			if( data[0].equalsIgnoreCase("connected") ) {
+				Gdx.app.log("ClientSystem", "connected");
+				EntityFactoryExamples.newClientActivePlayer( world, Integer.parseInt(data[2]), Integer.parseInt(data[3]) ).addToWorld();
+				this.connected  = true;
+			} else if( data[0].equalsIgnoreCase("chat") ) {
+				Systems.get(ChatSystem.class, world).newMessage(message.substring(5));
+			}
+			
+		}	
 	}
 	
 }

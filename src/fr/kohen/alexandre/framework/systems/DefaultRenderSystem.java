@@ -71,7 +71,7 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 	
 	
 	private void clearScreen() {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(1, 1, 1, 0);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 	}
 	

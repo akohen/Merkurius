@@ -126,20 +126,45 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 		return e;		
 	}
 	
-	public static Entity newNetworkExamplePlayer(World world, int mapId, float x, float y) {
-		Entity e = newPlayer(world, mapId, x, y);
-		e.addComponent( new ActionsComponent("mouse_example_action") );
+	
+	public static Entity newServerPlayer(World world, int playerId) {
+		Entity e = world.createEntity();
+		
+		e.addComponent( new Transform(1, 0, 0) );
+		e.addComponent( new Velocity(100,100) );
+		e.addComponent( new VisualComponent("example_player_visual") );
+		e.addComponent( new PhysicsBodyComponent(new PlayerBody()) );
+		
+		e.addComponent( new Player(playerId) );
+		e.addComponent( new EntityState() );
+		
 		e.addComponent( new Synchronize("player") );
 		return e;
 	}
 	
-	public static Entity newNetworkExamplePlayerClient(World world, int mapId, float x, float y) {
+	public static Entity newClientActivePlayer(World world, int playerId, int syncId) {
 		Entity e = world.createEntity();
 		world.getManager(TagManager.class).register("player", e);
+		
+		e.addComponent( new Transform(1, 0, 0) );
+		e.addComponent( new Velocity(100,100) );
+		e.addComponent( new VisualComponent("example_player_visual") );
+		e.addComponent( new PhysicsBodyComponent(new PlayerBody()) );
+		
+		e.addComponent( new Player(playerId) );
+		e.addComponent( new EntityState() );
+		
+		e.addComponent( new Synchronize("player", syncId) );
+		return e;
+	}
+	
+	public static Entity newClientOtherPlayer(World world, int mapId, float x, float y) {
+		Entity e = world.createEntity();
 		e.addComponent( new Transform(mapId, x, y) );
 		e.addComponent( new Velocity(100,100) );
 		e.addComponent( new VisualComponent("example_player_visual") );
 		e.addComponent( new PhysicsBodyComponent(new PlayerBody()) );
+		
 		e.addComponent( new Player() );
 		e.addComponent( new EntityState() );
 		e.addComponent( new Synchronize("player") );

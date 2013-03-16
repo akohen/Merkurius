@@ -48,16 +48,12 @@ public class MainScreen extends GameScreen {
 	
 	@Override
 	protected void initialize() {
-		//EntityFactoryExamples.addLordLard(world, 1, 0, 125);
 		
-		EntityFactoryExamples.newBox(world, 1, 0, 0, 50).addToWorld();
 		EntityFactoryExamples.newBox(world, 1, 0, 75, 50).addToWorld();
 		EntityFactoryExamples.newBox(world, 1, 0, 200, 50).addToWorld();
 		EntityFactoryExamples.newBox(world, 1, 130, -100, 100).addToWorld();
 		EntityFactoryExamples.newBox(world, 1, -130, -100, 100).addToWorld();
 		EntityFactoryExamples.newBox(world, 1, -130, 100, 100).addToWorld();
-		
-		//EntityFactoryExamples.addPlayer(world, 1, 75, 150);
 		
 		EntityFactoryExamples.newCamera(world, 1, 0, 0, 0, 0, 0, 640, 480, 0, "cameraWorld1").addToWorld();
 		

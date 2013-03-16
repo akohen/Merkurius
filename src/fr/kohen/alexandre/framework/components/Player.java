@@ -8,6 +8,10 @@ import com.artemis.Component;
  *
  */
 public class Player extends Component {
+	public int playerId = -1;
+	
 	public Player() {
-	}	
+	}
+	
+	public Player(int playerId) { this.playerId = playerId; }
 }

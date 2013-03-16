@@ -35,7 +35,7 @@ public class DefaultCameraSystem extends EntityProcessingSystem implements Camer
 	}
 
 	@Override
-	public void initialize() {
+	protected void initialize() {
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
 		depthMapper 	= ComponentMapper.getFor(DepthComponent.class, world);

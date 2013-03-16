@@ -26,6 +26,25 @@ import fr.kohen.alexandre.framework.network.GameClient;
 import fr.kohen.alexandre.framework.network.SyncThread;
 import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
 
+/**
+ * This system can be extended to provide simple synchronization between clients
+ * 
+ * The default message format is:
+ * update entity_synchronization_type entity_synchronization_id components_fields...
+ * These messages can be accessed with the updates map.
+ * 
+ * Other messages can be sent with the following format:
+ * keyword data...
+ * 
+ * All messages can be accessed with the events list.
+ * 
+ * events and updates variables are cleared at the beginning of each loop.
+ * 
+ * The entity_synchronization_id should be the id of the entity on the server (or the authoritative client for this entity)
+ * 
+ * @author Alexandre
+ *
+ */
 public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements SyncSystem {
 	protected ComponentMapper<Velocity> 	velocityMapper;
 	protected ComponentMapper<EntityState> 	stateMapper;
@@ -37,8 +56,8 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 	protected int							portIn = 0;
 	protected int							portOut = 0;
 	protected SyncThread 					syncThread;
-	protected Map<Integer, String> 			messages;
-	protected List<String> 					events;
+	protected List<DatagramPacket> 			events;
+	protected Map<Integer, EntityUpdate>	updates;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -55,14 +74,14 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 
 	
 	@Override
-	public void initialize() {
+	protected void initialize() {
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		velocityMapper 	= ComponentMapper.getFor(Velocity.class, world);
 		stateMapper 	= ComponentMapper.getFor(EntityState.class, world);
 		syncMapper 		= ComponentMapper.getFor(Synchronize.class, world);
 		
-		messages		= new HashMap<Integer,String>();
-		events			= new ArrayList<String>();
+		updates			= new HashMap<Integer, EntityUpdate>();
+		events			= new ArrayList<DatagramPacket>();
 		clientList 		= new ArrayList<GameClient>();
 		packets			= Collections.synchronizedList(new ArrayList<DatagramPacket>());
 		
@@ -78,9 +97,16 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 		try { this.socket = new DatagramSocket(); } 
 		catch (SocketException e) { e.printStackTrace(); }
 	}
-
 	
+	@Override
+	public void receiveFromThread(DatagramPacket packet) {
+		packets.add(packet);
+	}
+
 	protected void begin() {
+		events.clear();
+		updates.clear();
+		
 		synchronized(packets) {
 			Iterator<DatagramPacket> i = packets.iterator(); // Must be in synchronized block
 			while (i.hasNext()) {
@@ -90,16 +116,28 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 		}
 	}
 	
+	@Override
+	public void receive(DatagramPacket packet) { 
+		String message = new String( packet.getData(), 0, packet.getLength() );
+		String[] data = message.split(" ");
+		
+		if( data[0].contentEquals("update") ) {
+			updates.put( Integer.parseInt(data[2]), new EntityUpdate(data) );
+		} else {
+			events.add( packet );
+		}
+		
+	}
 	
 	@Override
-	protected void process(Entity e) { }
-	
-	
-	protected void removed(Entity e) { }
-	
+	public void connect(GameClient host) throws UnknownHostException {
+		clientList.add(host);
+		send("CONNECT " + portIn);
+		Gdx.app.log("SyncSystem", "connecting");
+	}
 	
 	public void send(String message) {
-		for( GameClient client : clientList) {
+		for( GameClient client : clientList ) {
 			send(client, message);
 		}	
 	}
@@ -111,33 +149,24 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 		DatagramPacket packet = new DatagramPacket( buf, buf.length, client.getAddress(), client.getPort() );
 		try { socket.send(packet); } catch (IOException e1) { e1.printStackTrace(); }		
 	}
-
 	
 	@Override
-	public void receiveFromThread(DatagramPacket packet) {
-		packets.add(packet);
-	}
-
+	protected void process(Entity e) { }
 	
-	@Override
-	public void connect(GameClient host) throws UnknownHostException {
-		clientList.add(host);
-		send("CONNECT " + portIn);
-		Gdx.app.log("SyncSystem", "connecting");
-	}
+	protected class EntityUpdate {
+		private String[] data;
+		private int pointer = 3;
 
-
-	@Override
-	public void receive(DatagramPacket packet) { 
-		String message = new String(packet.getData(), 0, packet.getLength());
-		String[] data = message.split(" ");
+		public EntityUpdate(String[] data) { this.data = data; }
+		public EntityUpdate(String[] data, int start) { this.data = data; this.pointer = start; }
 		
-		try {
-			messages.put(Integer.parseInt(data[0]), message);
-		} catch(NumberFormatException e) {
-			events.add(message);			
-		}
-		
+		public void reset() { this.pointer = 3; }
+		public boolean hasNext() { return pointer < data.length; }
+		public String getType() { return data[1]; }
+		public String getNext() { return data[pointer++]; }
+		public Float getNextFloat() { return Float.valueOf(data[pointer++]); }
+		public Integer getNextInteger() { return Integer.valueOf(data[pointer++]); }
+		public String[] getData() { return data; }
 	}
 	
 

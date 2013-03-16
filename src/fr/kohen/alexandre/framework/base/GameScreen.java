@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 
 public abstract class GameScreen implements Screen {
 	protected World world;
+	private GameController controller;
 
 	public GameScreen() {
 	}
@@ -56,6 +57,14 @@ public abstract class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
+	}
+
+	public GameController getController() {
+		return controller;
+	}
+
+	public void setController(GameController controller) {
+		this.controller = controller;
 	}
 	
 
