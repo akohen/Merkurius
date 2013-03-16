@@ -11,15 +11,15 @@ public class MenuScreen extends GameScreen {
 		world.setSystem( new DefaultCameraSystem() );
 		world.setSystem( new DefaultRenderSystem() );
 		world.setSystem( new DefaultBox2DSystem() );
-		world.setSystem( new DefaultDebugSystem() );	
 		world.setSystem( new DefaultVisualSystem(EntityFactoryExamples.visuals) );
-		world.setSystem( new TestScreenSystem(this) );
+		world.setSystem( new DefaultScreenSystem(this) );	
+		world.setSystem( new DefaultMouseSystem() );
+		world.setSystem( new DefaultActionSystem(EntityFactoryExamples.actions) );	
 	}
 	
 	@Override
 	protected void initialize() {
-		EntityFactoryExamples.newBox(world, 1, 0, 0, 50).addToWorld();
-		EntityFactoryExamples.newBox(world, 1, 0, 75, 50).addToWorld();
+		EntityFactoryExamples.newScreenExampleButton(world, 1, 0, 0).addToWorld();
 
 		EntityFactoryExamples.newCamera(world, 1, 0, 0, 0, 0, 0, 640, 480, 0, "camera1").addToWorld();
 	}

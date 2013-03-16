@@ -17,9 +17,11 @@ public abstract class MouseAction implements Action {
 	protected List<Entity> mouseContacts = new ArrayList<Entity>();
 	protected List<Entity> mousePressed = new ArrayList<Entity>();
 	protected List<Entity> toRemove = new ArrayList<Entity>();
+	protected World world;
 	
 	public void initialize(World world) {
-		mouseMapper 	= ComponentMapper.getFor(Mouse.class, world);
+		mouseMapper = ComponentMapper.getFor(Mouse.class, world);
+		this.world 	= world;
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 
 import fr.kohen.alexandre.examples._common.visuals.LordLardVisual;
 import fr.kohen.alexandre.examples.mouse.*;
+import fr.kohen.alexandre.examples.screens.ScreenExampleAction;
 import fr.kohen.alexandre.framework.base.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
 import fr.kohen.alexandre.framework.model.*;
@@ -39,6 +40,7 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 		actionList.add( new ExampleAction() );
 		actionList.add( new ExampleActionRight() );
 		actions.put( "mouse_example_action_list", new ActionList(actionList) );
+		actions.put( "screen_example_action", new ScreenExampleAction() );
 	}
 	
 	public static Entity newPlayer(World world, int mapId, float x, float y) {
@@ -169,5 +171,11 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 		e.addComponent( new EntityState() );
 		e.addComponent( new Synchronize("player") );
 		return e;
+	}
+	
+	public static Entity newScreenExampleButton(World world, int mapId, float x, float y) {
+		Entity e = newBox(world, mapId, x, y, 50);
+		e.addComponent( new ActionsComponent("screen_example_action") );
+		return e;		
 	}
 }
