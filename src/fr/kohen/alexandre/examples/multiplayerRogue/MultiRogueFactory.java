@@ -8,8 +8,6 @@ import com.artemis.World;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.graphics.Color;
 
-import fr.kohen.alexandre.examples._common.visuals.LordLardVisual;
-import fr.kohen.alexandre.examples.mouse.*;
 import fr.kohen.alexandre.examples.multiplayerRogue.components.Destination;
 import fr.kohen.alexandre.examples.multiplayerRogue.components.Input;
 import fr.kohen.alexandre.framework.base.EntityFactory;
@@ -25,13 +23,13 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 	
 	static {
 		visuals.put( "example_player_visual", new BoxVisual(25, 25, Color.BLUE) );
-		visuals.put( "lord_lard", new LordLardVisual() );
 		visuals.put( "example_box_50", new BoxVisual(50, 50, Color.RED) );
 		visuals.put( "example_box_100", new BoxVisual(100, 100, Color.RED) );
 		visuals.put( "example_box_green_50", new BoxVisual(50, 50, Color.GREEN) );
 		visuals.put( "example_box_green_100", new BoxVisual(100, 100, Color.GREEN) );
 
-		actions.put( "mouse_example_action", new ExampleAction() );
+		actions.put( "client_action", new ClientScreenAction() );
+		actions.put( "server_action", new ServerScreenAction() );
 	}
 
 	public static Entity newBox(World world, int mapId, float x, float y, int size) {
@@ -99,5 +97,17 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 		e.addComponent( new EntityState() );
 		e.addComponent( new Synchronize("player") );
 		return e;
+	}
+	
+	public static Entity newServerButton(World world, int mapId, float x, float y) {
+		Entity e = newBox(world, mapId, x, y, 50);
+		e.addComponent( new ActionsComponent("server_action") );
+		return e;		
+	}
+	
+	public static Entity newClientButton(World world, int mapId, float x, float y) {
+		Entity e = newBox(world, mapId, x, y, 50);
+		e.addComponent( new ActionsComponent("client_action") );
+		return e;		
 	}
 }

@@ -26,7 +26,7 @@ public class DefaultTextSystem extends EntityProcessingSystem implements TextDra
 	public DefaultTextSystem() {
 		super( Aspect.getAspectForAll(TextComponent.class) );
 		font = new BitmapFont();
-		font.setColor(Color.BLACK);
+		font.setColor( Color.BLACK );
 		
 	}
 	
@@ -43,7 +43,7 @@ public class DefaultTextSystem extends EntityProcessingSystem implements TextDra
 	protected void removed(Entity e) {
 		ImmutableBag<Entity> cameras = cameraSystem.getCameras();
 		
-		for (int c = 0, s = cameras.size(); s > c; c++) {
+		for ( int c = 0, s = cameras.size(); s > c; c++ ) {
 			Entity camera = cameras.get(c);
 			if( transformMapper.get(camera).mapId == transformMapper.get(e).mapId ) {
 				cameraSystem.removeFromCamera(camera, e);
@@ -56,7 +56,7 @@ public class DefaultTextSystem extends EntityProcessingSystem implements TextDra
 	protected void process(Entity e) {
 		ImmutableBag<Entity> cameras = cameraSystem.getCameras();
 
-		for (int c = 0, s = cameras.size(); s > c; c++) {
+		for ( int c = 0, s = cameras.size(); s > c; c++ ) {
 			Entity camera = cameras.get(c);
 			if( transformMapper.get(camera).mapId == transformMapper.get(e).mapId ) {
 				cameraSystem.addToCamera(camera, e);
@@ -66,7 +66,8 @@ public class DefaultTextSystem extends EntityProcessingSystem implements TextDra
 
 	@Override
 	public void draw(Entity e, SpriteBatch batch) {
-		font.draw(batch, textMapper.get(e).text, transformMapper.get(e).getPosition().x, transformMapper.get(e).getPosition().y);
+		font.setColor( textMapper.get(e).color );
+		font.draw( batch, textMapper.get(e).text, transformMapper.get(e).getPosition().x, transformMapper.get(e).getPosition().y );
 	}
 
 	@Override

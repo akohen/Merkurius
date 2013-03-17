@@ -1,10 +1,12 @@
-package fr.kohen.alexandre.examples.multiplayerRogue;
+package fr.kohen.alexandre.examples.multiplayerRogue.screens;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
 
+import fr.kohen.alexandre.examples.multiplayerRogue.MultiRogueFactory;
+import fr.kohen.alexandre.examples.multiplayerRogue.MultiRogueGameClient;
 import fr.kohen.alexandre.examples.multiplayerRogue.systems.*;
 import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.*;
@@ -38,9 +40,11 @@ public class MainScreen extends GameScreen {
 		if ( isServer ) {
 			world.setSystem( new ServerSystem(0.1f, 4445));	
 			Gdx.app.log("MainScreen", "Server mode");
+			Gdx.graphics.setTitle("MultiRogue Server");
 		} else {
 			this.syncSystem = world.setSystem(new ClientSystem());	
 			Gdx.app.log("MainScreen", "Client mode");	
+			Gdx.graphics.setTitle("MultiRogue Client");
 		}
 	}
 	
