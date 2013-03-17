@@ -1,8 +1,8 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.screens;
+package fr.kohen.alexandre.wip.multiplayerRogue.screens;
 
-import fr.kohen.alexandre.examples.multiplayerRogue.MultiRogueFactory;
 import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.*;
+import fr.kohen.alexandre.wip.multiplayerRogue.MultiRogueFactory;
 
 public class MenuScreen extends GameScreen {
 	

@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.systems;
+package fr.kohen.alexandre.wip.multiplayerRogue.systems;
 
 import com.artemis.Entity;
 import com.artemis.systems.VoidEntitySystem;

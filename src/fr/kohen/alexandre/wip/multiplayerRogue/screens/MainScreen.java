@@ -1,16 +1,16 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.screens;
+package fr.kohen.alexandre.wip.multiplayerRogue.screens;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
 
-import fr.kohen.alexandre.examples.multiplayerRogue.MultiRogueFactory;
-import fr.kohen.alexandre.examples.multiplayerRogue.MultiRogueGameClient;
-import fr.kohen.alexandre.examples.multiplayerRogue.systems.*;
 import fr.kohen.alexandre.framework.base.GameScreen;
 import fr.kohen.alexandre.framework.systems.*;
 import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
+import fr.kohen.alexandre.wip.multiplayerRogue.MultiRogueFactory;
+import fr.kohen.alexandre.wip.multiplayerRogue.MultiRogueGameClient;
+import fr.kohen.alexandre.wip.multiplayerRogue.systems.*;
 
 public class MainScreen extends GameScreen {
 

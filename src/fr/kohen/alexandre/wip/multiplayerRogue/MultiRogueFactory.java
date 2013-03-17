@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.multiplayerRogue;
+package fr.kohen.alexandre.wip.multiplayerRogue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,13 +8,13 @@ import com.artemis.World;
 import com.artemis.managers.TagManager;
 import com.badlogic.gdx.graphics.Color;
 
-import fr.kohen.alexandre.examples.multiplayerRogue.components.Destination;
-import fr.kohen.alexandre.examples.multiplayerRogue.components.Input;
 import fr.kohen.alexandre.framework.base.EntityFactory;
 import fr.kohen.alexandre.framework.components.*;
 import fr.kohen.alexandre.framework.model.*;
 import fr.kohen.alexandre.framework.model.physicsBodies.BoxBody;
 import fr.kohen.alexandre.framework.model.visuals.BoxVisual;
+import fr.kohen.alexandre.wip.multiplayerRogue.components.Destination;
+import fr.kohen.alexandre.wip.multiplayerRogue.components.Input;
 
 public class MultiRogueFactory extends EntityFactory {
 

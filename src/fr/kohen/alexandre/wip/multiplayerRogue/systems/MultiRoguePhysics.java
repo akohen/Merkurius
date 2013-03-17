@@ -1,11 +1,11 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.systems;
+package fr.kohen.alexandre.wip.multiplayerRogue.systems;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Vector2;
 
-import fr.kohen.alexandre.examples.multiplayerRogue.components.Destination;
 import fr.kohen.alexandre.framework.systems.DefaultBox2DSystem;
+import fr.kohen.alexandre.wip.multiplayerRogue.components.Destination;
 
 public class MultiRoguePhysics extends DefaultBox2DSystem {
 	

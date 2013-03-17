@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.systems;
+package fr.kohen.alexandre.wip.multiplayerRogue.systems;
 
 public interface ChatSystem {
 

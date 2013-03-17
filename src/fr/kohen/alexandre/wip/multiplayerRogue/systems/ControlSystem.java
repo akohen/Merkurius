@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.systems;
+package fr.kohen.alexandre.wip.multiplayerRogue.systems;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -7,8 +7,8 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
-import fr.kohen.alexandre.examples.multiplayerRogue.components.*;
 import fr.kohen.alexandre.framework.components.Player;
+import fr.kohen.alexandre.wip.multiplayerRogue.components.*;
 
 public class ControlSystem extends EntityProcessingSystem {
 	private ComponentMapper<Input> inputMapper;

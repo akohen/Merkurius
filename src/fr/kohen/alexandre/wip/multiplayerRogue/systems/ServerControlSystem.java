@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.systems;
+package fr.kohen.alexandre.wip.multiplayerRogue.systems;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -6,8 +6,8 @@ import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.Vector2;
 
-import fr.kohen.alexandre.examples.multiplayerRogue.components.*;
 import fr.kohen.alexandre.framework.components.Transform;
+import fr.kohen.alexandre.wip.multiplayerRogue.components.*;
 
 public class ServerControlSystem extends EntityProcessingSystem {
 	private ComponentMapper<Destination> destMapper;

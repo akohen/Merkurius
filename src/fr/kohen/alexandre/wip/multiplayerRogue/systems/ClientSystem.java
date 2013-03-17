@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.systems;
+package fr.kohen.alexandre.wip.multiplayerRogue.systems;
 
 import java.net.DatagramPacket;
 import java.util.Map.Entry;
@@ -7,12 +7,12 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 
-import fr.kohen.alexandre.examples.multiplayerRogue.MultiRogueFactory;
-import fr.kohen.alexandre.examples.multiplayerRogue.components.*;
 import fr.kohen.alexandre.framework.base.Systems;
 import fr.kohen.alexandre.framework.base.C.STATES;
 import fr.kohen.alexandre.framework.components.*;
 import fr.kohen.alexandre.framework.systems.DefaultSyncSystem;
+import fr.kohen.alexandre.wip.multiplayerRogue.MultiRogueFactory;
+import fr.kohen.alexandre.wip.multiplayerRogue.components.*;
 
 public class ClientSystem extends DefaultSyncSystem {
 	private ComponentMapper<Player> playerMapper;

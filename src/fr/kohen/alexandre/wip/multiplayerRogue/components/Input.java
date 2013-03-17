@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.examples.multiplayerRogue.components;
+package fr.kohen.alexandre.wip.multiplayerRogue.components;
 
 import com.artemis.Component;
 

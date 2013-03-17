@@ -7,8 +7,6 @@ import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 
 import fr.kohen.alexandre.examples._common.EntityFactoryExamples;
-import fr.kohen.alexandre.examples.multiplayerRogue.systems.ChatSystem;
-import fr.kohen.alexandre.framework.base.Systems;
 import fr.kohen.alexandre.framework.base.C.STATES;
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Synchronize;
@@ -85,10 +83,7 @@ public class ClientSystem extends DefaultSyncSystem {
 				Gdx.app.log("ClientSystem", "connected");
 				EntityFactoryExamples.newClientActivePlayer( world, Integer.parseInt(data[2]), Integer.parseInt(data[3]) ).addToWorld();
 				this.connected  = true;
-			} else if( data[0].equalsIgnoreCase("chat") ) {
-				Systems.get(ChatSystem.class, world).newMessage(message.substring(5));
-			}
-			
+			} 
 		}	
 	}
 	
