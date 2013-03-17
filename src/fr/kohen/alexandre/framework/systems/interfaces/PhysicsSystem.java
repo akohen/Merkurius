@@ -2,7 +2,9 @@ package fr.kohen.alexandre.framework.systems.interfaces;
 
 import java.util.Hashtable;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 
@@ -26,4 +28,6 @@ public interface PhysicsSystem extends ContactListener {
 	 * @param mapId
 	 */
 	public void addContactListener(ContactListener listener, int mapId);
+	
+	public void raycast(int worldId, RayCastCallback callback, Vector2 point1, Vector2 point2);
 }

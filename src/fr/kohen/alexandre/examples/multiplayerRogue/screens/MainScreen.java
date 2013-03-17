@@ -23,6 +23,15 @@ public class MainScreen extends GameScreen {
 	
 	@Override
 	protected void setSystems() {
+		if ( isServer ) {
+			world.setSystem( new ServerSystem(0.1f, 4445));	
+			Gdx.app.log("MainScreen", "Server mode");
+			Gdx.graphics.setTitle("MultiRogue Server");
+		} else {
+			this.syncSystem = world.setSystem(new ClientSystem());	
+			Gdx.app.log("MainScreen", "Client mode");	
+			Gdx.graphics.setTitle("MultiRogue Client");
+		}
 		if ( isServer )
 			world.setSystem( new ServerControlSystem());
 		else
@@ -36,16 +45,9 @@ public class MainScreen extends GameScreen {
 		world.setSystem( new MultiRoguePhysics());	
 		world.setSystem( new DefaultExpirationSystem());
 		world.setSystem( new DefaultDebugSystem());
+		world.setSystem( new MultiRogueVisibilitySystem());
 		
-		if ( isServer ) {
-			world.setSystem( new ServerSystem(0.1f, 4445));	
-			Gdx.app.log("MainScreen", "Server mode");
-			Gdx.graphics.setTitle("MultiRogue Server");
-		} else {
-			this.syncSystem = world.setSystem(new ClientSystem());	
-			Gdx.app.log("MainScreen", "Client mode");	
-			Gdx.graphics.setTitle("MultiRogue Client");
-		}
+		
 	}
 	
 	@Override

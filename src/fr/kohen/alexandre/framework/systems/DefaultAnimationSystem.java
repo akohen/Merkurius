@@ -18,6 +18,11 @@ import fr.kohen.alexandre.framework.model.Visual;
 import fr.kohen.alexandre.framework.model.visuals.BoxVisual;
 import fr.kohen.alexandre.framework.systems.interfaces.AnimationSystem;
 
+/**
+ * Extend this class to modify how the animations are updated
+ * @author Alexandre
+ *
+ */
 public class DefaultAnimationSystem extends EntityProcessingSystem implements AnimationSystem {
 	protected ComponentMapper<VisualComponent> 	visualMapper;
 	protected ComponentMapper<Transform> 		transformMapper;

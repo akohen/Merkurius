@@ -74,11 +74,8 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 		// Body initialization
 		bodyMapper.get(e).physicsBody.initialize( b2World );
 		bodyMapper.get(e).getBody().setUserData(e);
-		bodyMapper.get(e).getBody().setTransform(
-				transformMapper.get(e).getPosition2(), 
-				transformMapper.get(e).rotation * MathUtils.degreesToRadians
-			);
 		previousMap.put(e, transformMapper.get(e).mapId);
+		updateBody(e);
 	}
 	
 	
@@ -134,7 +131,7 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 		updateWorlds();	
 		updateEntitiesAfterWorldUpdate();
 	}
-	
+
 
 	private void updateWorlds() {
 		for( Integer i : universe.keySet() ) {
@@ -153,7 +150,7 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 			if( velocityMapper.getSafe(e) != null ) { // adding speed
 				velocityMapper.get(e).speed = bodyMapper.get(e).getBody().getLinearVelocity();
 				velocityMapper.get(e).rotation = bodyMapper.get(e).getBody().getAngularVelocity();		
-			} 
+			}
 		}
 	}
 	
