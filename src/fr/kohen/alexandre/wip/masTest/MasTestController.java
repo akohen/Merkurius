@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.wip.mas;
+package fr.kohen.alexandre.wip.masTest;
 
 import fr.kohen.alexandre.framework.base.GameController;
 

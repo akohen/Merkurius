@@ -1,4 +1,4 @@
-package fr.kohen.alexandre.wip.mas;
+package fr.kohen.alexandre.wip.masTest;
 
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
