@@ -27,4 +27,8 @@ Getting started
 
 ### Export
 
+<<<<<<< HEAD
 ### Creating a simple game 
+=======
+### Creating a simple game.
+>>>>>>> origin/master
