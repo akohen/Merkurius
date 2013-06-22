@@ -10,8 +10,9 @@ Getting started
 ### Setting up the project
   1. Download or clone `Merkurius`
   2. Add it to your Eclipse path. If you are using another IDE, instructions may be slightly different.
-  3. On Linux, 
 
+
+... to be continued ...
 
 ### Creating the main package
 
@@ -27,8 +28,4 @@ Getting started
 
 ### Export
 
-<<<<<<< HEAD
 ### Creating a simple game 
-=======
-### Creating a simple game.
->>>>>>> origin/master
