@@ -9,7 +9,8 @@ Getting started
 
 ### Setting up the project
   1. Download or clone `Merkurius`
-  2. Add it to your Eclipse path. If you are using another IDE, instructions may be slightly different.
+  2. Import the git project to your Eclipse path. An easy way to do it is with <a href="http://www.eclipse.org/egit/">Egit</a>. <a href="http://www.vogella.com/articles/EGit/article.html">This tutorial</a> explains how to set it up.
+  3.
 
 
 ... to be continued ...
