@@ -5,11 +5,11 @@ import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 
 import fr.kohen.alexandre.framework.base.C.STATES;
+import fr.kohen.alexandre.framework.base.KeyBindings;
 import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Player;
 import fr.kohen.alexandre.framework.components.Velocity;
@@ -51,6 +51,15 @@ public class DefaultControlSystem extends EntityProcessingSystem {
 	public void initialize() {
 		velocityMapper = ComponentMapper.getFor(Velocity.class, world);
 		stateMapper = ComponentMapper.getFor(EntityState.class, world);
+		KeyBindings.addKey(Keys.LEFT, "move_left");
+		KeyBindings.addKey(Keys.RIGHT, "move_right");
+		KeyBindings.addKey(Keys.UP, "move_up");
+		KeyBindings.addKey(Keys.DOWN, "move_down");
+		
+		KeyBindings.addKey(Keys.Q, "move_left");
+		KeyBindings.addKey(Keys.D, "move_right");
+		KeyBindings.addKey(Keys.Z, "move_up");
+		KeyBindings.addKey(Keys.S, "move_down");
 	}
 
 	@Override
@@ -63,19 +72,19 @@ public class DefaultControlSystem extends EntityProcessingSystem {
 		// Adding speed according to input if the player can move
 		if( state.getState() == STATES.IDLE || state.getState() == STATES.MOVING ) {
 			
-			if ( Gdx.input.isKeyPressed(Keys.LEFT) ) {
+			if ( KeyBindings.isKeyPressed("move_left") ) {
 				accel.x = -speedLeft;
 			}
 			
-			if ( Gdx.input.isKeyPressed(Keys.RIGHT) ) {
+			if ( KeyBindings.isKeyPressed("move_right") ) {
 				accel.x = speedRight;
 			} 
 			
-			if ( Gdx.input.isKeyPressed(Keys.UP) ) {
+			if ( KeyBindings.isKeyPressed("move_up") ) {
 				accel.y = speedUp;
 			}
 			
-			if ( Gdx.input.isKeyPressed(Keys.DOWN) ) {
+			if ( KeyBindings.isKeyPressed("move_down") ) {
 				accel.y = -speedDown;
 			}
 			
