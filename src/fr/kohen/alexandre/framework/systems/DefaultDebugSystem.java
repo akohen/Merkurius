@@ -47,7 +47,7 @@ public class DefaultDebugSystem extends VoidEntitySystem {
 	public DefaultDebugSystem() {
 		super();
 		batch 			= new SpriteBatch();
-		framebuffer 	= new FrameBuffer(Format.RGBA4444, 640, 480, true);
+		framebuffer 	= new FrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		debugRenderer 	= new Box2DDebugRenderer();
 		acceptingInput	= true;
 		debugEnabled	= false;

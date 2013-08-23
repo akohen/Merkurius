@@ -34,7 +34,7 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 		super(Aspect.getAspectForAll(CameraComponent.class));
 		
 		batch 			= new SpriteBatch();
-		framebuffer 	= new FrameBuffer(Format.RGBA4444, 640, 480, true);
+		framebuffer 	= new FrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true); 
 	}
 	
 	@Override
