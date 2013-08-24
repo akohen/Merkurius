@@ -25,10 +25,9 @@ public class MultiRogueChat extends VoidEntitySystem implements InputProcessor, 
 	public void initialize() {
 		clientSystem = Systems.get(SyncSystem.class, world);
 		chatEntity = world.createEntity()
-			.addComponent( new Transform(-2, 0, 0) )
+			.addComponent( new Transform(-2, 0, 0, 10) )
 			.addComponent( new TextComponent("chat") )
-			.addComponent( new EntityState() )
-			.addComponent( new DepthComponent(10) );
+			.addComponent( new EntityState() );
 		chatEntity.addToWorld();
 		chatEntity.disable();
 		
@@ -85,10 +84,9 @@ public class MultiRogueChat extends VoidEntitySystem implements InputProcessor, 
 	@Override
 	public void newMessage(String message) {
 		world.createEntity()
-			.addComponent( new Transform(-1, 0, shift) )
+			.addComponent( new Transform(-1, 0, shift, 10) )
 			.addComponent( new TextComponent(message) )
 			.addComponent( new EntityState() )
-			.addComponent( new DepthComponent(10) )
 			.addComponent( new Expires(5000) )
 			.addToWorld();
 		shift -= 15;

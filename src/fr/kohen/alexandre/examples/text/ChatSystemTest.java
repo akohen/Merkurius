@@ -20,10 +20,9 @@ public class ChatSystemTest extends VoidEntitySystem implements InputProcessor {
 	@Override
 	public void initialize() {
 		chatEntity = world.createEntity()
-			.addComponent( new Transform(1, -300, -200) )
+			.addComponent( new Transform(1, -300, -200, 10) )
 			.addComponent( new TextComponent("chat") )
-			.addComponent( new EntityState() )
-			.addComponent( new DepthComponent(10) );
+			.addComponent( new EntityState() );
 		chatEntity.addToWorld();
 		chatEntity.disable();
 		

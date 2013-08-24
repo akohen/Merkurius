@@ -12,9 +12,8 @@ public class LayersExampleFactory extends EntityFactoryExamples {
 	
 	public static Entity newFrontBox(World world, int mapId, float x, float y, int size) {
 		Entity e = world.createEntity();
-		e.addComponent( new Transform(mapId, x, y) )
+		e.addComponent( new Transform(mapId, x, y, 1) )
 			.addComponent( new VisualComponent("example_box_" + size) )
-			.addComponent( new DepthComponent(1) )
 			.addComponent( new PhysicsBodyComponent(new BoxBody(size, C.CATEGORY_1, (short) ~C.CATEGORY_PLAYER)) )
 			.addComponent( new EntityState() );
 		return e;
@@ -22,9 +21,8 @@ public class LayersExampleFactory extends EntityFactoryExamples {
 	
 	public static Entity newBackBox(World world, int mapId, float x, float y, int size) {
 		Entity e = world.createEntity();
-		e.addComponent( new Transform(mapId, x, y) )
+		e.addComponent( new Transform(mapId, x, y, -1) )
 			.addComponent( new VisualComponent("example_box_" + size) )
-			.addComponent( new DepthComponent(-1) )
 			.addComponent( new PhysicsBodyComponent(new BoxBody(size, C.CATEGORY_1, (short) ~C.CATEGORY_PLAYER)) )
 			.addComponent( new EntityState() );
 		return e;

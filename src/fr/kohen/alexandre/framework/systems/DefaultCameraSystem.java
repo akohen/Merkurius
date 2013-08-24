@@ -24,7 +24,6 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 public class DefaultCameraSystem extends EntityProcessingSystem implements CameraSystem, ContactListener {
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
 	protected ComponentMapper<Transform> 		transformMapper;
-	protected ComponentMapper<DepthComponent> 	depthMapper;
 	protected ImmutableBag<Entity>				cameras;
 	protected PhysicsSystem 					box2dSystem;
 
@@ -38,7 +37,6 @@ public class DefaultCameraSystem extends EntityProcessingSystem implements Camer
 	protected void initialize() {
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
-		depthMapper 	= ComponentMapper.getFor(DepthComponent.class, world);
 		box2dSystem		= Systems.get(PhysicsSystem.class, world);
 		
 		if ( box2dSystem == null ) {
@@ -81,11 +79,7 @@ public class DefaultCameraSystem extends EntityProcessingSystem implements Camer
 	private List<Entity> getSortedEntities(List<Entity> entities) {
 		List<SortableEntity> sortableEntities = new ArrayList<SortableEntity>();
 		for( Entity e : entities ) {
-			if( depthMapper.has(e) ) {
-				sortableEntities.add( new SortableEntity(e, depthMapper.get(e).depth) );
-			} else {
-				sortableEntities.add( new SortableEntity(e, 0) );
-			}
+			sortableEntities.add( new SortableEntity(e, transformMapper.get(e).getPosition().z) );
 		}
 		Collections.sort(sortableEntities);
 		
@@ -145,9 +139,9 @@ public class DefaultCameraSystem extends EntityProcessingSystem implements Camer
 	
 	private class SortableEntity implements Comparable<SortableEntity> {
 		private Entity e;
-		private int depth;
+		private float depth;
 
-		public SortableEntity(Entity e, int depth) {
+		public SortableEntity(Entity e, float depth) {
 			this.e = e;
 			this.depth = depth;
 		}

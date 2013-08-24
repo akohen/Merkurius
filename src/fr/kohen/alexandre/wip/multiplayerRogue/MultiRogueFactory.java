@@ -43,10 +43,9 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 	
 	public static Entity newText(World world, int mapId, float x, float y, String text) {
 		Entity e = world.createEntity();
-		e.addComponent( new Transform(mapId, x, y) );
+		e.addComponent( new Transform(mapId, x, y, 10) );
 		e.addComponent( new TextComponent(text) );
 		e.addComponent( new EntityState() );
-		e.addComponent( new DepthComponent(10) );
 		return e;
 	}
 	
