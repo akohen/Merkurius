@@ -28,6 +28,7 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 	private SpriteBatch 						batch;
 	private FrameBuffer 						framebuffer;
 	private OrthographicCamera 					mainCamera;
+	private float red = 1, green = 1, blue = 1, alpha = 0;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -36,6 +37,14 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 		
 		batch 			= new SpriteBatch();
 		framebuffer 	= new FrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true); 
+	}
+	
+	public DefaultRenderSystem(float red, float green, float blue, float alpha){
+		this();
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
+		this.alpha = alpha;
 	}
 	
 	@Override
@@ -73,7 +82,7 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 	
 	
 	private void clearScreen() {
-		Gdx.gl.glClearColor(1, 1, 1, 0);
+		Gdx.gl.glClearColor(red, green, blue, alpha);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 	}
 	
