@@ -25,4 +25,8 @@ public interface Action {
 	public void endContact(Entity e, Entity other, Contact contact);
 	
 	public void initialize(World world);
+
+	public void preSolve(Entity e, Entity other, Contact contact);
+
+	public void postSolve(Entity e, Entity other, Contact contact);
 }

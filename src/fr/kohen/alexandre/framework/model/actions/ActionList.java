@@ -49,5 +49,13 @@ public class ActionList implements Action {
 			action.initialize(world);
 		}
 	}
+
+	@Override
+	public void preSolve(Entity e, Entity other, Contact contact) {
+	}
+
+	@Override
+	public void postSolve(Entity e, Entity other, Contact contact) {
+	}
 	
 }

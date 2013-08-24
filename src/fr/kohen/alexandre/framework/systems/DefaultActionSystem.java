@@ -103,11 +103,43 @@ public class DefaultActionSystem extends EntityProcessingSystem implements Actio
 	}
 
 	@Override
-	public void preSolve(Contact contact, Manifold oldManifold) {		
+	public void preSolve(Contact contact, Manifold oldManifold) {
+		if ( contact.isTouching() ) {
+			if ( actionsMapper.has((Entity) contact.getFixtureA().getBody().getUserData()) ) {
+				actions.get((Entity) contact.getFixtureA().getBody().getUserData()).preSolve(
+						(Entity) contact.getFixtureA().getBody().getUserData(),
+						(Entity) contact.getFixtureB().getBody().getUserData(),
+						contact
+					);
+			}
+			if ( actionsMapper.has((Entity) contact.getFixtureB().getBody().getUserData()) ) {
+				actions.get((Entity) contact.getFixtureB().getBody().getUserData()).preSolve(
+						(Entity) contact.getFixtureB().getBody().getUserData(),
+						(Entity) contact.getFixtureA().getBody().getUserData(),
+						contact
+					);
+			}
+		}
 	}
 
 	@Override
-	public void postSolve(Contact contact, ContactImpulse impulse) {		
+	public void postSolve(Contact contact, ContactImpulse impulse) {
+		if ( contact.isTouching() ) {
+			if ( actionsMapper.has((Entity) contact.getFixtureA().getBody().getUserData()) ) {
+				actions.get((Entity) contact.getFixtureA().getBody().getUserData()).postSolve(
+						(Entity) contact.getFixtureA().getBody().getUserData(),
+						(Entity) contact.getFixtureB().getBody().getUserData(),
+						contact
+					);
+			}
+			if ( actionsMapper.has((Entity) contact.getFixtureB().getBody().getUserData()) ) {
+				actions.get((Entity) contact.getFixtureB().getBody().getUserData()).postSolve(
+						(Entity) contact.getFixtureB().getBody().getUserData(),
+						(Entity) contact.getFixtureA().getBody().getUserData(),
+						contact
+					);
+			}
+		}
 	}
 
 }	
