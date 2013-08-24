@@ -21,6 +21,10 @@ public class Expires extends Component {
 		this.lifeTime -= lifeTime;
 	}
 	
+	public void increaseLifeTime(int lifeTime) {
+		this.lifeTime += lifeTime;
+	}
+	
 	public boolean isExpired() {
 		return lifeTime <= 0;
 	}
