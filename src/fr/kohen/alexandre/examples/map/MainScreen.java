@@ -15,7 +15,8 @@ public class MainScreen extends GameScreen {
 		world.setSystem( new DefaultVisualSystem(EntityFactoryExamples.visuals) );
 		world.setSystem( new DefaultBox2DSystem() );
 		world.setSystem( new DefaultDebugSystem() );
-		world.setSystem( new MapSystemTest() );	
+		//world.setSystem( new MapSystemTest() );	
+		world.setSystem( new DefaultMapSystem() );
 	}
 	
 	@Override
@@ -29,7 +30,7 @@ public class MainScreen extends GameScreen {
 		
 		EntityFactoryExamples.newPlayer(world, 1, 75, 150).addToWorld();
 
-		EntityFactoryExamples.newCamera(world, 1, 0, 0, 0, 0, 0, 400, 300, 0, "world1").addToWorld();
+		EntityFactoryExamples.newCamera(world, 1, 0, 0, 0, 0, 0, 640, 480, 0, "cameraFollowPlayer").addToWorld();
 		
 		EntityFactoryExamples.newMap(world, 1, "data/examples/maps/map1.tmx").addToWorld();
 	}

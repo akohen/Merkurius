@@ -24,6 +24,7 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
 	private VisualDrawSystem 					visualSystem;
 	private TextDrawSystem 						textSystem;
+	private MapDrawSystem 						mapSystem;
 	private SpriteBatch 						batch;
 	private FrameBuffer 						framebuffer;
 	private OrthographicCamera 					mainCamera;
@@ -44,6 +45,7 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 
 		visualSystem	= Systems.get(VisualDrawSystem.class, world);
 		textSystem		= Systems.get(TextDrawSystem.class, world);
+		mapSystem		= Systems.get(MapDrawSystem.class, world);
 		
 		if( visualSystem == null ) throw new RuntimeException("A required system is not loaded");
 	}
@@ -76,7 +78,7 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 	}
 	
 
-	private OrthographicCamera setCamera(Entity cameraEntity) {
+	public OrthographicCamera setCamera(Entity cameraEntity) {
 		OrthographicCamera camera = new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 		camera.rotate( - transformMapper.get(cameraEntity).rotation );
 		camera.translate(
@@ -86,7 +88,6 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 		camera.update();
 		return camera;
 	}
-	
 	
 	private void drawObjects(List<Entity> entities) {
 		for ( Entity e : entities ) {
@@ -107,6 +108,9 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 		}
 		if ( textSystem != null && textSystem.canProcess(e) ) {
 			textSystem.draw(e, batch);
+		}
+		if ( mapSystem != null && mapSystem.canProcess(e) ) {
+			mapSystem.draw(e, batch);
 		}
 	}
 	

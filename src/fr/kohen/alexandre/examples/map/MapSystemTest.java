@@ -28,6 +28,7 @@ public class MapSystemTest extends EntityProcessingSystem {
 	protected void process(Entity e) {
 		OrthographicCamera camera = new OrthographicCamera();
 		camera.setToOrtho(false, 30, 20);
+		camera.position.x = -10;
 		camera.update();
 		
 		MapLayer layer = mapMapper.get(e).tmap.getLayers().getLayer(0);

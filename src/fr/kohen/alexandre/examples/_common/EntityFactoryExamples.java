@@ -77,6 +77,7 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 	public static Entity newMap(World world, int mapId, String mapName) {
 		Entity e = world.createEntity();
 		e.addComponent( new MapComponent(mapId,mapName) );
+		e.addComponent( new Transform(mapId, 0, 0, 0) );
 		return e;
 	}
 	
