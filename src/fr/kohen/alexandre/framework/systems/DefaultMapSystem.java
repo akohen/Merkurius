@@ -16,6 +16,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import fr.kohen.alexandre.framework.base.Systems;
@@ -28,9 +31,9 @@ import fr.kohen.alexandre.framework.systems.interfaces.MapDrawSystem;
 public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawSystem {
 	protected ComponentMapper<MapComponent> 	mapMapper;
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
+	protected ComponentMapper<Transform> 		transformMapper;
 	private FrameBuffer framebuffer = new FrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 	private HashMap<Entity, Sprite> spriteMap = new HashMap<Entity, Sprite>();
-	private ComponentMapper<Transform> transformMapper;
 	private ImmutableBag<Entity> cameras;
 	private CameraSystem cameraSystem;
 	
@@ -97,10 +100,29 @@ public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawS
 	
 	@Override
 	protected void inserted(Entity e) {
-		
+		for (MapLayer layer : mapMapper.get(e).tmap.getLayers()) {
+			if (layer.isVisible()) {
+				if (layer instanceof TiledMapTileLayer) {
+					for (int x = 0; x < ((TiledMapTileLayer) layer).getWidth(); x++) {
+						for (int y = 0; y < ((TiledMapTileLayer) layer).getHeight(); y++) {
+							checkTile(x, y, (TiledMapTileLayer) layer, mapMapper.get(e).mapId);
+						}
+					}
+				} else {
+					for (MapObject object : layer.getObjects()) {
+						checkObject(object, (TiledMapTileLayer) layer, mapMapper.get(e).mapId);
+					}
+				}
+			}				
+		}
 	}
 	
-	
+
+	protected void checkTile(int x, int y, TiledMapTileLayer layer, int mapId) {
+	}
+	protected void checkObject(MapObject object, TiledMapTileLayer layer, int mapId) {
+	}
+
 	public void draw(Entity e, SpriteBatch batch) {
 		Sprite sprite = spriteMap.get(e);
 		if( sprite != null ) {
