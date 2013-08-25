@@ -6,7 +6,7 @@ import java.util.Map;
 import com.badlogic.gdx.Game;
 
 public abstract class GameController extends Game {
-	private Map<String, GameScreen>	screens = new HashMap<String, GameScreen>();
+	protected Map<String, GameScreen>	screens = new HashMap<String, GameScreen>();
 	
 	public void setScreen(GameScreen screen) {
 		super.setScreen(screen);
