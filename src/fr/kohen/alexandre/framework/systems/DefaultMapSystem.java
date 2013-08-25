@@ -32,10 +32,11 @@ public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawS
 	protected ComponentMapper<MapComponent> 	mapMapper;
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
 	protected ComponentMapper<Transform> 		transformMapper;
-	private FrameBuffer framebuffer = new FrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-	private HashMap<Entity, Sprite> spriteMap = new HashMap<Entity, Sprite>();
-	private ImmutableBag<Entity> cameras;
-	private CameraSystem cameraSystem;
+	protected FrameBuffer framebuffer = new FrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+	protected HashMap<Entity, Sprite> spriteMap = new HashMap<Entity, Sprite>();
+	protected ImmutableBag<Entity> cameras;
+	protected CameraSystem cameraSystem;
+	protected HashMap<Integer, Entity> maps;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -50,6 +51,8 @@ public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawS
 		mapMapper 		= ComponentMapper.getFor(MapComponent.class, world);
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
+		
+		maps			= new HashMap<Integer, Entity>();
 	}
 
 	protected void begin() {
@@ -100,6 +103,8 @@ public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawS
 	
 	@Override
 	protected void inserted(Entity e) {
+		maps.put(mapMapper.get(e).mapId, e);
+		
 		for (MapLayer layer : mapMapper.get(e).tmap.getLayers()) {
 			if (layer.isVisible()) {
 				if (layer instanceof TiledMapTileLayer) {
@@ -123,6 +128,7 @@ public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawS
 	protected void checkObject(MapObject object, TiledMapTileLayer layer, int mapId) {
 	}
 
+	
 	public void draw(Entity e, SpriteBatch batch) {
 		Sprite sprite = spriteMap.get(e);
 		if( sprite != null ) {
@@ -132,9 +138,18 @@ public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawS
 		
 	}
 
+	public Entity getMap(int mapId) {
+		return maps.get(mapId);
+	}
+	
 	@Override
 	public boolean canProcess(Entity e) {
 		return mapMapper.has(e);
+	}
+	
+	@Override
+	protected void removed(Entity e) {
+		maps.remove(e);
 	}
 	
 }
