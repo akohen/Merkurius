@@ -80,6 +80,7 @@ public class DefaultMapSystem extends EntityProcessingSystem implements MapDrawS
 				Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 					renderer.setView( camera );
 					renderer.render();
+					renderer.dispose();
 				framebuffer.end();
 				
 				TextureRegion region = new TextureRegion(

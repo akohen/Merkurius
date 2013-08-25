@@ -21,6 +21,10 @@ public class BoxBody extends PhysicsBody {
 	public BoxBody(int size) {
 		this.width = size;
 		this.length = size;
+		
+	}public BoxBody(int width, int length) {
+		this.width = width;
+		this.length = length;
 	}
 	
 	public BoxBody(int size, short categoryBits, short maskBits) {

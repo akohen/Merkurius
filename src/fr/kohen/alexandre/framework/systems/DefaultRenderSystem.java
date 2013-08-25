@@ -35,8 +35,7 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 	public DefaultRenderSystem() {
 		super(Aspect.getAspectForAll(CameraComponent.class));
 		
-		batch 			= new SpriteBatch();
-		framebuffer 	= new FrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true); 
+		
 	}
 	
 	public DefaultRenderSystem(float red, float green, float blue, float alpha){
@@ -56,12 +55,14 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 		textSystem		= Systems.get(TextDrawSystem.class, world);
 		mapSystem		= Systems.get(MapDrawSystem.class, world);
 		
-		if( visualSystem == null ) throw new RuntimeException("A required system is not loaded");
+		framebuffer 	= new FrameBuffer(Format.RGBA4444, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true); 
+		//if( visualSystem == null ) throw new RuntimeException("A required system is not loaded");
 	}
 
 	
 	@Override
 	protected void begin() {
+		batch 			= new SpriteBatch();
 		clearScreen();
 		mainCamera = new OrthographicCamera( Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
 		mainCamera.setToOrtho(true);
@@ -78,6 +79,10 @@ public class DefaultRenderSystem extends EntityProcessingSystem implements Rende
 			batch.end();
 		framebuffer.end();
 		drawToScreen(cameraEntity);
+	}
+	
+	protected void end() {
+		batch.dispose();
 	}
 	
 	
