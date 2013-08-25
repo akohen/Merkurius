@@ -52,6 +52,7 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	protected SyncThread 					syncThread;
 	protected List<DatagramPacket> 			events;
 	protected Map<Integer, EntityUpdate>	updates;
+	protected List<Integer>					removeList;
 	protected int							lastPlayerId = 1;
 
 	protected ComponentMapper<Synchronize> 	syncMapper;
@@ -73,6 +74,7 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	protected void initialize() {
 		updates			= new HashMap<Integer, EntityUpdate>();
 		events			= new ArrayList<DatagramPacket>();
+		removeList		= new ArrayList<Integer>();
 		clientList 		= new ArrayList<GameClient>();
 		packets			= Collections.synchronizedList(new ArrayList<DatagramPacket>());
 
@@ -94,6 +96,7 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	protected void begin() {
 		events.clear();
 		updates.clear();
+		removeList.clear();
 		
 		synchronized(packets) {
 			Iterator<DatagramPacket> i = packets.iterator(); // Must be in synchronized block
@@ -107,9 +110,14 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	@Override
 	protected void process(Entity e) {
 		Synchronize	sync		= syncMapper		.get(e);
+		if( removeList.contains(sync.getId()) ) {
+			updates.remove(sync.getId());
+			e.deleteFromWorld();
+		}
 		if( updates.containsKey(sync.getId()) ) {
 			EntityUpdate update = updates.get( sync.getId() );
-			updateEntity(e, update);			
+			try { updateEntity(e, update); }
+			catch (NullPointerException exception) { Gdx.app.log( "SyncSystem", "Update error " ); }						
 			updates.remove(sync.getId());
 		}
 	}
@@ -143,6 +151,8 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 			addClient( packet,Integer.parseInt(data[1]) );
 		} else if( data[0].equalsIgnoreCase("connected") ) {
 			connected( Integer.parseInt(data[2]) );
+		} else if( data[0].equalsIgnoreCase("removed") ) {
+			removeList.add( Integer.parseInt(data[1]) );
 		} else {
 			events.add( packet );
 		}
@@ -152,7 +162,7 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	public void send(String message) {
 		for( GameClient client : clientList ) {
 			send(client, message);
-		}	
+		}
 	}
 	
 	public void send(GameClient client, String message) {
@@ -204,10 +214,10 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		public void reset() { this.pointer = 3; }
 		public boolean hasNext() { return pointer < data.length; }
 		public String getType() { return data[1]; }
-		public String getNext() { return data[pointer++]; }
-		public Float getNextFloat() { return Float.valueOf(data[pointer++]); }
-		public Integer getNextInteger() { return Integer.valueOf(data[pointer++]); }
-		public Boolean getNextBoolean() { return Boolean.valueOf(data[pointer++]); }
+		public String getNext() { if(hasNext()) return data[pointer++]; else return null;}
+		public Float getNextFloat() { return Float.valueOf(getNext()); }
+		public Integer getNextInteger() { return Integer.valueOf(getNext()); }
+		public Boolean getNextBoolean() { return Boolean.valueOf(getNext()); }
 		public String[] getData() { return data; }
 	}
 	
