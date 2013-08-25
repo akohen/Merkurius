@@ -8,7 +8,7 @@ import com.artemis.Component;
  *
  */
 public class Parent extends Component {
-	private int parentId;
+	public int parentId;
 	
 	public Parent(int parentId) {
 		this.setParentId(parentId);

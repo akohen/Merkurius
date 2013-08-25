@@ -42,7 +42,7 @@ public class ServerSystem extends DefaultSyncSystem {
 	
 	private void connectNewPlayer(DatagramPacket packet, String[] data) {
 		// Set player id
-		int playerId = getPlayerId();
+		int playerId = newPlayerId();
 		
 		// Create player entity
 		Entity player = EntityFactoryExamples.newServerPlayer(world, playerId);
@@ -94,6 +94,18 @@ public class ServerSystem extends DefaultSyncSystem {
 
 	@Override
 	protected void connected(int clientId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void newEntity(EntityUpdate entityUpdate, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void updateEntity(Entity e, EntityUpdate update) {
 		// TODO Auto-generated method stub
 		
 	}

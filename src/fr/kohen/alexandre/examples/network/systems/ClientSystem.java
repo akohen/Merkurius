@@ -110,5 +110,17 @@ public class ClientSystem extends DefaultSyncSystem {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected void newEntity(EntityUpdate entityUpdate, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void updateEntity(Entity e, EntityUpdate update) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

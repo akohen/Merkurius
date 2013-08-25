@@ -12,8 +12,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 
@@ -49,7 +52,9 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	protected SyncThread 					syncThread;
 	protected List<DatagramPacket> 			events;
 	protected Map<Integer, EntityUpdate>	updates;
-	protected int							lastPlayerId = 0;
+	protected int							lastPlayerId = 1;
+
+	protected ComponentMapper<Synchronize> 	syncMapper;
 	
 	@SuppressWarnings("unchecked")
 	public DefaultSyncSystem(float delta, int port) {
@@ -70,6 +75,8 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		events			= new ArrayList<DatagramPacket>();
 		clientList 		= new ArrayList<GameClient>();
 		packets			= Collections.synchronizedList(new ArrayList<DatagramPacket>());
+
+        syncMapper  	= ComponentMapper.getFor(Synchronize.class, world);
 		
 		try { 
 			if( portIn > 0 )
@@ -84,11 +91,6 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		catch (SocketException e) { e.printStackTrace(); }
 	}
 	
-	@Override
-	public void receiveFromThread(DatagramPacket packet) {
-		packets.add(packet);
-	}
-
 	protected void begin() {
 		events.clear();
 		updates.clear();
@@ -100,6 +102,33 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 			}
 			packets.clear();
 		}
+	}
+	
+	@Override
+	protected void process(Entity e) {
+		Synchronize	sync		= syncMapper		.get(e);
+		if( updates.containsKey(sync.getId()) ) {
+			EntityUpdate update = updates.get( sync.getId() );
+			updateEntity(e, update);			
+			updates.remove(sync.getId());
+		}
+	}
+
+	protected void end() {
+		for (Entry<Integer, EntityUpdate> entry : updates.entrySet()) {
+			newEntity( entry.getValue(), entry.getKey() );
+		}
+	}
+	
+	
+	// Communication methods
+	
+	
+
+
+	@Override
+	public void receiveFromThread(DatagramPacket packet) {
+		packets.add(packet);
 	}
 	
 	@Override
@@ -120,11 +149,20 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		
 	}
 	
+	public void send(String message) {
+		for( GameClient client : clientList ) {
+			send(client, message);
+		}	
+	}
 	
-	protected abstract GameClient addHost(InetAddress inetAddress, int port);
-	protected abstract GameClient newClient(DatagramPacket packet, int port);
-	protected abstract void connected(int clientId);
-
+	public void send(GameClient client, String message) {
+		byte[] buf = message.getBytes();
+		//Gdx.app.log("SyncSystem", "Sending message '" + message + "' to " + client.getAddress() + ":" + client.getPort());
+		DatagramPacket packet = new DatagramPacket( buf, buf.length, client.getAddress(), client.getPort() );
+		try { socket.send(packet); } catch (IOException e1) { e1.printStackTrace(); }		
+	}
+	
+	
 	private void addClient(DatagramPacket packet, int port) {
 		GameClient client = newClient(packet, port);
 		clientList.add( client );
@@ -137,21 +175,6 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		clientList.add( host );
 		send(host, "connect " + this.portIn );
 	}
-
-	
-	public void send(String message) {
-		for( GameClient client : clientList ) {
-			send(client, message);
-		}	
-	}
-	
-	public void send(GameClient client, String message) {
-		byte[] buf = message.getBytes();
-		Gdx.app.log("SyncSystem", "Sending message '" + message + "' to " + client.getAddress() + ":" + client.getPort());
-		DatagramPacket packet = new DatagramPacket( buf, buf.length, client.getAddress(), client.getPort() );
-		try { socket.send(packet); } catch (IOException e1) { e1.printStackTrace(); }		
-	}
-	
 	
 	protected GameClient getMessageSender(DatagramPacket packet) {
 		for( GameClient client : clientList ) {
@@ -162,8 +185,14 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		return null;
 	}
 	
-	protected int getPlayerId() { return lastPlayerId++; }
+	protected int newPlayerId() { return lastPlayerId++; }
 	protected int getLastPlayerId() { return lastPlayerId; }
+	protected abstract GameClient addHost(InetAddress inetAddress, int port);
+	protected abstract GameClient newClient(DatagramPacket packet, int port);
+	protected abstract void connected(int clientId);
+	protected abstract void newEntity(EntityUpdate entityUpdate, int id);
+	protected abstract void updateEntity(Entity e, EntityUpdate update);
+
 	
 	public class EntityUpdate {
 		private String[] data;
