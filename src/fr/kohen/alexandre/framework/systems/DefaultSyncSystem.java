@@ -3,6 +3,7 @@ package fr.kohen.alexandre.framework.systems;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -13,15 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.artemis.Aspect;
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.badlogic.gdx.Gdx;
 
-import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Synchronize;
-import fr.kohen.alexandre.framework.components.Transform;
-import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.network.GameClient;
 import fr.kohen.alexandre.framework.network.SyncThread;
 import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
@@ -45,20 +41,15 @@ import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
  * @author Alexandre
  *
  */
-public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements SyncSystem {
-	protected ComponentMapper<Velocity> 	velocityMapper;
-	protected ComponentMapper<EntityState> 	stateMapper;
-	protected ComponentMapper<Transform> 	transformMapper;
-	protected ComponentMapper<Synchronize> 	syncMapper;
+public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem implements SyncSystem {
 	protected List<GameClient>				clientList;
 	protected DatagramSocket 				socket;	
 	protected List<DatagramPacket> 			packets;
 	protected int							portIn = 0;
-	protected int							portOut = 0;
 	protected SyncThread 					syncThread;
 	protected List<DatagramPacket> 			events;
 	protected Map<Integer, EntityUpdate>	updates;
-	
+	protected int							lastPlayerId = 0;
 	
 	@SuppressWarnings("unchecked")
 	public DefaultSyncSystem(float delta, int port) {
@@ -75,11 +66,6 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 	
 	@Override
 	protected void initialize() {
-		transformMapper = ComponentMapper.getFor(Transform.class, world);
-		velocityMapper 	= ComponentMapper.getFor(Velocity.class, world);
-		stateMapper 	= ComponentMapper.getFor(EntityState.class, world);
-		syncMapper 		= ComponentMapper.getFor(Synchronize.class, world);
-		
 		updates			= new HashMap<Integer, EntityUpdate>();
 		events			= new ArrayList<DatagramPacket>();
 		clientList 		= new ArrayList<GameClient>();
@@ -119,22 +105,39 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 	@Override
 	public void receive(DatagramPacket packet) { 
 		String message = new String( packet.getData(), 0, packet.getLength() );
+		//Gdx.app.log("Sync", "received " + message);
 		String[] data = message.split(" ");
 		
 		if( data[0].contentEquals("update") ) {
 			updates.put( Integer.parseInt(data[2]), new EntityUpdate(data) );
+		} else if( data[0].equalsIgnoreCase("connect") ) {
+			addClient( packet,Integer.parseInt(data[1]) );
+		} else if( data[0].equalsIgnoreCase("connected") ) {
+			connected( Integer.parseInt(data[2]) );
 		} else {
 			events.add( packet );
 		}
 		
 	}
 	
-	@Override
-	public void connect(GameClient host) throws UnknownHostException {
-		clientList.add(host);
-		send("CONNECT " + portIn);
-		Gdx.app.log("SyncSystem", "connecting");
+	
+	protected abstract GameClient addHost(InetAddress inetAddress, int port);
+	protected abstract GameClient newClient(DatagramPacket packet, int port);
+	protected abstract void connected(int clientId);
+
+	private void addClient(DatagramPacket packet, int port) {
+		GameClient client = newClient(packet, port);
+		clientList.add( client );
+		send( client, "connected player " + client.getId() );
 	}
+	
+	
+	public void connect(String address, int port) throws UnknownHostException {
+		GameClient host = addHost(InetAddress.getByName("127.0.0.1"), port);
+		clientList.add( host );
+		send(host, "connect " + this.portIn );
+	}
+
 	
 	public void send(String message) {
 		for( GameClient client : clientList ) {
@@ -142,18 +145,27 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 		}	
 	}
 	
-	
-	@Override
 	public void send(GameClient client, String message) {
 		byte[] buf = message.getBytes();
+		Gdx.app.log("SyncSystem", "Sending message '" + message + "' to " + client.getAddress() + ":" + client.getPort());
 		DatagramPacket packet = new DatagramPacket( buf, buf.length, client.getAddress(), client.getPort() );
 		try { socket.send(packet); } catch (IOException e1) { e1.printStackTrace(); }		
 	}
 	
-	@Override
-	protected void process(Entity e) { }
 	
-	protected class EntityUpdate {
+	protected GameClient getMessageSender(DatagramPacket packet) {
+		for( GameClient client : clientList ) {
+			if( client.checkPacket(packet) ) {
+				return client;
+			}
+		}
+		return null;
+	}
+	
+	protected int getPlayerId() { return lastPlayerId++; }
+	protected int getLastPlayerId() { return lastPlayerId; }
+	
+	public class EntityUpdate {
 		private String[] data;
 		private int pointer = 3;
 
@@ -166,8 +178,17 @@ public class DefaultSyncSystem extends IntervalEntityProcessingSystem implements
 		public String getNext() { return data[pointer++]; }
 		public Float getNextFloat() { return Float.valueOf(data[pointer++]); }
 		public Integer getNextInteger() { return Integer.valueOf(data[pointer++]); }
+		public Boolean getNextBoolean() { return Boolean.valueOf(data[pointer++]); }
 		public String[] getData() { return data; }
 	}
 	
+	
+	// Deprecated
+	
+	public void connect(GameClient host) throws UnknownHostException {
+		clientList.add(host);
+		send("CONNECT " + portIn);
+		Gdx.app.log("SyncSystem", "connecting");
+	}
 
 }

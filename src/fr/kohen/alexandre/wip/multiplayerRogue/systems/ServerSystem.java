@@ -1,6 +1,7 @@
 package fr.kohen.alexandre.wip.multiplayerRogue.systems;
 
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -14,8 +15,11 @@ import fr.kohen.alexandre.wip.multiplayerRogue.components.*;
 
 
 public class ServerSystem extends DefaultSyncSystem {
-	private int	lastPlayerId = 0;
+
+	private ComponentMapper<Synchronize> 	syncMapper;
+	private ComponentMapper<Transform> 		transformMapper;
 	private ComponentMapper<Destination> destMapper;
+	private ComponentMapper<EntityState> stateMapper;
 
 	public ServerSystem(float delta, int port) { super(delta, port); }	
 	
@@ -67,11 +71,6 @@ public class ServerSystem extends DefaultSyncSystem {
 			updates.put( entityId, new EntityUpdate(data) );
 		}
 	}
-	
-	
-	private int getPlayerId() {
-		return lastPlayerId++;
-	}
 
 	@Override
 	protected void process(Entity e) {
@@ -101,13 +100,24 @@ public class ServerSystem extends DefaultSyncSystem {
 		send(message);
 	}
 	
-	private GameClient getMessageSender(DatagramPacket packet) {
-		for( GameClient client : clientList ) {
-			if( client.checkPacket(packet) ) {
-				return client;
-			}
-		}
+	
+
+	@Override
+	public GameClient newClient(DatagramPacket packet, int port) {
+		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected GameClient addHost(InetAddress inetAddress, int port) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void connected(int clientId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,7 +1,9 @@
 package fr.kohen.alexandre.examples.network.systems;
 
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 
@@ -11,13 +13,16 @@ import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Synchronize;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
+import fr.kohen.alexandre.framework.network.GameClient;
 import fr.kohen.alexandre.framework.systems.DefaultSyncSystem;
 
 
 public class ServerSystem extends DefaultSyncSystem {
-	private int lastPlayerId = 0;
-	
 	public ServerSystem(float delta, int port) { super(delta, port); }
+	private ComponentMapper<Synchronize> 	syncMapper;
+	private ComponentMapper<Transform> 		transformMapper;
+	private ComponentMapper<Velocity> 		velocityMapper;
+	private ComponentMapper<EntityState> 	stateMapper;
 	
 	@Override
 	protected void begin() { 
@@ -50,11 +55,6 @@ public class ServerSystem extends DefaultSyncSystem {
 		clientList.add( client );
 		Gdx.app.log("New connection: ", packet.getAddress().toString() + ":" + packet.getPort() + " " + data[1] );
 	}
-	
-	private int getPlayerId() {
-		return lastPlayerId++;
-	}
-
 
 	@Override
 	protected void process(Entity e) {
@@ -78,6 +78,24 @@ public class ServerSystem extends DefaultSyncSystem {
 
 		// Sending the message for each client
 		send(message);
+	}
+
+	@Override
+	public GameClient newClient(DatagramPacket packet, int port) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected GameClient addHost(InetAddress inetAddress, int port) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void connected(int clientId) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

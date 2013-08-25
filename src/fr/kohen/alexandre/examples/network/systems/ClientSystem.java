@@ -1,8 +1,10 @@
 package fr.kohen.alexandre.examples.network.systems;
 
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.util.Map.Entry;
 
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 
@@ -12,11 +14,15 @@ import fr.kohen.alexandre.framework.components.EntityState;
 import fr.kohen.alexandre.framework.components.Synchronize;
 import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.Velocity;
+import fr.kohen.alexandre.framework.network.GameClient;
 import fr.kohen.alexandre.framework.systems.DefaultSyncSystem;
 
 public class ClientSystem extends DefaultSyncSystem {
 	private boolean connected = false;
-
+	private ComponentMapper<Synchronize> 	syncMapper;
+	private ComponentMapper<Transform> 		transformMapper;
+	private ComponentMapper<Velocity> 		velocityMapper;
+	private ComponentMapper<EntityState> 	stateMapper;
 
 
 	public ClientSystem() {
@@ -85,6 +91,24 @@ public class ClientSystem extends DefaultSyncSystem {
 				this.connected  = true;
 			} 
 		}	
+	}
+
+	@Override
+	public GameClient newClient(DatagramPacket packet, int port) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected GameClient addHost(InetAddress inetAddress, int port) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void connected(int clientId) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

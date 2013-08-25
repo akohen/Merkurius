@@ -33,6 +33,7 @@ public class GameClientImpl implements GameClient {
 	public int getPort() { return this.port; }
 	public int getId() { return this.id; }
 	public Entity getShip() { return this.ship; }
+	public Entity getEntity() { return this.ship; }
 
 	@Override
 	public boolean checkPacket(DatagramPacket packet) {
