@@ -1,21 +1,20 @@
 package fr.kohen.alexandre.framework.network;
 
-import java.io.*;
-import java.net.*;
-
-import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
  
 public class SyncThread extends Thread {
 	protected DatagramSocket 		socket = null;
-	protected SyncSystem 	parentSystem;
+	protected NetworkUtil 	parentSystem;
     
-    public SyncThread(SyncSystem system) throws IOException {
+    public SyncThread(NetworkUtil system) throws IOException {
 		super("ServerThread");
 		this.parentSystem 	= system;
 		socket 				= new DatagramSocket();
     }
     
-    public SyncThread(SyncSystem system, int port) throws IOException {
+    public SyncThread(NetworkUtil system, int port) throws IOException {
 		super("ServerThread");
 		this.parentSystem 	= system;
 		socket 				= new DatagramSocket(port);

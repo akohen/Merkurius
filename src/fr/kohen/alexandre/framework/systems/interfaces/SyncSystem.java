@@ -30,7 +30,6 @@ public interface SyncSystem {
 	 * @param packet
 	 */
 	public void receive(DatagramPacket packet);
-	public void receiveFromThread(DatagramPacket packet);
 	/**
 	 * Connect to specified host
 	 * @param host
