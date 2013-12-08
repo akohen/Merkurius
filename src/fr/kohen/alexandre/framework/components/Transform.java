@@ -4,11 +4,14 @@ import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import fr.kohen.alexandre.framework.network.Syncable;
+import fr.kohen.alexandre.framework.systems.DefaultSyncSystem.EntityUpdate;
+
 /**
  * Position component
  * @author Alexandre
  */
-public class Transform extends Component {
+public class Transform extends Component implements Syncable {
 	public Vector3 position = new Vector3();
 	public float rotation = 0;
 	public float scale = 1;
@@ -70,6 +73,16 @@ public class Transform extends Component {
 
 	public Vector3 getPosition() {
 		return position;
+	}
+	@Override
+	public void sync(EntityUpdate update) {
+		this.position.x 	= update.getNextFloat();
+		this.position.y 	= update.getNextFloat();
+		this.rotation 		= update.getNextFloat();
+	}
+	@Override
+	public StringBuilder getMessage() {
+		return new StringBuilder().append(this.position.x).append(" ").append(this.position.y).append(" ").append(this.rotation);
 	}
 
 }

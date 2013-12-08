@@ -34,7 +34,7 @@ public class DefaultBox2DSystem extends EntityProcessingSystem implements Physic
 	private Hashtable<Integer, World> 					universe;
 	private Hashtable<Integer, List<ContactListener>> 	contactListeners;
 	private List<ContactListener> 						globalListeners;
-	private Hashtable<Entity, Integer> 					previousMap;
+	private Hashtable<Entity, Integer> 					previousMap; // Used to detect when an entity changes map
 
 	@SuppressWarnings("unchecked")
 	public DefaultBox2DSystem() {

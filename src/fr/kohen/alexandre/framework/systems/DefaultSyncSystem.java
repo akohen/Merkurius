@@ -131,15 +131,12 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	
 	// Communication methods
 	
-	
 
-
-	@Override
 	public void receiveFromThread(DatagramPacket packet) {
 		packets.add(packet);
 	}
 	
-	@Override
+	
 	public void receive(DatagramPacket packet) { 
 		String message = new String( packet.getData(), 0, packet.getLength() );
 		//Gdx.app.log("Sync", "received " + message);
@@ -159,12 +156,18 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		
 	}
 	
+	/**
+	 * Send a message to all connected clients
+	 */
 	public void send(String message) {
 		for( GameClient client : clientList ) {
 			send(client, message);
 		}
 	}
 	
+	/**
+	 * Send a message to a single client
+	 */
 	public void send(GameClient client, String message) {
 		byte[] buf = message.getBytes();
 		//Gdx.app.log("SyncSystem", "Sending message '" + message + "' to " + client.getAddress() + ":" + client.getPort());
@@ -172,16 +175,25 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		try { socket.send(packet); } catch (IOException e1) { e1.printStackTrace(); }		
 	}
 	
-	
+	/**
+	 * 
+	 * @param packet
+	 * @param port
+	 */
 	private void addClient(DatagramPacket packet, int port) {
 		GameClient client = newClient(packet, port);
 		clientList.add( client );
 		send( client, "connected player " + client.getId() );
 	}
 	
-	
+	/**
+	 * Connect to a server listening on the specified port
+	 * @param address
+	 * @param port
+	 * @throws UnknownHostException
+	 */
 	public void connect(String address, int port) throws UnknownHostException {
-		GameClient host = addHost(InetAddress.getByName("127.0.0.1"), port);
+		GameClient host = addHost(InetAddress.getByName(address), port);
 		clientList.add( host );
 		send(host, "connect " + this.portIn );
 	}
@@ -222,8 +234,12 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	}
 	
 	
-	// Deprecated
-	
+	/**
+	 * Does some thing in old style.
+	 *
+	 * @deprecated use {@link connect(String address, int port)} instead.  
+	 */
+	@Deprecated
 	public void connect(GameClient host) throws UnknownHostException {
 		clientList.add(host);
 		send("CONNECT " + portIn);

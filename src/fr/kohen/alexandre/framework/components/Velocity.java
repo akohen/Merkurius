@@ -3,7 +3,10 @@ package fr.kohen.alexandre.framework.components;
 import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
 
-public class Velocity extends Component {
+import fr.kohen.alexandre.framework.network.Syncable;
+import fr.kohen.alexandre.framework.systems.DefaultSyncSystem.EntityUpdate;
+
+public class Velocity extends Component implements Syncable {
 	public Vector2 	speed;
 	public Vector2 	maxVector;
 	public float		maxSpeed = -1f;
@@ -106,6 +109,17 @@ public class Velocity extends Component {
 		if( maxRotation >= 0 && Math.abs(rotation) > maxRotation ) {
 			rotation = Math.signum(rotation) * maxRotation;
 		}
+	}
+
+	@Override
+	public void sync(EntityUpdate update) {
+		this.speed.x		= update.getNextFloat();
+		this.speed.y 		= update.getNextFloat();
+	}
+
+	@Override
+	public StringBuilder getMessage() {
+		return new StringBuilder().append(this.speed.x).append(" ").append(this.speed.y);
 	}
 
 }
