@@ -1,15 +1,10 @@
 package fr.kohen.alexandre.framework.systems;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,7 +17,7 @@ import com.badlogic.gdx.Gdx;
 
 import fr.kohen.alexandre.framework.components.Synchronize;
 import fr.kohen.alexandre.framework.network.GameClient;
-import fr.kohen.alexandre.framework.network.SyncThread;
+import fr.kohen.alexandre.framework.network.NetworkUtil;
 import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
 
 /**
@@ -46,16 +41,16 @@ import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
  */
 public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem implements SyncSystem {
 	protected List<GameClient>				clientList;
-	protected DatagramSocket 				socket;	
 	protected List<DatagramPacket> 			packets;
-	protected int							portIn = 0;
-	protected SyncThread 					syncThread;
 	protected List<DatagramPacket> 			events;
 	protected Map<Integer, EntityUpdate>	updates;
 	protected List<Integer>					removeList;
 	protected int							lastPlayerId = 1;
-
 	protected ComponentMapper<Synchronize> 	syncMapper;
+	protected int							portIn = 0;
+	protected NetworkUtil					network;
+	
+	
 	
 	@SuppressWarnings("unchecked")
 	public DefaultSyncSystem(float delta, int port) {
@@ -76,21 +71,15 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		events			= new ArrayList<DatagramPacket>();
 		removeList		= new ArrayList<Integer>();
 		clientList 		= new ArrayList<GameClient>();
-		packets			= Collections.synchronizedList(new ArrayList<DatagramPacket>());
+		packets			= new ArrayList<DatagramPacket>();
 
         syncMapper  	= ComponentMapper.getFor(Synchronize.class, world);
-		
-		try { 
-			if( portIn > 0 )
-				this.syncThread = new SyncThread(this, portIn);
-			else
-				this.syncThread = new SyncThread(this);
-		} catch (IOException e) { e.printStackTrace(); }
-		this.syncThread.start();
-		this.portIn = this.syncThread.getLocalPort();
-		
-		try { this.socket = new DatagramSocket(); } 
-		catch (SocketException e) { e.printStackTrace(); }
+        if( portIn > 0 ) {
+        	 network	= new NetworkUtil(portIn);
+        } else {
+        	 network	= new NetworkUtil();
+        	 portIn		= network.getPort();
+        }
 	}
 	
 	protected void begin() {
@@ -98,12 +87,9 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 		updates.clear();
 		removeList.clear();
 		
-		synchronized(packets) {
-			Iterator<DatagramPacket> i = packets.iterator(); // Must be in synchronized block
-			while (i.hasNext()) {
-				receive(i.next());
-			}
-			packets.clear();
+		packets = network.getPackets();
+		for(DatagramPacket packet  : packets) {
+			receive(packet);
 		}
 	}
 	
@@ -130,13 +116,6 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	
 	
 	// Communication methods
-	
-
-	public void receiveFromThread(DatagramPacket packet) {
-		packets.add(packet);
-	}
-	
-	
 	public void receive(DatagramPacket packet) { 
 		String message = new String( packet.getData(), 0, packet.getLength() );
 		//Gdx.app.log("Sync", "received " + message);
@@ -169,10 +148,8 @@ public abstract class DefaultSyncSystem extends IntervalEntityProcessingSystem i
 	 * Send a message to a single client
 	 */
 	public void send(GameClient client, String message) {
-		byte[] buf = message.getBytes();
-		//Gdx.app.log("SyncSystem", "Sending message '" + message + "' to " + client.getAddress() + ":" + client.getPort());
-		DatagramPacket packet = new DatagramPacket( buf, buf.length, client.getAddress(), client.getPort() );
-		try { socket.send(packet); } catch (IOException e1) { e1.printStackTrace(); }		
+		//Gdx.app.log("Sync", "sending " + message);
+		network.send(client, message);
 	}
 	
 	/**
