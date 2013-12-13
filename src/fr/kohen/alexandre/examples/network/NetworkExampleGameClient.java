@@ -8,7 +8,7 @@ import com.artemis.Entity;
 import fr.kohen.alexandre.framework.network.GameClient;
 
 
-public class GameClientImpl implements GameClient {
+public class NetworkExampleGameClient implements GameClient {
 	protected InetAddress 	address;
 	protected int			port;
 	protected int			portOut;
@@ -16,7 +16,7 @@ public class GameClientImpl implements GameClient {
 	protected Entity		ship;
 	
 
-	public GameClientImpl(InetAddress address, int port, int portOut, int id, Entity ship) {
+	public NetworkExampleGameClient(InetAddress address, int port, int portOut, int id, Entity ship) {
 		this.address 	= address;
 		this.port 		= port;
 		this.portOut 	= portOut;
@@ -24,7 +24,7 @@ public class GameClientImpl implements GameClient {
 		this.ship 		= ship;
 	}
 	
-	public GameClientImpl(InetAddress address, int port) {
+	public NetworkExampleGameClient(InetAddress address, int port) {
 		this.address 	= address;
 		this.port 		= port;
 	}

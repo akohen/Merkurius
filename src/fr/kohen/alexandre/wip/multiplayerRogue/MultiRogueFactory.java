@@ -63,7 +63,7 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 		e.addComponent( new Player(playerId) );
 		e.addComponent( new EntityState() );
 		
-		e.addComponent( new Synchronize("player") );
+		e.addComponent( new Synchronize("player", true) );
 		return e;
 	}
 	
@@ -81,7 +81,7 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 		e.addComponent( new Player(playerId) );
 		e.addComponent( new EntityState() );
 		
-		e.addComponent( new Synchronize("player", syncId) );
+		e.addComponent( new Synchronize("player", true, syncId) );
 		return e;
 	}
 	
@@ -94,7 +94,7 @@ public static Map<String, Action> actions = new HashMap<String, Action>();
 		
 		e.addComponent( new Player() );
 		e.addComponent( new EntityState() );
-		e.addComponent( new Synchronize("player") );
+		e.addComponent( new Synchronize("player", true) );
 		return e;
 	}
 	

@@ -115,11 +115,12 @@ public class Velocity extends Component implements Syncable {
 	public void sync(EntityUpdate update) {
 		this.speed.x		= update.getNextFloat();
 		this.speed.y 		= update.getNextFloat();
+		this.rotation		= update.getNextFloat();
 	}
 
 	@Override
 	public StringBuilder getMessage() {
-		return new StringBuilder().append(this.speed.x).append(" ").append(this.speed.y);
+		return new StringBuilder().append(this.speed.x).append(" ").append(this.speed.y).append(" ").append(this.rotation);
 	}
 
 }

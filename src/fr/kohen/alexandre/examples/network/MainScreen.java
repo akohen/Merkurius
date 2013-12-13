@@ -1,14 +1,12 @@
 package fr.kohen.alexandre.examples.network;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.badlogic.gdx.Gdx;
-
 import fr.kohen.alexandre.examples._common.EntityFactoryExamples;
-import fr.kohen.alexandre.examples.network.systems.ClientSystem;
-import fr.kohen.alexandre.examples.network.systems.ServerSystem;
 import fr.kohen.alexandre.framework.base.GameScreen;
+import fr.kohen.alexandre.framework.components.Synchronize;
+import fr.kohen.alexandre.framework.components.Transform;
+import fr.kohen.alexandre.framework.components.Velocity;
 import fr.kohen.alexandre.framework.systems.DefaultBox2DSystem;
 import fr.kohen.alexandre.framework.systems.DefaultCameraSystem;
 import fr.kohen.alexandre.framework.systems.DefaultControlSystem;
@@ -20,8 +18,9 @@ import fr.kohen.alexandre.framework.systems.interfaces.SyncSystem;
 
 public class MainScreen extends GameScreen {
 
-	protected ClientSystem syncSystem;
+
 	protected boolean isServer;
+	private NetworkExampleSyncSystem syncSystem;
 
 	public MainScreen(boolean server) {
 		this.isServer = server;
@@ -29,21 +28,20 @@ public class MainScreen extends GameScreen {
 	
 	@Override
 	protected void setSystems() {
-		world.setSystem(new DefaultCameraSystem());
-		if ( isServer )
-			world.setSystem(new DefaultControlSystem(50));
-		world.setSystem(new DefaultRenderSystem());
+		world.setSystem( new DefaultCameraSystem() );
+		world.setSystem( new DefaultControlSystem(50) );
+		world.setSystem( new DefaultRenderSystem() );
 		world.setSystem( new DefaultVisualSystem(EntityFactoryExamples.visuals) );
-		world.setSystem(new DefaultBox2DSystem());	
-		world.setSystem(new DefaultExpirationSystem());
-		world.setSystem(new DefaultDebugSystem());	
-		if ( isServer ) {
-			world.setSystem(new ServerSystem(0.1f, 4445));	
-			Gdx.app.log("MainScreen", "Server mode");
+		world.setSystem( new DefaultBox2DSystem() );	
+		world.setSystem( new DefaultExpirationSystem() );
+		world.setSystem( new DefaultDebugSystem() );
+		if( isServer ) {
+			syncSystem = world.setSystem( new NetworkExampleSyncSystem(0.2f, 4445, true) );	// An update is sent every 200ms. This is high enough so client-side interpolation can be noticed	
 		} else {
-			this.syncSystem = world.setSystem(new ClientSystem());	
-			Gdx.app.log("MainScreen", "Client mode");	
+			syncSystem = world.setSystem( new NetworkExampleSyncSystem() );	
 		}
+		syncSystem.addSyncedComponent(Transform.class, SyncSystem.SyncTypes.ServerToClient);
+		syncSystem.addSyncedComponent(Velocity.class, SyncSystem.SyncTypes.ServerToClient);
 	}
 	
 	@Override
@@ -54,13 +52,16 @@ public class MainScreen extends GameScreen {
 		EntityFactoryExamples.newBox(world, 1, 130, -100, 100).addToWorld();
 		EntityFactoryExamples.newBox(world, 1, -130, -100, 100).addToWorld();
 		EntityFactoryExamples.newBox(world, 1, -130, 100, 100).addToWorld();
-		
+
 		EntityFactoryExamples.newCamera(world, 1, 0, 0, 0, 0, 0, 640, 480, 0, "cameraWorld1").addToWorld();
 		
-		if ( !isServer ) {
-			try { ((SyncSystem) syncSystem).connect(new GameClientImpl(InetAddress.getByName("127.0.0.1"), 4445)); }
+		if ( isServer ) {
+			EntityFactoryExamples.newPlayer(world, 1, 0, 0).addComponent( new Synchronize("player", true) ).addToWorld();
+		} else {
+			try { ((NetworkExampleSyncSystem) syncSystem).connect("127.0.0.1", 4445); }
 			catch (UnknownHostException e) { e.printStackTrace(); }
 		}
 	}
+
 
 }

@@ -10,7 +10,7 @@ import fr.kohen.alexandre.framework.network.GameClient;
  * @author Alexandre
  */
 public interface SyncSystem {
-
+	public enum 							SyncTypes {ServerToClient, ClientToServer, Both};
 	
 	/**
 	 * Sends a message to every connected client

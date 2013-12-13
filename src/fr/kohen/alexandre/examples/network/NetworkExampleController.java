@@ -3,12 +3,12 @@ package fr.kohen.alexandre.examples.network;
 import fr.kohen.alexandre.framework.base.GameController;
 import fr.kohen.alexandre.framework.base.GameScreen;
 
-public class GameControllerEx3 extends GameController {
+public class NetworkExampleController extends GameController {
 
 	private boolean isServer;
 
 
-	public GameControllerEx3(boolean server) {
+	public NetworkExampleController(boolean server) {
 		this.isServer = server;
 	}
 	
