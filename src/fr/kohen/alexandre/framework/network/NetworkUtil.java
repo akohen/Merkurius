@@ -3,18 +3,11 @@ package fr.kohen.alexandre.framework.network;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.bitlet.weupnp.GatewayDevice;
-import org.bitlet.weupnp.GatewayDiscover;
-import org.bitlet.weupnp.PortMappingEntry;
-
-import com.badlogic.gdx.Gdx;
 
 public class NetworkUtil {
 
@@ -49,37 +42,11 @@ public class NetworkUtil {
 	private void init() {
 		packets			= Collections.synchronizedList(new ArrayList<DatagramPacket>());
 		
-		this.syncThread.start();
 		this.portIn = this.syncThread.getLocalPort();
+		this.syncThread.start();
 		
 		try { this.socket = new DatagramSocket(); }
 		catch (SocketException e) { e.printStackTrace(); }
-		UPNP();
-	}
-	
-	
-	private void UPNP() {
-		GatewayDiscover gatewayDiscover = new GatewayDiscover();
-		try {
-			gatewayDiscover.discover();
-			GatewayDevice activeGW = gatewayDiscover.getValidGateway();
-			if (null == activeGW) {
-				Gdx.app.log("Network", "No active Gateway, aborting");
-				return;
-			}
-			InetAddress localAddress = activeGW.getLocalAddress();
-			String externalIPAddress = activeGW.getExternalIPAddress(); 
-			Gdx.app.log("Network", "Internal address " + localAddress.getHostAddress() + " - External address " + externalIPAddress);
-			
-			PortMappingEntry portMapping = new PortMappingEntry();
-			if (activeGW.getSpecificPortMappingEntry(this.portIn,"UDP",portMapping)) {
-				Gdx.app.log("Network", "Port "+this.portIn+" is already mapped.");
-			} else {
-				if (activeGW.addPortMapping(this.portIn,this.portIn,localAddress.getHostAddress(),"TCP","Merkurius Mapping")) {
-					Gdx.app.log("Network", "Port "+this.portIn+" mapped successfully.");
-				}				
-			}
-		} catch (Exception e) { e.printStackTrace(); }
 	}
 	
 	
