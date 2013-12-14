@@ -58,7 +58,7 @@ public class SyncThread extends Thread {
 			if (activeGW.getSpecificPortMappingEntry(socket.getLocalPort(),"UDP",portMapping)) {
 				Gdx.app.log("Network", "Port "+socket.getLocalPort()+" is already mapped.");
 			} else {
-				if (activeGW.addPortMapping(socket.getLocalPort(),socket.getLocalPort(),localAddress.getHostAddress(),"TCP","Merkurius Mapping")) {
+				if (activeGW.addPortMapping(socket.getLocalPort(),socket.getLocalPort(),localAddress.getHostAddress(),"UDP","Merkurius Mapping")) {
 					Gdx.app.log("Network", "Port "+socket.getLocalPort()+" mapped successfully.");
 				}				
 			}
