@@ -11,12 +11,8 @@ import fr.kohen.alexandre.framework.components.Transform;
 import fr.kohen.alexandre.framework.components.VisualComponent;
 
 public abstract class Visual {
-	protected Hashtable<String, Animation>	animations;
+	protected Hashtable<String, Animation>	animations = new Hashtable<String,Animation>();
 	protected Sprite sprite = null;
-	
-	public Visual() {
-		animations = new Hashtable<String,Animation>();
-	}
 	
 	/*
 	public void draw(Transform transform, SpriteBatch batch) {

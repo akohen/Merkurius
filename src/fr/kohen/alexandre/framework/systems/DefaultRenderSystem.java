@@ -22,12 +22,12 @@ import fr.kohen.alexandre.framework.systems.interfaces.*;
 public class DefaultRenderSystem extends EntityProcessingSystem implements RenderSystem {
 	protected ComponentMapper<Transform> 		transformMapper;
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
-	private VisualDrawSystem 					visualSystem;
-	private TextDrawSystem 						textSystem;
-	private MapDrawSystem 						mapSystem;
-	private SpriteBatch 						batch;
-	private FrameBuffer 						framebuffer;
-	private OrthographicCamera 					mainCamera;
+	protected VisualDrawSystem 					visualSystem;
+	protected TextDrawSystem 					textSystem;
+	protected MapDrawSystem 					mapSystem;
+	protected SpriteBatch 						batch;
+	protected FrameBuffer 						framebuffer;
+	protected OrthographicCamera 				mainCamera;
 	private float red = 1, green = 1, blue = 1, alpha = 0;
 	
 	

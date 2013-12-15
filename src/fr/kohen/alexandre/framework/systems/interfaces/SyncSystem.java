@@ -3,6 +3,8 @@ package fr.kohen.alexandre.framework.systems.interfaces;
 import java.net.DatagramPacket;
 import java.net.UnknownHostException;
 
+import com.artemis.Component;
+
 import fr.kohen.alexandre.framework.network.GameClient;
 
 /**
@@ -10,7 +12,7 @@ import fr.kohen.alexandre.framework.network.GameClient;
  * @author Alexandre
  */
 public interface SyncSystem {
-	public enum 							SyncTypes {ServerToClient, ClientToServer, Both};
+	public enum SyncTypes {ServerToClient, ClientToServer, Both};
 	
 	/**
 	 * Sends a message to every connected client
@@ -35,7 +37,10 @@ public interface SyncSystem {
 	 * @param host
 	 * @throws UnknownHostException 
 	 */
-	public void connect(GameClient host) throws UnknownHostException;
+	public void connect(String address, int port) throws UnknownHostException;
+	
+	
+	public <T extends Component> void addSyncedComponent (Class<T> component, SyncTypes type);
 
 	
 }

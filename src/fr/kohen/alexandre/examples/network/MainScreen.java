@@ -58,7 +58,7 @@ public class MainScreen extends GameScreen {
 		if ( isServer ) {
 			EntityFactoryExamples.newPlayer(world, 1, 0, 0).addComponent( new Synchronize("player", true) ).addToWorld();
 		} else {
-			try { ((NetworkExampleSyncSystem) syncSystem).connect("127.0.0.1", 4445); }
+			try { ((NetworkExampleSyncSystem) syncSystem).connect("109.21.201.101", 4445); }
 			catch (UnknownHostException e) { e.printStackTrace(); }
 		}
 	}

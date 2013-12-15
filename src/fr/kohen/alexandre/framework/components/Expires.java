@@ -2,7 +2,10 @@ package fr.kohen.alexandre.framework.components;
 
 import com.artemis.Component;
 
-public class Expires extends Component {
+import fr.kohen.alexandre.framework.network.Syncable;
+import fr.kohen.alexandre.framework.systems.DefaultSyncSystem.EntityUpdate;
+
+public class Expires extends Component implements Syncable {
 	private int lifeTime;
 	
 	public Expires(int lifeTime) {
@@ -27,6 +30,16 @@ public class Expires extends Component {
 	
 	public boolean isExpired() {
 		return lifeTime <= 0;
+	}
+
+	@Override
+	public void sync(EntityUpdate update) {
+		this.lifeTime = update.getNextInteger();
+	}
+
+	@Override
+	public StringBuilder getMessage() {
+		return new StringBuilder().append(this.lifeTime);
 	}
 
 	
