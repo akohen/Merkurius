@@ -10,14 +10,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Polygon;
 
 import fr.kohen.alexandre.framework.base.EntityFactory;
-import fr.kohen.alexandre.framework.base.Systems;
 import fr.kohen.alexandre.framework.components.CameraComponent;
 import fr.kohen.alexandre.framework.components.Mouse;
 import fr.kohen.alexandre.framework.components.Transform;
-import fr.kohen.alexandre.framework.systems.interfaces.CameraSystem;
 
 public class DefaultMouseSystem extends EntityProcessingSystem {
-	protected CameraSystem 					cameraSystem;
 	protected ComponentMapper<Transform> 		transformMapper;
 	protected ComponentMapper<CameraComponent> 	cameraMapper;
 	protected ComponentMapper<Mouse> mouseMapper;
@@ -32,7 +29,6 @@ public class DefaultMouseSystem extends EntityProcessingSystem {
 		transformMapper = ComponentMapper.getFor(Transform.class, world);
 		cameraMapper 	= ComponentMapper.getFor(CameraComponent.class, world);
 		mouseMapper 	= ComponentMapper.getFor(Mouse.class, world);
-		cameraSystem	= Systems.get(CameraSystem.class, world);
 	}
 	
 	@Override
